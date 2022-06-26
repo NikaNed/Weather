@@ -10,5 +10,8 @@ data class ForecastItem(
     val humidity: String,
     val pressure: String,
     val description: String,
-    val windSpeed: String
+    val windSpeed: String,
+    val icon: String,
+    val feels_like: Double,
+    val pop: Double,
 )
