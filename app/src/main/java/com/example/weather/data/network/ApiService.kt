@@ -1,7 +1,5 @@
 package com.example.weather.data.network
 
-import com.example.weather.data.network.models.City
-import com.example.weather.data.network.models.ForecastResponse
 import com.example.weather.data.network.test.SimpleResponse
 import com.example.weather.data.network.test.Weather
 import retrofit2.Response

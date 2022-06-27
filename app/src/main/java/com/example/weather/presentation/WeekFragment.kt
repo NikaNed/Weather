@@ -21,4 +21,11 @@ class WeekFragment: Fragment() {
         _binding = FragmentWeekBinding.inflate(inflater, container, false)
         return binding.root
     }
+
+    companion object {
+
+        fun newInstance(): Fragment {
+            return WeekFragment()
+        }
+    }
 }

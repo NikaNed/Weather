@@ -22,4 +22,11 @@ class DayFragment: Fragment() {
         _binding = FragmentDayBinding.inflate(inflater, container, false)
         return binding.root
     }
+
+    companion object {
+
+        fun newInstance(): Fragment {
+            return DayFragment()
+        }
+    }
 }
