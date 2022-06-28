@@ -19,6 +19,7 @@ object ApiFactory {
         .baseUrl(BASE_URL) //указываем к какому базовому URL будем образаться
         .build()
 
+
     val apiService: ApiService = retrofit.create(ApiService::class.java) //для генирации кода описанного api
 // предоставляем класс интерфейса
 
