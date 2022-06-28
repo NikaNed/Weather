@@ -17,7 +17,6 @@ class RequestInterceptor /*@Inject constructor*/() :
             )
             .build()
         return chain.proceed(request)
-
     }
 
     companion object {
