@@ -12,7 +12,6 @@ object ApiFactory {
         .addInterceptor(RequestInterceptor())
         .build()
 
-
     private val retrofit = Retrofit.Builder() //создаем объект retrofit
         .addConverterFactory(GsonConverterFactory.create())
         .client(okHttpClient)
