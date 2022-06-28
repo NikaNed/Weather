@@ -1,14 +1,13 @@
 package com.example.weather.data.network.models
 
-import androidx.room.Entity
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 
 data class ForecastResponse(
 
-/*    @SerializedName("NAME")
-    @Expose*/
+    @SerializedName("NAME")
+    @Expose
     val name: String,
     val dt: Long, //Время
     val lat: Double,
