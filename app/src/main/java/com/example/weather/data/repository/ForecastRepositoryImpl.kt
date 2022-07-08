@@ -1,36 +1,32 @@
 package com.example.weather.data.repository
 
+import android.app.Application
 import androidx.lifecycle.LiveData
-import com.example.weather.data.network.ApiService
 import com.example.weather.domain.ForecastRepository
 import com.example.weather.domain.entities.ForecastItem
-import com.example.weather.domain.entities.Location
+import javax.inject.Inject
 
-/*
-class ForecastRepositoryImpl (
-    private val weatherApi: ApiService,
-    */
-/*private val weatherDb: AppDatabase*//*
-
+class ForecastRepositoryImpl @Inject constructor(
+    private val application: Application,
+//    private val mapper: CoinMapper, //инжектим mapper
 ) : ForecastRepository {
 
     override fun getCurrentWeather(): LiveData<List<ForecastItem>> {
-        weatherApi.getCurrentWeather(name = String()).toLocationInformation()
-    }
-
-    override fun searchCity(name: String): LiveData<List<Location>> {
         TODO("Not yet implemented")
     }
 
-    */
-/*override fun getForecastForDay(): LiveData<List<ForecastItem>> {
-
+   /* override fun searchCity(name: String): LiveData<List<Location>> {
+        TODO("Not yet implemented")
     }
 
-    override fun getForecastForWeek(): LiveData<List<ForecastItem>> {
-*//*
-
+    override fun getForecastForDays(): LiveData<List<ForecastItem>> {
+        TODO("Not yet implemented")
     }
 
 
-}*/
+       fun getForecastForWeek(): LiveData<List<ForecastItem>> {
+           TODO("Not yet implemented")
+       }*/
+
+
+}

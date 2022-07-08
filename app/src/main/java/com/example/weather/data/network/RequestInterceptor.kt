@@ -2,17 +2,19 @@ package com.example.weather.data.network
 
 import okhttp3.Interceptor
 import okhttp3.Response
+import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class RequestInterceptor /*@Inject constructor*/() :
+class RequestInterceptor @Inject constructor() :
     Interceptor { // добавить в di в moduleNetwork
 
     override fun intercept(chain: Interceptor.Chain): Response {
+
         val request = chain.request()
             .newBuilder()
             .addHeader(
-                "api-key",
+                "APPID",
                 API_KEY
             )
             .build()
