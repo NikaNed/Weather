@@ -3,7 +3,6 @@ package com.example.weather.presentation
 import android.Manifest
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,15 +10,9 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
-import com.example.weather.data.network.ApiFactory
 import com.example.weather.databinding.FragmentCurrentWeatherBinding
-import com.example.weather.presentation.adapters.ViewPagerAdapter
-import com.google.android.material.tabs.TabLayoutMediator
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
+import com.example.weather.presentation.adapters.WeatherAdapter
 import javax.inject.Inject
 
 class CurrentWeatherFragment : Fragment() {
@@ -49,7 +42,7 @@ class CurrentWeatherFragment : Fragment() {
     private val binding: FragmentCurrentWeatherBinding
         get() = _binding ?: throw RuntimeException("FragmentCurrentWeatherBinding == null")
 
-    private val compositeDisposable = CompositeDisposable()
+//    private val compositeDisposable = CompositeDisposable()
 
 
     override fun onAttach(context: Context) {
@@ -69,42 +62,44 @@ class CurrentWeatherFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         checkPermission()
-        init()
+//        init()
+
+
+        val adapter = WeatherAdapter(this)
+        binding.rvWeatherHours.adapter = adapter
 
         viewModel = ViewModelProvider(this,
             viewModelFactory)[CurrentWeatherViewModel::class.java] //инициализируем vM
         viewModel.forecastItem.observe(viewLifecycleOwner) {
-            Log.d("TAG", it.toString())
-            /*     with(binding) {
-                     tvPrice.text = it.price
-                 }*/
+            adapter.submitList(it)
         }
 
-        val disposable = ApiFactory.apiService.getCurrentWeather(
-            "Москва",
-            "cf6776e097a42e7104c009431a5c9ef8",
-            "ru",
-            "metric")
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({
-                Log.d("Load_test", it.toString())
-            }, {
-                Log.d("Load_test", it.message.toString())
-            })
-        compositeDisposable.add(disposable)
+
+//        val disposable = ApiFactory.apiService.getCurrentWeather(
+//            "Москва",
+//            "cf6776e097a42e7104c009431a5c9ef8",
+//            "ru",
+//            "metric")
+//            .subscribeOn(Schedulers.io())
+//            .observeOn(AndroidSchedulers.mainThread())
+//            .subscribe({
+//                Log.d("Load_test", it.toString())
+//            }, {
+//                Log.d("Load_test", it.message.toString())
+//            })
+//        compositeDisposable.add(disposable)
 
     }
 
 
-    private fun init() = with(binding) {
-        val adapter = ViewPagerAdapter(activity as FragmentActivity, fragmentList)
-        viewPager.adapter = adapter
-        TabLayoutMediator(tabLayout, viewPager) { tab, pos ->
-            tab.text = tabLayoutList[pos]
-        }
-            .attach()
-    }
+//    private fun init() = with(binding) {
+//        val adapter = ViewPagerAdapter(activity as FragmentActivity, fragmentList)
+//        rvWeatherHours.adapter = adapter
+//        TabLayoutMediator(tabLayout, viewPager) { tab, pos ->
+//            tab.text = tabLayoutList[pos]
+//        }
+//            .attach()
+//    }
 
     private fun permissionListener() {
         pLauncher = registerForActivityResult(
@@ -120,10 +115,10 @@ class CurrentWeatherFragment : Fragment() {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        compositeDisposable.dispose()
-    }
+//    override fun onDestroy() {
+//        super.onDestroy()
+//        compositeDisposable.dispose()
+//    }
 
     companion object {
 

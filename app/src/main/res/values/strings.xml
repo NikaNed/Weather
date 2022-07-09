@@ -3,6 +3,8 @@
     <string name="search_hint">Search places</string>
     <string name="hours">Hours</string>
     <string name="days">Days</string>
+    <string name="data_template">%s/%s/%s %s : %s</string>
+
 
 
 </resources>
