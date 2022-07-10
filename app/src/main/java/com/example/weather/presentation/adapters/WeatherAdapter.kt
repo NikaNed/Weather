@@ -7,9 +7,10 @@ import com.example.weather.R
 import com.example.weather.databinding.ItemForecastDayBinding
 import com.example.weather.domain.entities.ForecastItem
 import com.example.weather.presentation.CurrentWeatherFragment
+import com.example.weather.presentation.DayFragment
 import com.squareup.picasso.Picasso
 
-class WeatherAdapter(private val context: CurrentWeatherFragment) :
+class WeatherAdapter(private val context: DayFragment) :
     ListAdapter<ForecastItem, WeatherViewHolder>(WeatherInfoDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {

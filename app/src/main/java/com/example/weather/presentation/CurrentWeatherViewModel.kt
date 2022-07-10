@@ -1,12 +1,7 @@
 package com.example.weather.presentation
 
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.weather.data.database.AppDatabase
-import com.example.weather.domain.entities.ForecastItem
 import com.example.weather.domain.usecase.GetCurrentWeatherUseCase
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 class CurrentWeatherViewModel @Inject constructor(
@@ -28,12 +23,12 @@ class CurrentWeatherViewModel @Inject constructor(
     val currentWeatherParams: LiveData<ForecastItem>
         get() = _currentWeatherParams*/
 
-    val forecastItem = MutableLiveData<List<ForecastItem>>()
+    val forecastItem = getCurrentWeatherUseCase()
 
-    fun getCurrentWeather() {
-//        viewModelScope.launch {
-            val list = getCurrentWeatherUseCase.getCurrentWeather()
-            forecastItem.value = list.value // устанавлием его в LiveData
-//        }
-    }
+//    fun getCurrentWeather() {
+////        viewModelScope.launch {
+//            val list = getCurrentWeatherUseCase.getCurrentWeather()
+//            forecastItem.value = list.value // устанавлием его в LiveData
+////        }
+//    }
 }

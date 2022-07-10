@@ -2,6 +2,7 @@ package com.example.weather.di
 
 import android.app.Application
 import com.example.weather.presentation.CurrentWeatherFragment
+import com.example.weather.presentation.DayFragment
 import com.example.weather.presentation.WeatherApp
 import dagger.BindsInstance
 import dagger.Component
@@ -12,6 +13,7 @@ import dagger.Component
 interface ApplicationComponent  {
 
     fun inject(fragment: CurrentWeatherFragment)
+    fun inject(fragment: DayFragment)
 
 //    fun inject(activity: WeatherActivity)
 

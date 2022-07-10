@@ -11,6 +11,7 @@ import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import com.example.weather.R
 import com.example.weather.databinding.FragmentCurrentWeatherBinding
 import com.example.weather.presentation.adapters.WeatherAdapter
 import javax.inject.Inject
@@ -24,15 +25,15 @@ class CurrentWeatherFragment : Fragment() {
 
     private lateinit var pLauncher: ActivityResultLauncher<String>
 
-    private val fragmentList = listOf(
-        DayFragment.newInstance(),
-        WeekFragment.newInstance()
-    )
+//    private val fragmentList = listOf(
+//        DayFragment.newInstance(EXTRA_NAME_CITY),
+//        WeekFragment.newInstance()
+//    )
 
-    private val tabLayoutList = listOf(
-        "Hours",
-        "Days"
-    )
+//    private val tabLayoutList = listOf(
+//        "Hours",
+//        "Days"
+//    )
 
     private val component by lazy {
         (requireActivity().application as WeatherApp).component
@@ -63,17 +64,13 @@ class CurrentWeatherFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         checkPermission()
 //        init()
-
-
-        val adapter = WeatherAdapter(this)
-        binding.rvWeatherHours.adapter = adapter
+        setOnClickLaunchDayFragment()
 
         viewModel = ViewModelProvider(this,
             viewModelFactory)[CurrentWeatherViewModel::class.java] //инициализируем vM
         viewModel.forecastItem.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
         }
-
+    }
 
 //        val disposable = ApiFactory.apiService.getCurrentWeather(
 //            "Москва",
@@ -89,8 +86,6 @@ class CurrentWeatherFragment : Fragment() {
 //            })
 //        compositeDisposable.add(disposable)
 
-    }
-
 
 //    private fun init() = with(binding) {
 //        val adapter = ViewPagerAdapter(activity as FragmentActivity, fragmentList)
@@ -100,6 +95,20 @@ class CurrentWeatherFragment : Fragment() {
 //        }
 //            .attach()
 //    }
+
+    private fun setOnClickLaunchDayFragment() {
+        binding.buttonHours.setOnClickListener {
+            launchDayFragment()
+        }
+    }
+
+    private fun launchDayFragment() {
+//        val name = requireActivity().intent.getStringExtra(EXTRA_NAME_CITY) ?: EMPTY_NAME
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container, DayFragment.newInstance())
+            .commit()
+    }
 
     private fun permissionListener() {
         pLauncher = registerForActivityResult(
@@ -121,6 +130,9 @@ class CurrentWeatherFragment : Fragment() {
 //    }
 
     companion object {
+
+        private const val EXTRA_NAME_CITY = "name"
+        private const val EMPTY_NAME = ""
 
         fun newInstance(): Fragment {
             return CurrentWeatherFragment()

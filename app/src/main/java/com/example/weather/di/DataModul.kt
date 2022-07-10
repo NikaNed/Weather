@@ -1,5 +1,8 @@
 package com.example.weather.di
 
+import android.app.Application
+import com.example.weather.data.database.AppDatabase
+import com.example.weather.data.database.WeatherInfoDao
 import com.example.weather.data.network.ApiFactory
 import com.example.weather.data.network.ApiService
 import com.example.weather.data.repository.ForecastRepositoryImpl
@@ -17,13 +20,13 @@ interface DataModule {
 
     companion object{
 
-//        @Provides
+        @Provides
 //        @ApplicationScope
-//        fun provideCoinInfoDao(
-//            application: Application
-//        ): CoinInfoDao {
-//            return AppDatabase.getInstance(application).coinPriceInfoDao()
-//        }
+        fun provideWeatherInfoDao(
+            application: Application
+        ): WeatherInfoDao {
+            return AppDatabase.getInstance(application).weatherInfoDao()
+        }
 
         @Provides
 //        @ApplicationScope
