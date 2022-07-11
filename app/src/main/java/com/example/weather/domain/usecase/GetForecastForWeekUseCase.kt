@@ -2,8 +2,7 @@ package com.example.weather.domain.usecase
 
 import com.example.weather.domain.ForecastRepository
 
-/*
-class GetForecastForWeekUseCase (
+/*class GetForecastForWeekUseCase (
     private val repository: ForecastRepository
 ) {
 

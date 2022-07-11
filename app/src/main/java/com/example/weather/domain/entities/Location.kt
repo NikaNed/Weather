@@ -6,4 +6,5 @@ data class Location(
     val country: String,
     val id: Int,
     val name: String,
+    val timezone: Int
 )

@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
     <com.google.android.material.appbar.AppBarLayout
@@ -37,24 +37,11 @@
 
 
     <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_data_with_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:textColor="@color/white"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appbar"
-        tools:text="23 June, 23:32" />
-
-    <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_temperature"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="32dp"
         android:textColor="@color/white"
         android:textSize="80sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -66,7 +53,7 @@
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -78,7 +65,7 @@
         android:id="@+id/iv_weather_icon"
         android:layout_width="128dp"
         android:layout_height="128dp"
-        android:layout_marginTop="64dp"
+        android:layout_marginTop="124dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appbar"
@@ -89,8 +76,8 @@
         android:id="@+id/tv_description"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="48dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="44dp"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -98,80 +85,87 @@
         app:layout_constraintTop_toBottomOf="@+id/iv_weather_icon"
         tools:text="Party cloudy" />
 
-
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:backgroundTint="@color/white_clean"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/guideline">
-
-        <com.google.android.material.tabs.TabItem
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-           />
-
-        <com.google.android.material.tabs.TabItem
-
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-         />
-
-    </com.google.android.material.tabs.TabLayout>
-
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/view_pager"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tab_layout" />
-
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/guideline"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_data_with_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_begin="325dp" />
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="92dp"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appbar"
+        tools:text="23 June, 23:32" />
 
-    <!--    <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_humidity"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="150dp"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_temp_feel"
-            tools:text="Humidity 100%" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_pressure"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_humidity"
-            tools:text="Pressure 1,010 mBar" />
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_hours"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="51dp"
+        android:backgroundTint="@color/white_clean"
+        android:text="@string/hours"
+        app:cornerRadius="0dp"
+        app:layout_constraintEnd_toStartOf="@id/guideline_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textview.MaterialTextView
-            android:id="@+id/tv_wind_speed"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:layout_marginTop="8dp"
-            android:textColor="@color/white"
-            android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_pressure"
-            tools:text="Wind speed 1.5 m/s" />-->
+    <com.google.android.material.button.MaterialButton
+        android:id="@+id/button_days"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="51dp"
+        android:backgroundTint="@color/white_clean"
+        android:text="@string/days"
+        app:cornerRadius="0dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/guideline_vertical"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline_vertical"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5" />
+
+    <!--        <com.google.android.material.tabs.TabItem-->
+
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            tools:text="Hours" />-->
+
+    <!--        <com.google.android.material.tabs.TabItem-->
+
+    <!--            android:layout_width="wrap_content"-->
+    <!--            android:layout_height="wrap_content"-->
+    <!--            tools:text="Days" />-->
+
+    <!--    </com.google.android.material.button.MaterialButton>-->
+
+    <!--    <androidx.viewpager2.widget.ViewPager2-->
+    <!--        android:id="@+id/view_pager"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="0dp"-->
+    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/tab_layout" >-->
+
+
+    <!--    <LinearLayout-->
+    <!--        android:id="@+id/frag_hours"-->
+    <!--        android:layout_width="match_parent"-->
+    <!--        android:layout_height="wrap_content"-->
+    <!--        android:orientation="vertical"-->
+    <!--        app:layout_constraintEnd_toEndOf="parent"-->
+    <!--        app:layout_constraintStart_toStartOf="parent"-->
+    <!--        app:layout_constraintTop_toBottomOf="@+id/button_hours">-->
+
+    <!--    </LinearLayout>-->
+
+    <!--    </androidx.viewpager2.widget.ViewPager2>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

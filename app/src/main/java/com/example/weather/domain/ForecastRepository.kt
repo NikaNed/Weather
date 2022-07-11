@@ -8,12 +8,9 @@ interface ForecastRepository {
 
     fun getCurrentWeather(): LiveData<List<ForecastItem>>
 
-    fun searchCity(name: String): LiveData<List<Location>>
-
-/*    fun getForecastForDay(): LiveData<List<ForecastItem>>
-
-    fun getForecastForWeek(): LiveData<List<ForecastItem>>*/
-
+//    fun searchCity(name: String): LiveData<List<Location>>
+//
+//    fun getForecastForDays(): LiveData<List<ForecastItem>>
 
 
 }
