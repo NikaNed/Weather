@@ -1,8 +1,9 @@
 package com.example.weather.domain.entities
 
 data class Location(
-    val woeid: Int,
-    val title: String,
-    val locationType: String,
-    val latLon: String,
+    val lat: Double,
+    val lon: Double,
+    val country: String,
+    val id: Int,
+    val name: String,
 )

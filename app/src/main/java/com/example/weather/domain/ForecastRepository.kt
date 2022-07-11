@@ -6,10 +6,14 @@ import com.example.weather.domain.entities.Location
 
 interface ForecastRepository {
 
-    fun getForecastForDay(): LiveData<List<ForecastItem>>
+    fun getCurrentWeather(): LiveData<List<ForecastItem>>
 
-    fun getForecastForWeek(): LiveData<List<ForecastItem>>
+    fun searchCity(name: String): LiveData<List<Location>>
 
-    fun getLocationByName(name: String): LiveData<List<Location>>
+/*    fun getForecastForDay(): LiveData<List<ForecastItem>>
+
+    fun getForecastForWeek(): LiveData<List<ForecastItem>>*/
+
+
 
 }

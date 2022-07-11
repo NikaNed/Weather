@@ -1,6 +1,13 @@
-package com.example.weather.domain.entities
+package com.example.weather.data.network.models
 
-data class ForecastItem(
+import com.google.gson.annotations.Expose
+import com.google.gson.annotations.SerializedName
+
+
+data class ForecastResponse(
+
+    @SerializedName("NAME")
+    @Expose
     val name: String,
     val dt: Long, //Время
     val lat: Double,
@@ -16,4 +23,5 @@ data class ForecastItem(
     val description: String,
     val icon: String,
     val speed: Double,
+    val hours: String
 )

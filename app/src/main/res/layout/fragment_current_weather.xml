@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white_clean"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
+            style="@style/ToolbarStyle.Search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:titleTextColor="@color/purple_dark"
+            tools:title="Moscow" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <ImageView
+        android:id="@+id/im_background"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:contentDescription="background"
+        android:scaleType="fitXY"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/backgr_weather" />
+
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_data_with_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appbar"
+        tools:text="23 June, 23:32" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_temperature"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:textSize="80sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_data_with_time"
+        tools:text="30°C" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_temp_feel"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_temperature"
+        tools:text="Feels like 22°C" />
+
+    <ImageView
+        android:id="@+id/iv_weather_icon"
+        android:layout_width="128dp"
+        android:layout_height="128dp"
+        android:layout_marginTop="64dp"
+        android:layout_marginEnd="32dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appbar"
+        tools:ignore="ContentDescription"
+        tools:src="@drawable/ic_showers" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_description"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="48dp"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_weather_icon"
+        tools:text="Party cloudy" />
+
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:backgroundTint="@color/white_clean"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/guideline">
+
+        <com.google.android.material.tabs.TabItem
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+           />
+
+        <com.google.android.material.tabs.TabItem
+
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+         />
+
+    </com.google.android.material.tabs.TabLayout>
+
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/view_pager"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tab_layout" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="325dp" />
+
+    <!--    <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_humidity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="150dp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_temp_feel"
+            tools:text="Humidity 100%" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_pressure"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_humidity"
+            tools:text="Pressure 1,010 mBar" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_wind_speed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/white"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_pressure"
+            tools:text="Wind speed 1.5 m/s" />-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>

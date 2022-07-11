@@ -1,11 +1,10 @@
 package com.example.weather.domain.usecase
 
 import com.example.weather.domain.ForecastRepository
-/*
 
-class GetForecastForDayUseCase (
+class GetCurrentWeatherUseCase  (
     private val repository: ForecastRepository
-    ) {
-        operator fun invoke(  ) = repository.getForecastForDay()
+) {
+    operator fun invoke(  ) = repository.getCurrentWeather()
 
-    }*/
+}
