@@ -7,7 +7,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weather.databinding.FragmentDayBinding
+import com.example.weather.domain.entities.ForecastItem
 import com.example.weather.presentation.adapters.WeatherAdapter
 import javax.inject.Inject
 
@@ -18,6 +20,8 @@ class DayFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentDayBinding == null")
 
     private lateinit var viewModel: CurrentWeatherViewModel
+
+    private lateinit var adapter: WeatherAdapter
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -42,11 +46,18 @@ class DayFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = WeatherAdapter(this)
-        binding.rvWeatherHours.adapter = adapter
+        initRcView()
+    }
+
+    private fun initRcView() {
+        with(binding) {
+            rvWeatherHours.layoutManager = LinearLayoutManager(activity)
+            adapter = WeatherAdapter()
+            rvWeatherHours.adapter = adapter
+        }
         viewModel = ViewModelProvider(this,
             viewModelFactory)[CurrentWeatherViewModel::class.java] //инициализируем vM
-        viewModel.forecastItem.observe(viewLifecycleOwner) {
+        viewModel.weatherItem.observe(viewLifecycleOwner) {
             adapter.submitList(it)
         }
     }

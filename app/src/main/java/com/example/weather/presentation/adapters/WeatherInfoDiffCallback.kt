@@ -6,7 +6,7 @@ import com.example.weather.domain.entities.ForecastItem
 object WeatherInfoDiffCallback: DiffUtil.ItemCallback<ForecastItem>() {
 
     override fun areItemsTheSame(oldItem: ForecastItem, newItem: ForecastItem): Boolean {
-        return oldItem.name == newItem.name
+        return oldItem == newItem
     }
 
     override fun areContentsTheSame(oldItem: ForecastItem, newItem: ForecastItem): Boolean {

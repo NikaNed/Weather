@@ -10,10 +10,13 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
 import com.example.weather.databinding.FragmentCurrentWeatherBinding
 import com.example.weather.presentation.adapters.WeatherAdapter
+import com.squareup.picasso.Picasso
 import javax.inject.Inject
 
 class CurrentWeatherFragment : Fragment() {
@@ -43,9 +46,6 @@ class CurrentWeatherFragment : Fragment() {
     private val binding: FragmentCurrentWeatherBinding
         get() = _binding ?: throw RuntimeException("FragmentCurrentWeatherBinding == null")
 
-//    private val compositeDisposable = CompositeDisposable()
-
-
     override fun onAttach(context: Context) {
         component.inject(this)
         super.onAttach(context)
@@ -68,23 +68,19 @@ class CurrentWeatherFragment : Fragment() {
 
         viewModel = ViewModelProvider(this,
             viewModelFactory)[CurrentWeatherViewModel::class.java] //инициализируем vM
-        viewModel.forecastItem.observe(viewLifecycleOwner) {
+        viewModel.weatherItem.observe(viewLifecycleOwner) {
+            with(binding) {
+                tvDataWithTime.text = it.toString()
+                tvTemperature.text = it.toString()
+                tvTempFeel.text = it.toString()
+                tvDescription.text = it.toString()
+                Picasso.get().load(it.toString()).into(ivWeatherIcon)
+            }
         }
+
     }
 
-//        val disposable = ApiFactory.apiService.getCurrentWeather(
-//            "Москва",
-//            "cf6776e097a42e7104c009431a5c9ef8",
-//            "ru",
-//            "metric")
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe({
-//                Log.d("Load_test", it.toString())
-//            }, {
-//                Log.d("Load_test", it.message.toString())
-//            })
-//        compositeDisposable.add(disposable)
+//
 
 
 //    private fun init() = with(binding) {
@@ -99,8 +95,10 @@ class CurrentWeatherFragment : Fragment() {
     private fun setOnClickLaunchDayFragment() {
         binding.buttonHours.setOnClickListener {
             launchDayFragment()
+
         }
     }
+
 
     private fun launchDayFragment() {
 //        val name = requireActivity().intent.getStringExtra(EXTRA_NAME_CITY) ?: EMPTY_NAME
@@ -108,6 +106,7 @@ class CurrentWeatherFragment : Fragment() {
             .beginTransaction()
             .replace(R.id.fragment_container, DayFragment.newInstance())
             .commit()
+
     }
 
     private fun permissionListener() {
@@ -124,10 +123,12 @@ class CurrentWeatherFragment : Fragment() {
         }
     }
 
-//    override fun onDestroy() {
-//        super.onDestroy()
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null //присваиваем значение null
 //        compositeDisposable.dispose()
-//    }
+    }
 
     companion object {
 

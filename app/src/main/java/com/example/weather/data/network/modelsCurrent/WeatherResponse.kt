@@ -5,7 +5,9 @@ data class WeatherResponse(
     val name: String,
     val dt: Int,
     val main: Main,
-    val weather: List<Weather>
+//    val weather: List<Weather>,
+    val description: String,
+    val icon: String,
 //    val timezone: Int,
 //    val visibility: Int,
 //    val id: Int, //идентификатор города

@@ -1,6 +1,7 @@
 package com.example.weather.data.mapper
 
 import com.example.weather.data.database.WeatherInfoDbModel
+import com.example.weather.data.network.modelsCurrent.WeatherResponse
 import com.example.weather.domain.entities.ForecastItem
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
@@ -20,6 +21,18 @@ class WeatherMapper @Inject constructor() {
         icon = dbModel.icon
     )
 
+    fun mapDtoToDbModel(dto: WeatherResponse) = WeatherInfoDbModel( //преобразует класс dto в класс БД
+        name = dto.name,
+        dt = dto.dt,
+        feels_like = dto.main.feels_like,
+        temp = dto.main.temp,
+        temp_max = dto.main.temp_max,
+        temp_min = dto.main.temp_min,
+        description = dto.description,
+        icon = BASE_URL + dto.icon
+    )
+
+
     private fun convertTimestampToTime(timestamp: Int): String {
         if (timestamp == null) return ""
         val stamp = Timestamp((timestamp * 1000).toLong())
@@ -28,5 +41,9 @@ class WeatherMapper @Inject constructor() {
         val sdf = SimpleDateFormat(pattern, Locale.getDefault())
         sdf.timeZone = TimeZone.getDefault()
         return sdf.format(date)
+    }
+
+    companion object{
+        private const val BASE_URL = "http://api.openweathermap.org/data/2.5/"
     }
 }

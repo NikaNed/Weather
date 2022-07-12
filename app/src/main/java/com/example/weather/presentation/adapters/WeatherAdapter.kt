@@ -10,30 +10,20 @@ import com.example.weather.presentation.CurrentWeatherFragment
 import com.example.weather.presentation.DayFragment
 import com.squareup.picasso.Picasso
 
-class WeatherAdapter(private val context: DayFragment) :
-    ListAdapter<ForecastItem, WeatherViewHolder>(WeatherInfoDiffCallback) {
+class WeatherAdapter: ListAdapter<ForecastItem, WeatherViewHolder>(WeatherInfoDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
-        val binding = ItemForecastDayBinding.inflate(
-            LayoutInflater.from(parent.context),
+        val view = LayoutInflater.from(parent.context).inflate(
+            R.layout.item_forecast_day,
             parent,
-            false
-        )
-        return WeatherViewHolder(binding)
+            false)
+        return WeatherViewHolder(view)
     }
-
 
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
-        val item = getItem(position)
-        with(holder.binding) {
-            with(item) {
-                val dataTemplate = context.resources.getString(R.string.data_template)
-                tvDate.text = String.format(dataTemplate, dt)
-                tvDescription.text = description
-                tvTemperature.text = temp.toString()
-                Picasso.get().load(icon).into(ivWeatherIcon)
-            }
-        }
+       holder.bind(getItem(position))
     }
 }
+
+
 

@@ -19,7 +19,7 @@ interface ApiService {
 
     @GET("weather")
      fun getCurrentWeather(
-        @Query("q") name: String,
+        @Query("q") name: String = "",
         @Query("appid") appid: String = API_KEY,
         @Query("lang") languageCode: String = "ru",
         @Query("units") units: String = "metric"

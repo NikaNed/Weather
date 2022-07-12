@@ -10,7 +10,7 @@ import com.example.weather.domain.entities.ForecastItem
 import javax.inject.Inject
 
 class ForecastRepositoryImpl @Inject constructor(
-    private val application: Application,
+//    private val application: Application,
     private val mapper: WeatherMapper, //инжектим mapper
     private val weatherInfoDao: WeatherInfoDao
 ) : ForecastRepository {
