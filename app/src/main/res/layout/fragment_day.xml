@@ -7,7 +7,6 @@
     android:fitsSystemWindows="true"
    >
 
-
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_weather_hours"
         android:layout_width="match_parent"
@@ -17,9 +16,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appbar"
-        android:background="#9C27B0"
-        tools:listitem="@layout/item_forecast_day"
-        />
+        tools:listitem="@layout/item_forecast_day" />
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/appbar"

@@ -2,16 +2,21 @@ package com.example.weather.presentation
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.weather.data.network.ApiFactory
+import com.example.weather.data.network.modelsForecast.ForecastResponse
 import com.example.weather.databinding.FragmentDayBinding
-import com.example.weather.domain.entities.ForecastItem
 import com.example.weather.presentation.adapters.WeatherAdapter
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import javax.inject.Inject
+
 
 class DayFragment : Fragment() {
 
@@ -46,21 +51,43 @@ class DayFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initRcView()
+
+        val apiInterface = ApiFactory.apiService.getForecastWeather("Москва")
+
+        apiInterface.enqueue(object : Callback<ForecastResponse> {
+
+            override fun onResponse(
+                call: Call<ForecastResponse>,
+                response: Response<ForecastResponse>,
+            ) {
+                Log.d("TAG", "onResponse Forecast Success $call ${response.body()?.list}")
+
+                binding.rvWeatherHours.layoutManager = LinearLayoutManager(activity)
+                adapter = WeatherAdapter()
+                binding.rvWeatherHours.adapter = adapter
+                adapter.submitList(response.body()?.list)
+
+            }
+
+            override fun onFailure(call: Call<ForecastResponse>, t: Throwable) {
+                Log.d("TAG", "onResponse onFailure ${t.message}")
+            }
+        })
+//        viewModel = ViewModelProvider(this,
+//            viewModelFactory)[CurrentWeatherViewModel::class.java] //инициализируем vM
+//        viewModel.weatherItem.observe(viewLifecycleOwner) {
+//            adapter.submitList(it)
+//        }
     }
 
-    private fun initRcView() {
-        with(binding) {
-            rvWeatherHours.layoutManager = LinearLayoutManager(activity)
-            adapter = WeatherAdapter()
-            rvWeatherHours.adapter = adapter
-        }
-        viewModel = ViewModelProvider(this,
-            viewModelFactory)[CurrentWeatherViewModel::class.java] //инициализируем vM
-        viewModel.weatherItem.observe(viewLifecycleOwner) {
-            adapter.submitList(it)
-        }
-    }
+//    private fun initRcView() {
+//
+//        viewModel = ViewModelProvider(this,
+//            viewModelFactory)[CurrentWeatherViewModel::class.java] //инициализируем vM
+//        viewModel.weatherItem.observe(viewLifecycleOwner) {
+//            adapter.submitList(it)
+//        }
+//    }
 
     companion object {
         private const val EXTRA_NAME_CITY = "name"
@@ -74,4 +101,6 @@ class DayFragment : Fragment() {
         }
     }
 }
+
+
 

@@ -4,26 +4,28 @@ import com.example.weather.data.network.modelsCurrent.WeatherResponse
 import com.example.weather.data.network.modelsForecast.City
 import com.example.weather.data.network.modelsForecast.ForecastResponse
 import io.reactivex.Single
+import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ApiService {
 
-    @GET("forecast")
-   fun getForecastWeather(
-        @Query("q") name: String,
-        @Query("appid") appid: String = API_KEY,
-        @Query("lang") languageCode: String = "ru",
-        @Query("units") units: String = "metric"
-    ): Single<ForecastResponse>
-
     @GET("weather")
-     fun getCurrentWeather(
+    fun getCurrentWeather(
         @Query("q") name: String = "",
         @Query("appid") appid: String = API_KEY,
         @Query("lang") languageCode: String = "ru",
-        @Query("units") units: String = "metric"
-    ): Single<WeatherResponse>
+        @Query("units") units: String = "metric",
+    ): Call<WeatherResponse>
+
+    @GET("forecast")
+    fun getForecastWeather(
+        @Query("q") name: String = "",
+        @Query("appid") appid: String = API_KEY,
+        @Query("lang") languageCode: String = "ru",
+        @Query("units") units: String = "metric",
+    ): Call<ForecastResponse>
+
 
 //    @GET("forecast")
 //    fun searchCity(

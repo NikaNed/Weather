@@ -3,6 +3,7 @@ package com.example.weather.presentation
 import android.Manifest
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -10,14 +11,20 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
+import com.example.weather.data.network.ApiFactory
+import com.example.weather.data.network.modelsCurrent.WeatherResponse
 import com.example.weather.databinding.FragmentCurrentWeatherBinding
-import com.example.weather.presentation.adapters.WeatherAdapter
 import com.squareup.picasso.Picasso
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
+import kotlin.math.roundToInt
+
 
 class CurrentWeatherFragment : Fragment() {
 
@@ -66,21 +73,52 @@ class CurrentWeatherFragment : Fragment() {
 //        init()
         setOnClickLaunchDayFragment()
 
-        viewModel = ViewModelProvider(this,
-            viewModelFactory)[CurrentWeatherViewModel::class.java] //инициализируем vM
-        viewModel.weatherItem.observe(viewLifecycleOwner) {
-            with(binding) {
-                tvDataWithTime.text = it.toString()
-                tvTemperature.text = it.toString()
-                tvTempFeel.text = it.toString()
-                tvDescription.text = it.toString()
-                Picasso.get().load(it.toString()).into(ivWeatherIcon)
-            }
-        }
+        val apiInterface = ApiFactory.apiService.getCurrentWeather("Москва")
 
+        apiInterface.enqueue(object : Callback<WeatherResponse> {
+
+            override fun onResponse(
+                call: Call<WeatherResponse>,
+                response: Response<WeatherResponse>,
+            ) {
+                Log.d("TAG", "onResponse Weather Success $call ${response.body()}")
+
+                with(binding) {
+                    tvDataWithTime.text = convertTimestampToTime(response.body()?.dt ?: 0)
+                    tvDescription.text = response.body()?.weather.toString()
+                    tvTemperature.text = response.body()?.main?.temp?.roundToInt().toString()
+                    tvTempFeel.text = response.body()?.main?.feels_like.toString()
+                    Picasso.get().load(" http://openweathermap.org/img/wn/" + response.body()?.weather)
+                        .into(ivWeatherIcon)
+                }
+            }
+
+            override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
+                Log.d("TAG", "onResponse onFailure ${t.message}")
+            }
+        })
     }
 
-//
+    private fun convertTimestampToTime(timestamp: Int): String {
+        val stamp = Timestamp(System.currentTimeMillis())
+        val data = Date(stamp.time)
+        val pattern = "dd.MM, HH:mm"
+        val sdf = SimpleDateFormat(pattern, Locale.getDefault())
+        sdf.timeZone = TimeZone.getDefault()
+        return sdf.format(data)
+    }
+
+//        viewModel = ViewModelProvider(this,
+//            viewModelFactory)[CurrentWeatherViewModel::class.java] //инициализируем vM
+//        viewModel.weatherItem.observe(viewLifecycleOwner) {
+//            with(binding) {
+//                tvDataWithTime.text = it.toString()
+//                tvTemperature.text = it.toString()
+//                tvTempFeel.text = it.toString()
+//                tvDescription.text = it.toString()
+//                Picasso.get().load(it.toString()).into(ivWeatherIcon)
+//            }
+//        }
 
 
 //    private fun init() = with(binding) {
@@ -95,7 +133,6 @@ class CurrentWeatherFragment : Fragment() {
     private fun setOnClickLaunchDayFragment() {
         binding.buttonHours.setOnClickListener {
             launchDayFragment()
-
         }
     }
 
@@ -106,7 +143,6 @@ class CurrentWeatherFragment : Fragment() {
             .beginTransaction()
             .replace(R.id.fragment_container, DayFragment.newInstance())
             .commit()
-
     }
 
     private fun permissionListener() {

@@ -4,13 +4,10 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.weather.R
-import com.example.weather.databinding.ItemForecastDayBinding
-import com.example.weather.domain.entities.ForecastItem
-import com.example.weather.presentation.CurrentWeatherFragment
-import com.example.weather.presentation.DayFragment
-import com.squareup.picasso.Picasso
+import com.example.weather.data.network.modelsForecast.ForecastListItem
+import com.example.weather.data.network.modelsForecast.ForecastResponse
 
-class WeatherAdapter: ListAdapter<ForecastItem, WeatherViewHolder>(WeatherInfoDiffCallback) {
+class WeatherAdapter: ListAdapter<ForecastListItem, WeatherViewHolder>(WeatherInfoDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(
@@ -21,7 +18,7 @@ class WeatherAdapter: ListAdapter<ForecastItem, WeatherViewHolder>(WeatherInfoDi
     }
 
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
-       holder.bind(getItem(position))
+        holder.bind(getItem(position))
     }
 }
 

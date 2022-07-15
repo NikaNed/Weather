@@ -23,13 +23,15 @@ class ForecastRepositoryImpl @Inject constructor(
         }
     }
 
+    override fun getForecast(): LiveData<List<ForecastItem>> {
+        TODO("Not yet implemented")
+    }
+
     /* override fun searchCity(name: String): LiveData<List<Location>> {
          TODO("Not yet implemented")
      }
 
-     override fun getForecastForDays(): LiveData<List<ForecastItem>> {
-         TODO("Not yet implemented")
-     }
+
 
 
         fun getForecastForWeek(): LiveData<List<ForecastItem>> {

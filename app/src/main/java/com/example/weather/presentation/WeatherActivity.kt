@@ -1,14 +1,9 @@
 package com.example.weather.presentation
 
 import android.os.Bundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weather.R
-import com.example.weather.data.network.ApiFactory
 import com.example.weather.databinding.ActivityWeatherBinding
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
 
 class WeatherActivity : AppCompatActivity() {
 
@@ -20,8 +15,6 @@ class WeatherActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
         launchFragment()
-
-
         }
 
 

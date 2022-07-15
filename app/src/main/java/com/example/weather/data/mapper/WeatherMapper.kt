@@ -21,23 +21,22 @@ class WeatherMapper @Inject constructor() {
         icon = dbModel.icon
     )
 
-    fun mapDtoToDbModel(dto: WeatherResponse) = WeatherInfoDbModel( //преобразует класс dto в класс БД
-        name = dto.name,
-        dt = dto.dt,
-        feels_like = dto.main.feels_like,
-        temp = dto.main.temp,
-        temp_max = dto.main.temp_max,
-        temp_min = dto.main.temp_min,
-        description = dto.description,
-        icon = BASE_URL + dto.icon
-    )
+//    fun mapDtoToDbModel(dto: WeatherResponse) = WeatherInfoDbModel( //преобразует класс dto в класс БД
+//        name = dto.name,
+//        dt = dto.dt,
+//        feels_like = dto.main.feels_like,
+//        temp = dto.main.temp,
+//        temp_max = dto.main.temp_max,
+//        temp_min = dto.main.temp_min,
+//        description = dto.weather,
+//        icon = BASE_URL + dto.icon
+//    )
 
 
     private fun convertTimestampToTime(timestamp: Int): String {
-        if (timestamp == null) return ""
         val stamp = Timestamp((timestamp * 1000).toLong())
         val date = Date(stamp.time)
-        val pattern = "HH:mm:ss"
+        val pattern = "yyyy-MM-dd HH:mm:ss"
         val sdf = SimpleDateFormat(pattern, Locale.getDefault())
         sdf.timeZone = TimeZone.getDefault()
         return sdf.format(date)

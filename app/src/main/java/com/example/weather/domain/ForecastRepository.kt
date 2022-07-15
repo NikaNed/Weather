@@ -10,7 +10,7 @@ interface ForecastRepository {
 
 //    fun searchCity(name: String): LiveData<List<Location>>
 //
-//    fun getForecastForDays(): LiveData<List<ForecastItem>>
+    fun getForecast(): LiveData<List<ForecastItem>>
 
 
 }
