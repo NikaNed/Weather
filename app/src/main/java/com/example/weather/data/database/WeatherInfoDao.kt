@@ -12,7 +12,10 @@ import com.example.weather.data.network.modelsForecast.ForecastResponse
 interface WeatherInfoDao {
 
     @Query("SELECT * FROM weather_items ORDER BY dt")
-    fun getWeatherList(): LiveData<List<WeatherInfoDbModel>>
+    fun getCurrentList(): LiveData<List<WeatherInfoDbModel>>
+
+    @Query("SELECT * FROM weather_items ORDER BY dt")
+    fun getForecastList(): LiveData<List<WeatherInfoDbModel>>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertWeatherList(weatherList: List<WeatherInfoDbModel>)

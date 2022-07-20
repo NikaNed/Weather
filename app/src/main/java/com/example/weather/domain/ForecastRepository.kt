@@ -1,16 +1,16 @@
 package com.example.weather.domain
 
-import androidx.lifecycle.LiveData
-import com.example.weather.domain.entities.ForecastItem
-import com.example.weather.domain.entities.Location
+import com.example.weather.data.network.modelsCurrent.WeatherResponse
+import com.example.weather.data.network.modelsForecast.ForecastResponse
+import retrofit2.Call
 
 interface ForecastRepository {
 
-    fun getCurrentWeather(): LiveData<List<ForecastItem>>
+    fun getCurrentInfoList(name: String): Call<WeatherResponse>
 
 //    fun searchCity(name: String): LiveData<List<Location>>
 //
-    fun getForecast(): LiveData<List<ForecastItem>>
+    fun getForecastInfo(name: String): Call<ForecastResponse>
 
 
 }

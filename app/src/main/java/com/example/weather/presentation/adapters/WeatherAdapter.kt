@@ -5,7 +5,6 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.weather.R
 import com.example.weather.data.network.modelsForecast.ForecastListItem
-import com.example.weather.data.network.modelsForecast.ForecastResponse
 
 class WeatherAdapter: ListAdapter<ForecastListItem, WeatherViewHolder>(WeatherInfoDiffCallback) {
 

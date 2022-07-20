@@ -2,7 +2,7 @@ package com.example.weather.domain.entities
 
 data class ForecastItem(
     val name: String,
-    val dt: String, //Время
+    val dt: String,
     val feels_like: Double,
     val temp: Double,
     val temp_max: Double,

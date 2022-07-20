@@ -11,19 +11,20 @@ import dagger.Binds
 import dagger.Module
 import dagger.Provides
 
+
 @Module
 interface DataModule {
 
     @Binds
 //    @ApplicationScope
-    fun bindCoinRepository(impl: ForecastRepositoryImpl) : ForecastRepository
+    fun bindForecastRepository(impl: ForecastRepositoryImpl): ForecastRepository
 
-    companion object{
+    companion object {
 
         @Provides
 //        @ApplicationScope
         fun provideWeatherInfoDao(
-            application: Application
+            application: Application,
         ): WeatherInfoDao {
             return AppDatabase.getInstance(application).weatherInfoDao()
         }
@@ -34,4 +35,5 @@ interface DataModule {
             return ApiFactory.apiService
         }
     }
+
 }

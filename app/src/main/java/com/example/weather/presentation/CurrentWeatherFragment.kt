@@ -3,7 +3,6 @@ package com.example.weather.presentation
 import android.Manifest
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,14 +10,11 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
-import com.example.weather.data.network.ApiFactory
 import com.example.weather.data.network.modelsCurrent.WeatherResponse
 import com.example.weather.databinding.FragmentCurrentWeatherBinding
 import com.squareup.picasso.Picasso
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -34,16 +30,6 @@ class CurrentWeatherFragment : Fragment() {
     lateinit var viewModelFactory: ViewModelFactory
 
     private lateinit var pLauncher: ActivityResultLauncher<String>
-
-//    private val fragmentList = listOf(
-//        DayFragment.newInstance(EXTRA_NAME_CITY),
-//        WeekFragment.newInstance()
-//    )
-
-//    private val tabLayoutList = listOf(
-//        "Hours",
-//        "Days"
-//    )
 
     private val component by lazy {
         (requireActivity().application as WeatherApp).component
@@ -70,33 +56,26 @@ class CurrentWeatherFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         checkPermission()
-//        init()
+        initObservers()
         setOnClickLaunchDayFragment()
 
-        val apiInterface = ApiFactory.apiService.getCurrentWeather("Москва")
+        viewModel.getCurrentInfo("Москва")
 
-        apiInterface.enqueue(object : Callback<WeatherResponse> {
+    }
 
-            override fun onResponse(
-                call: Call<WeatherResponse>,
-                response: Response<WeatherResponse>,
-            ) {
-                Log.d("TAG", "onResponse Weather Success $call ${response.body()}")
-
-                with(binding) {
-                    tvDataWithTime.text = convertTimestampToTime(response.body()?.dt ?: 0)
-                    tvDescription.text = response.body()?.weather.toString()
-                    tvTemperature.text = response.body()?.main?.temp?.roundToInt().toString()
-                    tvTempFeel.text = response.body()?.main?.feels_like.toString()
-                    Picasso.get().load(" http://openweathermap.org/img/wn/" + response.body()?.weather)
-                        .into(ivWeatherIcon)
-                }
+    private fun initObservers() {
+        viewModel = ViewModelProvider(this,
+            viewModelFactory)[CurrentWeatherViewModel::class.java] //инициализируем vM
+        viewModel.currentInfo.observe(viewLifecycleOwner) {
+//
+            with(binding) {
+                tvDataWithTime.text = convertTimestampToTime(it.dt)
+                tvTemperature.text = it.main.temp.roundToInt().toString() + "С°"
+                tvTempFeel.text =  "Ощущается как " + it.main.feels_like.roundToInt().toString() + "С°"
+                tvDescription.text = it.weather.map { it.description }.toString()
+                Picasso.get().load(" http://openweathermap.org/img/wn/" + it.weather.map { it.icon }).into(ivWeatherIcon)
             }
-
-            override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-                Log.d("TAG", "onResponse onFailure ${t.message}")
-            }
-        })
+        }
     }
 
     private fun convertTimestampToTime(timestamp: Int): String {
@@ -107,18 +86,6 @@ class CurrentWeatherFragment : Fragment() {
         sdf.timeZone = TimeZone.getDefault()
         return sdf.format(data)
     }
-
-//        viewModel = ViewModelProvider(this,
-//            viewModelFactory)[CurrentWeatherViewModel::class.java] //инициализируем vM
-//        viewModel.weatherItem.observe(viewLifecycleOwner) {
-//            with(binding) {
-//                tvDataWithTime.text = it.toString()
-//                tvTemperature.text = it.toString()
-//                tvTempFeel.text = it.toString()
-//                tvDescription.text = it.toString()
-//                Picasso.get().load(it.toString()).into(ivWeatherIcon)
-//            }
-//        }
 
 
 //    private fun init() = with(binding) {

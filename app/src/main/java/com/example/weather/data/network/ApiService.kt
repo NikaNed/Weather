@@ -1,9 +1,7 @@
 package com.example.weather.data.network
 
 import com.example.weather.data.network.modelsCurrent.WeatherResponse
-import com.example.weather.data.network.modelsForecast.City
 import com.example.weather.data.network.modelsForecast.ForecastResponse
-import io.reactivex.Single
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Query
