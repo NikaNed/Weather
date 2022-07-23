@@ -2,7 +2,6 @@ package com.example.weather.presentation
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -60,15 +59,21 @@ class DayFragment : Fragment() {
         viewModel.getForecastInfo("Москва")
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null //присваиваем значение null
+    }
+
     companion object {
         private const val EXTRA_NAME_CITY = "name"
 
-        fun newInstance(): Fragment {
+        fun newInstance(name: String): Fragment {
             return DayFragment()
-//                .apply {
-//                arguments = Bundle().apply {
-//                    putString(EXTRA_NAME_CITY, name)
-//                }
+                .apply {
+                    arguments = Bundle().apply {
+                        putString(EXTRA_NAME_CITY, name)
+                    }
+                }
         }
     }
 }

@@ -17,11 +17,11 @@ class WeatherViewHolder(view: View): RecyclerView.ViewHolder(view) {
 
     fun bind(item: ForecastListItem) = with(binding){
 
-        tvDate.text = item.dt_txt
-        tvDescription.text = item.weather.map { it.description }.toString()
+        tvDate.text = item.dt_txt.substringAfter("-").substringBeforeLast(":")
+        tvDescription.text = item.weather.joinToString { it.description }
         tvTemperature.text = item.main.temp.roundToInt().toString() + "С°"
-        Picasso.get().load(" http://openweathermap.org/img/wn/" + item.weather.map { it.icon }).into(ivWeatherIcon)
-        Log.d("TAG","icon ${item.weather.map { it.icon }}")
+        Picasso.get().load("http://openweathermap.org/img/wn/" + item.weather.joinToString { it.icon } +"@2x.png").into(ivWeatherIcon)
+        Log.d("TAG"," ${convertTimestampToTime(item.dt_txt)}")
     }
 
     private fun convertTimestampToTime(timestamp: String): String {

@@ -10,16 +10,16 @@ import javax.inject.Inject
 
 class WeatherMapper @Inject constructor() {
 
-    fun mapDbModelToEntity(dbModel: WeatherInfoDbModel) = ForecastItem(
-        name = dbModel.name,
-        dt = convertTimestampToTime(dbModel.dt),
-        feels_like = dbModel.feels_like,
-        temp = dbModel.temp,
-        temp_max = dbModel.temp_max,
-        temp_min = dbModel.temp_min,
-        description = dbModel.description,
-        icon = dbModel.icon
-    )
+//    fun mapDbModelToEntity(dbModel: WeatherInfoDbModel) = ForecastItem(
+//        name = dbModel.name,
+//        dt = convertTimestampToTime(dbModel.dt),
+//        feels_like = dbModel.feels_like,
+//        temp = dbModel.temp,
+//        temp_max = dbModel.temp_max,
+//        temp_min = dbModel.temp_min,
+//        description = dbModel.description,
+//        icon = dbModel.icon
+//    )
 
 //    fun mapDtoToDbModel(dto: WeatherResponse) = WeatherInfoDbModel( //преобразует класс dto в класс БД
 //        name = dto.name,

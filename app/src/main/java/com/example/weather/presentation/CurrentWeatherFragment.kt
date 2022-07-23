@@ -12,6 +12,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
+import com.example.weather.data.network.modelsCurrent.Weather
 import com.example.weather.data.network.modelsCurrent.WeatherResponse
 import com.example.weather.databinding.FragmentCurrentWeatherBinding
 import com.squareup.picasso.Picasso
@@ -72,8 +73,8 @@ class CurrentWeatherFragment : Fragment() {
                 tvDataWithTime.text = convertTimestampToTime(it.dt)
                 tvTemperature.text = it.main.temp.roundToInt().toString() + "С°"
                 tvTempFeel.text =  "Ощущается как " + it.main.feels_like.roundToInt().toString() + "С°"
-                tvDescription.text = it.weather.map { it.description }.toString()
-                Picasso.get().load(" http://openweathermap.org/img/wn/" + it.weather.map { it.icon }).into(ivWeatherIcon)
+                tvDescription.text = it.weather.joinToString { it.description }
+                Picasso.get().load("http://openweathermap.org/img/wn/" + it.weather.joinToString { it.icon } +"@2x.png").into(ivWeatherIcon)
             }
         }
     }
@@ -87,28 +88,18 @@ class CurrentWeatherFragment : Fragment() {
         return sdf.format(data)
     }
 
-
-//    private fun init() = with(binding) {
-//        val adapter = ViewPagerAdapter(activity as FragmentActivity, fragmentList)
-//        rvWeatherHours.adapter = adapter
-//        TabLayoutMediator(tabLayout, viewPager) { tab, pos ->
-//            tab.text = tabLayoutList[pos]
-//        }
-//            .attach()
-//    }
-
     private fun setOnClickLaunchDayFragment() {
         binding.buttonHours.setOnClickListener {
             launchDayFragment()
         }
     }
 
-
     private fun launchDayFragment() {
-//        val name = requireActivity().intent.getStringExtra(EXTRA_NAME_CITY) ?: EMPTY_NAME
+        val name = requireActivity().intent.getStringExtra(EXTRA_NAME_CITY) ?: EMPTY_NAME
         requireActivity().supportFragmentManager
             .beginTransaction()
-            .replace(R.id.fragment_container, DayFragment.newInstance())
+            .replace(R.id.fragment_container, DayFragment.newInstance(name))
+            .addToBackStack(null)
             .commit()
     }
 
@@ -130,7 +121,6 @@ class CurrentWeatherFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null //присваиваем значение null
-//        compositeDisposable.dispose()
     }
 
     companion object {

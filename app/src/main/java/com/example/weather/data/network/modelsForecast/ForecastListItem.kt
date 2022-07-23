@@ -4,7 +4,7 @@ import com.example.weather.data.network.modelsCurrent.Main
 import com.google.gson.annotations.SerializedName
 
 data class ForecastListItem(
-    @SerializedName("dt")
+//    @SerializedName("dt")
     val dt: Int,
     val dt_txt: String, //прогнозируемое время данных в читаемом виде
     val main: Main,

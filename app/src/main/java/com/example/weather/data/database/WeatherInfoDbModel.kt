@@ -8,6 +8,7 @@ data class WeatherInfoDbModel(
     @PrimaryKey
     val name: String,
     val dt: Int,
+    val dt_txt: String,
     val feels_like: Double,
     val temp: Double,
     val temp_max: Double,
