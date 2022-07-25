@@ -71,18 +71,19 @@ class CurrentWeatherFragment : Fragment() {
 //
             with(binding) {
                 tvDataWithTime.text = convertTimestampToTime(it.dt)
-                tvTemperature.text = it.main.temp.roundToInt().toString() + "С°"
-                tvTempFeel.text =  "Ощущается как " + it.main.feels_like.roundToInt().toString() + "С°"
+                tvTemperature.text = it.main.temp.roundToInt().toString() + "°С"
+                tvTempFeel.text =  "Ощущается как " + it.main.feels_like.roundToInt().toString() + "°"
                 tvDescription.text = it.weather.joinToString { it.description }
+                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
                 Picasso.get().load("http://openweathermap.org/img/wn/" + it.weather.joinToString { it.icon } +"@2x.png").into(ivWeatherIcon)
             }
         }
     }
 
-    private fun convertTimestampToTime(timestamp: Int): String {
+    private fun convertTimestampToTime(data: Int): String {
         val stamp = Timestamp(System.currentTimeMillis())
         val data = Date(stamp.time)
-        val pattern = "dd.MM, HH:mm"
+        val pattern = "dd.MM HH:mm"
         val sdf = SimpleDateFormat(pattern, Locale.getDefault())
         sdf.timeZone = TimeZone.getDefault()
         return sdf.format(data)

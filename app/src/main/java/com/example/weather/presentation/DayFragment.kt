@@ -57,6 +57,8 @@ class DayFragment : Fragment() {
 
         }
         viewModel.getForecastInfo("Москва")
+
+
     }
 
     override fun onDestroyView() {

@@ -32,4 +32,5 @@ class ForecastRepositoryImpl @Inject constructor(
         fun getForecastForWeek(): LiveData<List<ForecastItem>> {
             TODO("Not yet implemented")
         }*/
+
 }
