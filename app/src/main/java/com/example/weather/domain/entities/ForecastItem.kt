@@ -1,12 +1,13 @@
 package com.example.weather.domain.entities
 
+
 data class ForecastItem(
     val name: String,
-    val dt: String,
-    val feels_like: Double,
-    val temp: Double,
-    val temp_max: Double,
-    val temp_min: Double,
-    val description: String,
-    val icon: String,
+    val dt: String = "",
+    val feels_like: Double = 0.0,
+    val temp: Double= 0.0,
+    val temp_max: Double= 0.0,
+    val temp_min: Double= 0.0,
+    val description: String = "",
+    val icon: String =""
 )

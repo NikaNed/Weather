@@ -3,19 +3,22 @@ package com.example.weather.presentation
 import android.Manifest
 import android.content.Context
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
-import com.example.weather.data.network.modelsCurrent.Weather
-import com.example.weather.data.network.modelsCurrent.WeatherResponse
 import com.example.weather.databinding.FragmentCurrentWeatherBinding
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_current_weather.*
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -40,6 +43,7 @@ class CurrentWeatherFragment : Fragment() {
     private val binding: FragmentCurrentWeatherBinding
         get() = _binding ?: throw RuntimeException("FragmentCurrentWeatherBinding == null")
 
+
     override fun onAttach(context: Context) {
         component.inject(this)
         super.onAttach(context)
@@ -57,30 +61,58 @@ class CurrentWeatherFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         checkPermission()
+
         initObservers()
+
+
+
         setOnClickLaunchDayFragment()
 
-        viewModel.getCurrentInfo("Москва")
-
+        toolbar.setNavigationOnClickListener {
+//            launchSearchFragment()
+        }
     }
+
 
     private fun initObservers() {
         viewModel = ViewModelProvider(this,
             viewModelFactory)[CurrentWeatherViewModel::class.java] //инициализируем vM
+
+        binding.etSearch.addTextChangedListener {
+//                val city = binding.etSearch.text.toString()
+            viewModel.getCityName(it.toString())
+//            binding.tvCity.setText(city).toString()
+
+//            Log.d("TAG", viewModel.getCurrentInfo(it.toString()).toString())
+
+        }
+
+        button.setOnClickListener(){
+            val city = binding.tvCity.text.toString()
+            viewModel.getCurrentInfo(city)
+
+        }
+
+        viewModel.nameCity.observe(viewLifecycleOwner) { city ->
+            binding.tvCity.text = city.toString()}
+
         viewModel.currentInfo.observe(viewLifecycleOwner) {
-//
             with(binding) {
                 tvDataWithTime.text = convertTimestampToTime(it.dt)
                 tvTemperature.text = it.main.temp.roundToInt().toString() + "°С"
-                tvTempFeel.text =  "Ощущается как " + it.main.feels_like.roundToInt().toString() + "°"
+                tvTempFeel.text =
+                    "Ощущается как " + it.main.feels_like.roundToInt().toString() + "°"
                 tvDescription.text = it.weather.joinToString { it.description }
                     .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
-                Picasso.get().load("http://openweathermap.org/img/wn/" + it.weather.joinToString { it.icon } +"@2x.png").into(ivWeatherIcon)
+                Picasso.get()
+                    .load("http://openweathermap.org/img/wn/" + it.weather.joinToString { it.icon } + "@2x.png")
+                    .into(ivWeatherIcon)
             }
         }
     }
 
-    private fun convertTimestampToTime(data: Int): String {
+
+    private fun convertTimestampToTime(dt: Int): String {
         val stamp = Timestamp(System.currentTimeMillis())
         val data = Date(stamp.time)
         val pattern = "dd.MM HH:mm"
@@ -95,6 +127,7 @@ class CurrentWeatherFragment : Fragment() {
         }
     }
 
+
     private fun launchDayFragment() {
         val name = requireActivity().intent.getStringExtra(EXTRA_NAME_CITY) ?: EMPTY_NAME
         requireActivity().supportFragmentManager
@@ -103,6 +136,15 @@ class CurrentWeatherFragment : Fragment() {
             .addToBackStack(null)
             .commit()
     }
+
+//    private fun launchSearchFragment() {
+//        val nameCity = requireActivity().intent.getStringExtra(EXTRA_NAME_CITY) ?: EMPTY_NAME
+//        requireActivity().supportFragmentManager
+//            .beginTransaction()
+//            .replace(R.id.fragment_container, SearchFragment.newInstance(nameCity))
+//            .addToBackStack(null)
+//            .commit()
+//    }
 
     private fun permissionListener() {
         pLauncher = registerForActivityResult(
@@ -124,10 +166,11 @@ class CurrentWeatherFragment : Fragment() {
         _binding = null //присваиваем значение null
     }
 
+
     companion object {
 
-        private const val EXTRA_NAME_CITY = "name"
-        private const val EMPTY_NAME = ""
+        const val EXTRA_NAME_CITY = "name"
+        const val EMPTY_NAME = ""
 
         fun newInstance(): Fragment {
             return CurrentWeatherFragment()

@@ -15,12 +15,30 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
-            style="@style/ToolbarStyle.Search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:titleTextColor="@color/purple_dark"
-            tools:title="Moscow" />
+            app:contentInsetEnd="0dp"
+            app:contentInsetStart="0dp"
+            app:contentInsetStartWithNavigation="0dp"
+            app:titleMargin="0dp"
+            app:titleTextColor="@color/purple_dark">
+            <!--            tools:title="Moscow"-->
 
+            <EditText
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:drawableStart="@drawable/ic_search"
+                android:drawablePadding="8dp"
+                android:hint="@string/search_hint"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <ImageView
@@ -76,6 +94,7 @@
         android:id="@+id/tv_description"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
+        android:layout_marginEnd="8dp"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -130,41 +149,27 @@
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
 
-    <!--        <com.google.android.material.tabs.TabItem-->
+    <TextView
+        android:id="@+id/tv_city"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="32dp"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/tv_data_with_time"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/appbar"
+        tools:text="Moscow"/>
 
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            tools:text="Hours" />-->
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_temp_feel" />
 
-    <!--        <com.google.android.material.tabs.TabItem-->
-
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            tools:text="Days" />-->
-
-    <!--    </com.google.android.material.button.MaterialButton>-->
-
-    <!--    <androidx.viewpager2.widget.ViewPager2-->
-    <!--        android:id="@+id/view_pager"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/tab_layout" >-->
-
-
-    <!--    <LinearLayout-->
-    <!--        android:id="@+id/frag_hours"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:orientation="vertical"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/button_hours">-->
-
-    <!--    </LinearLayout>-->
-
-    <!--    </androidx.viewpager2.widget.ViewPager2>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

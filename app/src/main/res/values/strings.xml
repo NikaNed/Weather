@@ -4,6 +4,8 @@
     <string name="hours">Hours</string>
     <string name="days">Days</string>
     <string name="data_template">%s/%s/%s %s : %s</string>
+    <string name="error_empty">Enter city</string>
+
 
 
 

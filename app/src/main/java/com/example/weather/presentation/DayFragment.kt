@@ -51,14 +51,12 @@ class DayFragment : Fragment() {
             viewModelFactory)[ForecastViewModel::class.java] //инициализируем vM
         viewModel.forecastInfo.observe(viewLifecycleOwner) {
             adapter = WeatherAdapter()
-            binding.rvWeatherHours.layoutManager = LinearLayoutManager(context)
-            binding.rvWeatherHours.adapter = adapter
+            binding.recycler.layoutManager = LinearLayoutManager(context)
+            binding.recycler.adapter = adapter
             adapter.submitList(it)
 
         }
         viewModel.getForecastInfo("Москва")
-
-
     }
 
     override fun onDestroyView() {

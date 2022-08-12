@@ -1,25 +1,44 @@
 package com.example.weather.data.mapper
 
+import androidx.lifecycle.LiveData
+import com.example.weather.data.database.CityNameDbModel
 import com.example.weather.data.database.WeatherInfoDbModel
 import com.example.weather.data.network.modelsCurrent.WeatherResponse
+import com.example.weather.data.network.modelsForecast.City
+import com.example.weather.data.network.modelsForecast.ForecastResponse
 import com.example.weather.domain.entities.ForecastItem
-import java.sql.Timestamp
-import java.text.SimpleDateFormat
-import java.util.*
+import com.example.weather.domain.entities.Location
+import com.example.weather.domain.entities.SearchItem
+import retrofit2.Call
 import javax.inject.Inject
 
 class WeatherMapper @Inject constructor() {
 
-//    fun mapDbModelToEntity(dbModel: WeatherInfoDbModel) = ForecastItem(
-//        name = dbModel.name,
-//        dt = convertTimestampToTime(dbModel.dt),
-//        feels_like = dbModel.feels_like,
-//        temp = dbModel.temp,
-//        temp_max = dbModel.temp_max,
-//        temp_min = dbModel.temp_min,
-//        description = dbModel.description,
-//        icon = dbModel.icon
-//    )
+    fun mapEntityToDbModel(forecastItem: ForecastItem) = WeatherInfoDbModel(
+        name = forecastItem.name,
+        dt = forecastItem.dt,
+        feels_like = forecastItem.feels_like,
+        temp = forecastItem.temp,
+        temp_max = forecastItem.temp_max,
+        temp_min = forecastItem.temp_min,
+        description = forecastItem.description,
+        icon = forecastItem.icon
+    )
+
+    fun mapEntityToDbModelCity(cityNameDbModel: CityNameDbModel) =
+        SearchItem(
+            name = cityNameDbModel.name,
+        )
+
+    fun mapDbModelToEntity(cityNameDbModel: CityNameDbModel) =
+        SearchItem( //метод преобразовывает модель БД в сущность domain-слоя
+            name = cityNameDbModel.name
+        )
+
+//    fun mapDbModelListToListEntity(list: List<CityNameDbModel>) = list.map {
+//        mapDbModelToEntity(it) //для каждого элемента коллекции вызовем метод
+//    }
+
 
 //    fun mapDtoToDbModel(dto: WeatherResponse) = WeatherInfoDbModel( //преобразует класс dto в класс БД
 //        name = dto.name,
@@ -32,17 +51,31 @@ class WeatherMapper @Inject constructor() {
 //        icon = BASE_URL + dto.icon
 //    )
 
+//    fun mapDtoToEntity(dto: Call<WeatherResponse>) =
+//        Location( //метод преобразовывает модель БД в сущность domain-слоя
+//            name = dto.name
+//        )
 
-    private fun convertTimestampToTime(timestamp: Int): String {
-        val stamp = Timestamp((timestamp * 1000).toLong())
-        val date = Date(stamp.time)
-        val pattern = "yyyy-MM-dd HH:mm:ss"
-        val sdf = SimpleDateFormat(pattern, Locale.getDefault())
-        sdf.timeZone = TimeZone.getDefault()
-        return sdf.format(date)
-    }
+    fun City.toLocationVo(isInFavorites: Boolean = false) = Location(
+        name = name
+    )
 
-    companion object{
+    fun WeatherResponse.toLocation() = Location(
+     name = name,
+
+    )
+
+
+//    private fun convertTimestampToTime(timestamp: String): String {
+//        val stamp = Timestamp((timestamp * 1000).toLong())
+//        val date = Date(stamp.time)
+//        val pattern = "yyyy-MM-dd HH:mm:ss"
+//        val sdf = SimpleDateFormat(pattern, Locale.getDefault())
+//        sdf.timeZone = TimeZone.getDefault()
+//        return sdf.format(date)
+//    }
+
+    companion object {
         private const val BASE_URL = "http://api.openweathermap.org/data/2.5/"
     }
 }
