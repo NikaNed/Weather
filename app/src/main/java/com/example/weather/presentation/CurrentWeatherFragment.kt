@@ -6,6 +6,9 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -13,8 +16,15 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
 import com.example.weather.databinding.FragmentCurrentWeatherBinding
-import com.example.weather.presentation.adapters.WeatherAdapter
+import com.example.weather.domain.entities.Location
+import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.fragment_current_weather.*
+import java.sql.Timestamp
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
+import kotlin.math.roundToInt
+
 
 class CurrentWeatherFragment : Fragment() {
 
@@ -25,16 +35,6 @@ class CurrentWeatherFragment : Fragment() {
 
     private lateinit var pLauncher: ActivityResultLauncher<String>
 
-//    private val fragmentList = listOf(
-//        DayFragment.newInstance(EXTRA_NAME_CITY),
-//        WeekFragment.newInstance()
-//    )
-
-//    private val tabLayoutList = listOf(
-//        "Hours",
-//        "Days"
-//    )
-
     private val component by lazy {
         (requireActivity().application as WeatherApp).component
     }
@@ -42,8 +42,6 @@ class CurrentWeatherFragment : Fragment() {
     private var _binding: FragmentCurrentWeatherBinding? = null
     private val binding: FragmentCurrentWeatherBinding
         get() = _binding ?: throw RuntimeException("FragmentCurrentWeatherBinding == null")
-
-//    private val compositeDisposable = CompositeDisposable()
 
 
     override fun onAttach(context: Context) {
@@ -63,52 +61,84 @@ class CurrentWeatherFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         checkPermission()
-//        init()
+
+        initObservers()
+
         setOnClickLaunchDayFragment()
 
-        viewModel = ViewModelProvider(this,
-            viewModelFactory)[CurrentWeatherViewModel::class.java] //инициализируем vM
-        viewModel.forecastItem.observe(viewLifecycleOwner) {
+        toolbar.setNavigationOnClickListener {
+//            launchSearchFragment()
         }
     }
 
-//        val disposable = ApiFactory.apiService.getCurrentWeather(
-//            "Москва",
-//            "cf6776e097a42e7104c009431a5c9ef8",
-//            "ru",
-//            "metric")
-//            .subscribeOn(Schedulers.io())
-//            .observeOn(AndroidSchedulers.mainThread())
-//            .subscribe({
-//                Log.d("Load_test", it.toString())
-//            }, {
-//                Log.d("Load_test", it.message.toString())
-//            })
-//        compositeDisposable.add(disposable)
+    private fun initObservers() {
+        viewModel = ViewModelProvider(requireActivity(),
+            viewModelFactory)[CurrentWeatherViewModel::class.java] //инициализируем vM
+
+        binding.etSearch.setOnEditorActionListener { view, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                viewModel.getCityName((view as EditText).text.toString())
+            }
+            false
+        }
+
+        viewModel.nameCity.observe(viewLifecycleOwner) {
+            val city = (binding.etSearch as TextView).text.toString()
+            viewModel.getCurrentInfo(city)
+        }
+
+        viewModel.currentInfo.observe(viewLifecycleOwner) {
+            with(binding) {
+                val maxMinTemp =
+                    "Day ${it.main.temp_max.roundToInt()}°↑ • Night ${it.main.temp_min.roundToInt()}°↓"
+                tvDataWithTime.text = convertTimestampToTime(it.dt)
+                tvTemperature.text = it.main.temp.roundToInt().toString() + "°С"
+                tvMaxMinTemp.text = maxMinTemp
+                tvTempFeel.text =
+                    "Ощущается как " + it.main.feels_like.roundToInt().toString() + "°"
+                tvDescription.text = it.weather.joinToString { it.description }
+                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                Picasso.get()
+                    .load("http://openweathermap.org/img/wn/" + it.weather.joinToString { it.icon } + "@2x.png")
+                    .into(ivWeatherIcon)
+            }
+        }
+    }
 
 
-//    private fun init() = with(binding) {
-//        val adapter = ViewPagerAdapter(activity as FragmentActivity, fragmentList)
-//        rvWeatherHours.adapter = adapter
-//        TabLayoutMediator(tabLayout, viewPager) { tab, pos ->
-//            tab.text = tabLayoutList[pos]
-//        }
-//            .attach()
-//    }
+    private fun convertTimestampToTime(dt: Int): String {
+        val stamp = Timestamp(System.currentTimeMillis())
+        val data = Date(stamp.time)
+        val pattern = "MMMM dd, HH:mm"
+        val sdf = SimpleDateFormat(pattern, Locale.getDefault())
+        sdf.timeZone = TimeZone.getDefault()
+        return sdf.format(data)
+    }
 
     private fun setOnClickLaunchDayFragment() {
         binding.buttonHours.setOnClickListener {
+            viewModel.getCityName(binding.etSearch.text.toString())
             launchDayFragment()
         }
     }
 
+
     private fun launchDayFragment() {
-//        val name = requireActivity().intent.getStringExtra(EXTRA_NAME_CITY) ?: EMPTY_NAME
         requireActivity().supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragment_container, DayFragment.newInstance())
+            .addToBackStack(null)
             .commit()
     }
+
+//    private fun launchSearchFragment() {
+//        val nameCity = requireActivity().intent.getStringExtra(EXTRA_NAME_CITY) ?: EMPTY_NAME
+//        requireActivity().supportFragmentManager
+//            .beginTransaction()
+//            .replace(R.id.fragment_container, SearchFragment.newInstance(nameCity))
+//            .addToBackStack(null)
+//            .commit()
+//    }
 
     private fun permissionListener() {
         pLauncher = registerForActivityResult(
@@ -124,15 +154,15 @@ class CurrentWeatherFragment : Fragment() {
         }
     }
 
-//    override fun onDestroy() {
-//        super.onDestroy()
-//        compositeDisposable.dispose()
-//    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null //присваиваем значение null
+    }
 
     companion object {
 
-        private const val EXTRA_NAME_CITY = "name"
-        private const val EMPTY_NAME = ""
+        const val EXTRA_NAME_CITY = "name"
+        const val EMPTY_NAME = ""
 
         fun newInstance(): Fragment {
             return CurrentWeatherFragment()

@@ -5,10 +5,10 @@ data class WeatherResponse(
     val name: String,
     val dt: Int,
     val main: Main,
-    val weather: List<Weather>
+    val weather: List<Weather>,
 //    val timezone: Int,
 //    val visibility: Int,
-//    val id: Int, //идентификатор города
+    val id: Int, //идентификатор города
 //    val wind: Wind
 //    val clouds: Clouds,
 )

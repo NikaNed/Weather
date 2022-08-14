@@ -3,11 +3,9 @@ package com.example.weather.domain.usecase
 import com.example.weather.domain.ForecastRepository
 import javax.inject.Inject
 
-class SearchCityUseCase @Inject constructor (
-
+class GetForecastUseCase  @Inject constructor (
     private val repository: ForecastRepository
 ) {
+        operator fun invoke(name: String) = repository.getForecastInfo(name)
 
-    operator fun invoke(inputName: String) = repository.getLocationByName(inputName)
-
-}
+    }

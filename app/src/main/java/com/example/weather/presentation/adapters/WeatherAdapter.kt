@@ -4,36 +4,22 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.weather.R
-import com.example.weather.databinding.ItemForecastDayBinding
-import com.example.weather.domain.entities.ForecastItem
-import com.example.weather.presentation.CurrentWeatherFragment
-import com.example.weather.presentation.DayFragment
-import com.squareup.picasso.Picasso
+import com.example.weather.data.network.modelsForecast.ForecastListItem
 
-class WeatherAdapter(private val context: DayFragment) :
-    ListAdapter<ForecastItem, WeatherViewHolder>(WeatherInfoDiffCallback) {
+class WeatherAdapter: ListAdapter<ForecastListItem, WeatherViewHolder>(WeatherInfoDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
-        val binding = ItemForecastDayBinding.inflate(
-            LayoutInflater.from(parent.context),
+        val view = LayoutInflater.from(parent.context).inflate(
+            R.layout.item_forecast_day,
             parent,
-            false
-        )
-        return WeatherViewHolder(binding)
+            false)
+        return WeatherViewHolder(view)
     }
-
 
     override fun onBindViewHolder(holder: WeatherViewHolder, position: Int) {
-        val item = getItem(position)
-        with(holder.binding) {
-            with(item) {
-                val dataTemplate = context.resources.getString(R.string.data_template)
-                tvDate.text = String.format(dataTemplate, dt)
-                tvDescription.text = description
-                tvTemperature.text = temp.toString()
-                Picasso.get().load(icon).into(ivWeatherIcon)
-            }
-        }
+        holder.bind(getItem(position))
     }
 }
+
+
 

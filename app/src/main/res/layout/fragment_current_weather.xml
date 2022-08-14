@@ -15,12 +15,30 @@
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
-            style="@style/ToolbarStyle.Search"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:titleTextColor="@color/purple_dark"
-            tools:title="Moscow" />
+            app:contentInsetEnd="0dp"
+            app:contentInsetStart="0dp"
+            app:contentInsetStartWithNavigation="0dp"
+            app:titleMargin="0dp"
+            app:titleTextColor="@color/purple_dark">
+            <!--            tools:title="Moscow"-->
 
+            <EditText
+                android:id="@+id/etSearch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="8dp"
+                android:drawableStart="@drawable/ic_search"
+                android:drawablePadding="8dp"
+                android:hint="@string/search_hint"
+                android:importantForAutofill="no"
+                android:inputType="text"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
     <ImageView
@@ -33,7 +51,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/backgr_weather" />
+        app:srcCompat="@drawable/background_current_weather" />
 
 
     <com.google.android.material.textview.MaterialTextView
@@ -41,7 +59,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
+        android:layout_marginTop="40dp"
         android:textColor="@color/white"
         android:textSize="80sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -53,7 +71,7 @@
         android:layout_width="wrap_content"
         android:layout_height="32dp"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="8dp"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
@@ -61,11 +79,24 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_temperature"
         tools:text="Feels like 22°C" />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_max_min_temp"
+        android:layout_width="wrap_content"
+        android:layout_height="32dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="16dp"
+        android:textColor="@color/white"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_data_with_time"
+        tools:text="Day 22°↑ • Night 18°↓" />
+
     <ImageView
         android:id="@+id/iv_weather_icon"
         android:layout_width="128dp"
         android:layout_height="128dp"
-        android:layout_marginTop="124dp"
+        android:layout_marginTop="145dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appbar"
@@ -76,12 +107,12 @@
         android:id="@+id/tv_description"
         android:layout_width="wrap_content"
         android:layout_height="32dp"
-        android:layout_marginTop="20dp"
-        android:layout_marginEnd="44dp"
+        android:layout_marginEnd="8dp"
         android:textColor="@color/white"
         android:textSize="16sp"
         android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/iv_weather_icon"
+        app:layout_constraintStart_toStartOf="@+id/iv_weather_icon"
         app:layout_constraintTop_toBottomOf="@+id/iv_weather_icon"
         tools:text="Party cloudy" />
 
@@ -90,9 +121,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="92dp"
+        android:layout_marginTop="86dp"
         android:textColor="@color/white"
-        android:textSize="20sp"
+        android:textSize="24sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/appbar"
@@ -130,42 +161,5 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
-
-    <!--        <com.google.android.material.tabs.TabItem-->
-
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            tools:text="Hours" />-->
-
-    <!--        <com.google.android.material.tabs.TabItem-->
-
-    <!--            android:layout_width="wrap_content"-->
-    <!--            android:layout_height="wrap_content"-->
-    <!--            tools:text="Days" />-->
-
-    <!--    </com.google.android.material.button.MaterialButton>-->
-
-    <!--    <androidx.viewpager2.widget.ViewPager2-->
-    <!--        android:id="@+id/view_pager"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="0dp"-->
-    <!--        app:layout_constraintBottom_toBottomOf="parent"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/tab_layout" >-->
-
-
-    <!--    <LinearLayout-->
-    <!--        android:id="@+id/frag_hours"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:orientation="vertical"-->
-    <!--        app:layout_constraintEnd_toEndOf="parent"-->
-    <!--        app:layout_constraintStart_toStartOf="parent"-->
-    <!--        app:layout_constraintTop_toBottomOf="@+id/button_hours">-->
-
-    <!--    </LinearLayout>-->
-
-    <!--    </androidx.viewpager2.widget.ViewPager2>-->
 
 </androidx.constraintlayout.widget.ConstraintLayout>

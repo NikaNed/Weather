@@ -2,14 +2,27 @@ package com.example.weather.presentation
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.EditText
+import android.widget.TextView
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LifecycleOwner
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.weather.data.network.modelsForecast.ForecastResponse
 import com.example.weather.databinding.FragmentDayBinding
+import com.example.weather.domain.entities.Location
 import com.example.weather.presentation.adapters.WeatherAdapter
+import kotlinx.android.synthetic.main.fragment_current_weather.*
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import javax.inject.Inject
+
 
 class DayFragment : Fragment() {
 
@@ -18,6 +31,8 @@ class DayFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentDayBinding == null")
 
     private lateinit var viewModel: CurrentWeatherViewModel
+
+    private lateinit var adapter: WeatherAdapter
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -42,13 +57,27 @@ class DayFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val adapter = WeatherAdapter(this)
-        binding.rvWeatherHours.adapter = adapter
-        viewModel = ViewModelProvider(this,
-            viewModelFactory)[CurrentWeatherViewModel::class.java] //инициализируем vM
-        viewModel.forecastItem.observe(viewLifecycleOwner) {
+
+        viewModel = ViewModelProvider(requireActivity(),
+            viewModelFactory)[CurrentWeatherViewModel::class.java]
+
+        viewModel.nameCity.observe(viewLifecycleOwner) {
+            binding.toolbar.title = it
+            viewModel.getForecastInfo(it)
+        }
+
+        viewModel.forecastInfo.observe(viewLifecycleOwner) {
+            adapter = WeatherAdapter()
+            binding.recycler.layoutManager = LinearLayoutManager(context)
+            binding.recycler.adapter = adapter
             adapter.submitList(it)
         }
+    }
+
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null
     }
 
     companion object {
@@ -56,11 +85,9 @@ class DayFragment : Fragment() {
 
         fun newInstance(): Fragment {
             return DayFragment()
-//                .apply {
-//                arguments = Bundle().apply {
-//                    putString(EXTRA_NAME_CITY, name)
-//                }
         }
     }
 }
+
+
 
