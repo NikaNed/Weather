@@ -27,6 +27,7 @@ class ForecastViewModel @Inject constructor(
     val forecastInfo: LiveData<List<ForecastListItem>>
         get() = _forecastInfo
 
+
     fun getForecastInfo(name: String){
 
         val response = getForecastUseCase.invoke(name)

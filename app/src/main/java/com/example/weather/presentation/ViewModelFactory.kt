@@ -12,6 +12,8 @@ class ViewModelFactory @Inject constructor(
 ) : ViewModelProvider.Factory {
 
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        return viewModelProvider[modelClass]?.get() as T
+        return viewModelProvider [modelClass]?.get() as T
+
+
     }
 }

@@ -4,15 +4,13 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
-import com.example.weather.data.network.modelsCurrent.Main
 import com.example.weather.data.network.modelsCurrent.WeatherResponse
-import com.example.weather.domain.entities.ForecastItem
-import com.example.weather.domain.entities.SearchItem
+import com.example.weather.data.network.modelsForecast.ForecastListItem
+import com.example.weather.data.network.modelsForecast.ForecastResponse
+import com.example.weather.domain.entities.Location
 import com.example.weather.domain.usecase.GetCurrentWeatherUseCase
 import com.example.weather.domain.usecase.GetForecastUseCase
 import com.example.weather.domain.usecase.SearchCityUseCase
-import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -33,6 +31,10 @@ class CurrentWeatherViewModel @Inject constructor(
     val currentInfo: LiveData<WeatherResponse>
         get() = _currentInfo
 
+    private val _forecastInfo = MutableLiveData<List<ForecastListItem>>()
+    val forecastInfo: LiveData<List<ForecastListItem>>
+        get() = _forecastInfo
+
     private val _nameCity = MutableLiveData<String>()
     val nameCity: LiveData<String>
         get() = _nameCity
@@ -40,8 +42,6 @@ class CurrentWeatherViewModel @Inject constructor(
     private val _errorInputName = MutableLiveData<Boolean>()
     val errorInputName: LiveData<Boolean>
         get() = _errorInputName
-
-
 
     fun getCurrentInfo(name: String) {
 
@@ -53,7 +53,7 @@ class CurrentWeatherViewModel @Inject constructor(
                 call: Call<WeatherResponse>,
                 response: Response<WeatherResponse>,
             ) {
-                viewModelScope.launch {   _currentInfo.postValue(response.body()) }
+                _currentInfo.postValue(response.body())
                 Log.d("TAG", "onResponse Weather Success $call ${response.body()}")
 
             }
@@ -68,11 +68,9 @@ class CurrentWeatherViewModel @Inject constructor(
         val name = parseName(nameCity)
         val fieldsVailed = validateInput(name)
         if (fieldsVailed) { // если поля валидные, то добаялем новый элемент
-            viewModelScope.launch {  _nameCity.value = nameCity  }
+          _nameCity.value = nameCity
         }
     }
-
-
 
     private fun parseName(inputName: String?): String { //приводим строку ввода в нормальный вид
         //принимает нулабельный тип, а возвращает ненулабельную строку
@@ -89,8 +87,23 @@ class CurrentWeatherViewModel @Inject constructor(
         return result
     }
 
+    fun getForecastInfo(name: String){
 
-//    val currentInfoList = getCurrentWeatherUseCase()
-//
-//    val forecastInfoList = getForecastUseCase()
+        val response = getForecastUseCase.invoke(name)
+
+        response.enqueue(object : Callback<ForecastResponse> {
+
+            override fun onResponse(
+                call: Call<ForecastResponse>,
+                response: Response<ForecastResponse>,
+            ) {
+                Log.d("TAG", "onResponse Forecast Success $call ${response.body()?.list}")
+                _forecastInfo.postValue(response.body()?.list)
+            }
+
+            override fun onFailure(call: Call<ForecastResponse>, t: Throwable) {
+                Log.d("TAG", "onResponse onFailure ${t.message}")
+            }
+        })
+    }
 }

@@ -3,20 +3,20 @@ package com.example.weather.presentation
 import android.Manifest
 import android.content.Context
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.EditText
+import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
 import com.example.weather.databinding.FragmentCurrentWeatherBinding
+import com.example.weather.domain.entities.Location
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_current_weather.*
 import java.sql.Timestamp
@@ -64,8 +64,6 @@ class CurrentWeatherFragment : Fragment() {
 
         initObservers()
 
-
-
         setOnClickLaunchDayFragment()
 
         toolbar.setNavigationOnClickListener {
@@ -73,33 +71,29 @@ class CurrentWeatherFragment : Fragment() {
         }
     }
 
-
     private fun initObservers() {
-        viewModel = ViewModelProvider(this,
+        viewModel = ViewModelProvider(requireActivity(),
             viewModelFactory)[CurrentWeatherViewModel::class.java] //инициализируем vM
 
-        binding.etSearch.addTextChangedListener {
-//                val city = binding.etSearch.text.toString()
-            viewModel.getCityName(it.toString())
-//            binding.tvCity.setText(city).toString()
-
-//            Log.d("TAG", viewModel.getCurrentInfo(it.toString()).toString())
-
+        binding.etSearch.setOnEditorActionListener { view, actionId, event ->
+            if (actionId == EditorInfo.IME_ACTION_DONE) {
+                viewModel.getCityName((view as EditText).text.toString())
+            }
+            false
         }
 
-        button.setOnClickListener(){
-            val city = binding.tvCity.text.toString()
+        viewModel.nameCity.observe(viewLifecycleOwner) {
+            val city = (binding.etSearch as TextView).text.toString()
             viewModel.getCurrentInfo(city)
-
         }
-
-        viewModel.nameCity.observe(viewLifecycleOwner) { city ->
-            binding.tvCity.text = city.toString()}
 
         viewModel.currentInfo.observe(viewLifecycleOwner) {
             with(binding) {
+                val maxMinTemp =
+                    "Day ${it.main.temp_max.roundToInt()}°↑ • Night ${it.main.temp_min.roundToInt()}°↓"
                 tvDataWithTime.text = convertTimestampToTime(it.dt)
                 tvTemperature.text = it.main.temp.roundToInt().toString() + "°С"
+                tvMaxMinTemp.text = maxMinTemp
                 tvTempFeel.text =
                     "Ощущается как " + it.main.feels_like.roundToInt().toString() + "°"
                 tvDescription.text = it.weather.joinToString { it.description }
@@ -115,7 +109,7 @@ class CurrentWeatherFragment : Fragment() {
     private fun convertTimestampToTime(dt: Int): String {
         val stamp = Timestamp(System.currentTimeMillis())
         val data = Date(stamp.time)
-        val pattern = "dd.MM HH:mm"
+        val pattern = "MMMM dd, HH:mm"
         val sdf = SimpleDateFormat(pattern, Locale.getDefault())
         sdf.timeZone = TimeZone.getDefault()
         return sdf.format(data)
@@ -123,16 +117,16 @@ class CurrentWeatherFragment : Fragment() {
 
     private fun setOnClickLaunchDayFragment() {
         binding.buttonHours.setOnClickListener {
+            viewModel.getCityName(binding.etSearch.text.toString())
             launchDayFragment()
         }
     }
 
 
     private fun launchDayFragment() {
-        val name = requireActivity().intent.getStringExtra(EXTRA_NAME_CITY) ?: EMPTY_NAME
         requireActivity().supportFragmentManager
             .beginTransaction()
-            .replace(R.id.fragment_container, DayFragment.newInstance(name))
+            .replace(R.id.fragment_container, DayFragment.newInstance())
             .addToBackStack(null)
             .commit()
     }
@@ -160,12 +154,10 @@ class CurrentWeatherFragment : Fragment() {
         }
     }
 
-
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null //присваиваем значение null
     }
-
 
     companion object {
 
