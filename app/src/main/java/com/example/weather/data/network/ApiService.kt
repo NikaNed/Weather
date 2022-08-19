@@ -27,7 +27,7 @@ interface ApiService {
     ): Call<ForecastResponse>
 
 
-    @GET("forecast/city")
+    @GET("forecast")
     fun getLocationByName( @Query("q") name: String):  List<City>
 
     companion object {

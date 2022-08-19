@@ -2,25 +2,15 @@ package com.example.weather.presentation
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.EditText
-import android.widget.TextView
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.LifecycleOwner
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.weather.data.network.modelsForecast.ForecastResponse
 import com.example.weather.databinding.FragmentDayBinding
-import com.example.weather.domain.entities.Location
 import com.example.weather.presentation.adapters.WeatherAdapter
-import kotlinx.android.synthetic.main.fragment_current_weather.*
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import javax.inject.Inject
 
 
@@ -72,8 +62,15 @@ class DayFragment : Fragment() {
             binding.recycler.adapter = adapter
             adapter.submitList(it)
         }
-    }
 
+        viewModel.progressVisible.observe(viewLifecycleOwner) {
+            binding.progressBar.isVisible = it
+        }
+
+        binding.toolbar.setNavigationOnClickListener {
+            requireActivity().onBackPressed()
+        }
+    }
 
     override fun onDestroyView() {
         super.onDestroyView()

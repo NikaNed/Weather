@@ -4,13 +4,15 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.weather.data.network.modelsCurrent.WeatherResponse
+import com.example.weather.data.network.modelsForecast.City
 import com.example.weather.data.network.modelsForecast.ForecastListItem
 import com.example.weather.data.network.modelsForecast.ForecastResponse
-import com.example.weather.domain.entities.Location
 import com.example.weather.domain.usecase.GetCurrentWeatherUseCase
 import com.example.weather.domain.usecase.GetForecastUseCase
 import com.example.weather.domain.usecase.SearchCityUseCase
+import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -39,9 +41,13 @@ class CurrentWeatherViewModel @Inject constructor(
     val nameCity: LiveData<String>
         get() = _nameCity
 
-    private val _errorInputName = MutableLiveData<Boolean>()
-    val errorInputName: LiveData<Boolean>
-        get() = _errorInputName
+    private val _progressVisible = MutableLiveData<Boolean>()
+    val progressVisible: LiveData<Boolean>
+        get() = _progressVisible
+
+    private val _searchCity = MutableLiveData<City>()
+    val searchCity: LiveData<City>
+        get() = _searchCity
 
     fun getCurrentInfo(name: String) {
 
@@ -65,10 +71,15 @@ class CurrentWeatherViewModel @Inject constructor(
     }
 
     fun getCityName(nameCity: String) {
+        _progressVisible.value = true
         val name = parseName(nameCity)
         val fieldsVailed = validateInput(name)
         if (fieldsVailed) { // если поля валидные, то добаялем новый элемент
-          _nameCity.value = nameCity
+
+            viewModelScope.launch {
+                _nameCity.value = nameCity
+                _progressVisible.value = false
+            }
         }
     }
 
@@ -82,7 +93,7 @@ class CurrentWeatherViewModel @Inject constructor(
         var result = true
         if (name.isBlank()) {
             result = false
-            _errorInputName.value = true
+
         }
         return result
     }
@@ -97,8 +108,13 @@ class CurrentWeatherViewModel @Inject constructor(
                 call: Call<ForecastResponse>,
                 response: Response<ForecastResponse>,
             ) {
-                Log.d("TAG", "onResponse Forecast Success $call ${response.body()?.list}")
-                _forecastInfo.postValue(response.body()?.list)
+                viewModelScope.launch {
+                    _progressVisible.value = true
+                    Log.d("TAG", "onResponse Forecast Success $call ${response.body()?.list}")
+                    _forecastInfo.postValue(response.body()?.list)
+                    _searchCity.postValue(response.body()?.city)
+                    _progressVisible.value = false
+                }
             }
 
             override fun onFailure(call: Call<ForecastResponse>, t: Throwable) {

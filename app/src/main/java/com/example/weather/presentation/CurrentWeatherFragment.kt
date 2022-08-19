@@ -12,11 +12,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
 import com.example.weather.databinding.FragmentCurrentWeatherBinding
-import com.example.weather.domain.entities.Location
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_current_weather.*
 import java.sql.Timestamp
@@ -66,6 +66,8 @@ class CurrentWeatherFragment : Fragment() {
 
         setOnClickLaunchDayFragment()
 
+        setOnClickLaunchWeekFragment()
+
         toolbar.setNavigationOnClickListener {
 //            launchSearchFragment()
         }
@@ -87,13 +89,12 @@ class CurrentWeatherFragment : Fragment() {
             viewModel.getCurrentInfo(city)
         }
 
+
+
         viewModel.currentInfo.observe(viewLifecycleOwner) {
             with(binding) {
-                val maxMinTemp =
-                    "Day ${it.main.temp_max.roundToInt()}°↑ • Night ${it.main.temp_min.roundToInt()}°↓"
                 tvDataWithTime.text = convertTimestampToTime(it.dt)
                 tvTemperature.text = it.main.temp.roundToInt().toString() + "°С"
-                tvMaxMinTemp.text = maxMinTemp
                 tvTempFeel.text =
                     "Ощущается как " + it.main.feels_like.roundToInt().toString() + "°"
                 tvDescription.text = it.weather.joinToString { it.description }
@@ -103,6 +104,11 @@ class CurrentWeatherFragment : Fragment() {
                     .into(ivWeatherIcon)
             }
         }
+        viewModel.progressVisible.observe(viewLifecycleOwner) {
+            binding.progressBar.isVisible = it
+        }
+
+
     }
 
 
@@ -131,14 +137,21 @@ class CurrentWeatherFragment : Fragment() {
             .commit()
     }
 
-//    private fun launchSearchFragment() {
-//        val nameCity = requireActivity().intent.getStringExtra(EXTRA_NAME_CITY) ?: EMPTY_NAME
-//        requireActivity().supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.fragment_container, SearchFragment.newInstance(nameCity))
-//            .addToBackStack(null)
-//            .commit()
-//    }
+    private fun setOnClickLaunchWeekFragment() {
+        binding.buttonDays.setOnClickListener {
+            viewModel.getCityName(binding.etSearch.text.toString())
+            launchSearchFragment()
+        }
+    }
+
+    private fun launchSearchFragment() {
+        val nameCity = requireActivity().intent.getStringExtra(EXTRA_NAME_CITY) ?: EMPTY_NAME
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container, SearchFragment.newInstance(nameCity))
+            .addToBackStack(null)
+            .commit()
+    }
 
     private fun permissionListener() {
         pLauncher = registerForActivityResult(

@@ -1,19 +1,25 @@
 package com.example.weather.presentation
 
+import android.R
 import android.content.Context
+import android.content.Context.INPUT_METHOD_SERVICE
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.widget.addTextChangedListener
+import android.view.inputmethod.InputMethodManager
+import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.example.weather.R
+import com.example.weather.data.network.modelsForecast.City
 import com.example.weather.databinding.FragmentSearchBinding
 import com.example.weather.presentation.adapters.SearchAdapter
 import kotlinx.android.synthetic.main.fragment_search.*
 import javax.inject.Inject
+
 
 class SearchFragment : Fragment() {
 
@@ -21,7 +27,7 @@ class SearchFragment : Fragment() {
     private val binding: FragmentSearchBinding
         get() = _binding ?: throw RuntimeException("FragmentSearchBinding == null")
 
-    private lateinit var viewModel: SearchViewModel
+    private lateinit var viewModel: CurrentWeatherViewModel
 
     private lateinit var adapter: SearchAdapter
 
@@ -31,6 +37,7 @@ class SearchFragment : Fragment() {
     private val component by lazy {
         (requireActivity().application as WeatherApp).component
     }
+
 
     override fun onAttach(context: Context) {
         component.inject(this)
@@ -50,66 +57,119 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = ViewModelProvider(this,
-            viewModelFactory)[SearchViewModel::class.java] //инициализируем vM
-        viewModel.searchCity.observe(viewLifecycleOwner) {
-            adapter = SearchAdapter()
+            viewModelFactory)[CurrentWeatherViewModel::class.java]
 
-            with(binding) {
-                recycler.layoutManager = LinearLayoutManager(context)
-                recycler.adapter = adapter
+        val cityList = ArrayList<String>()
+        cityList.add("London")
+        cityList.add("Miami")
+        cityList.add("California")
+        cityList.add("Los Angeles")
+        cityList.add("Chicago")
+        cityList.add("Houston")
 
-                etSearch.addTextChangedListener {
-                    // viewModel.getCity(inputNameCity)
 
-                    launchCurrentWeatherFragment()
-                }
-            }
-//                toolbar.setNavigationOnClickListener { viewModel.onBackPressed() }
+        val cityAdapter = ArrayAdapter(requireActivity().application,
+            R.layout.simple_spinner_dropdown_item,
+            cityList)
+        binding.autocomplete.setAdapter(cityAdapter)
+
+
+        binding.autocomplete.setOnItemClickListener { adapterView, view, position, l ->
+            val city = adapterView.getItemAtPosition(position).toString()
+            binding.autocomplete.setText(city)
+            closeKeyBoard()
         }
-    }
 
-    private fun launchCurrentWeatherFragment() {
 
-        val nameCity = etSearch.text.toString()
-        requireActivity().supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragment_container, CurrentWeatherFragment.newInstance())
-            .addToBackStack(null)
-            .commit()
-    }
-
-//    fun onClickResult(view: View) {
-//        if (!fieldEmpty()) {
-//            val resultText = getResult()
+//            val cityAdapter = SearchAdapter(
+//                requireActivity().application,
+//                R.layout.simple_spinner_dropdown_item,
+//                cityList
+//            )
 //
+//            binding.autocomplete.setAdapter(cityAdapter)
+//            binding.autocomplete.setOnItemClickListener { _, _, position, _ ->
+//                val city = cityAdapter.getItem(position) as City?
+//                binding.autocomplete.setText(city?.name)
+//            }
+
+//        viewModel.searchCity.observe(viewLifecycleOwner) {
+//            adapter = SearchAdapter()
+//
+//            with(binding) {
+//                recycler.layoutManager = LinearLayoutManager(context)
+//                recycler.adapter = adapter
+////                adapter.submitList(it)
+//
+////               etSearch.setOnEditorActionListener { view, actionId, event ->
+////                    if (actionId == EditorInfo.IME_ACTION_DONE) {
+////                        viewModel.getCityName((view as EditText).text.toString())
+////                    }
+////                    false
+////                }
+//
+//                autocomplete.onItemClickListener =
+//                    AdapterView.OnItemClickListener { parent, _, position, _ ->
+//                        val place = parent.getItemAtPosition(position) as City
+//                        autocomplete.setText(place.name)
+//                    }
+//            }
+
+
+        binding.toolbar.setNavigationOnClickListener {
+            requireActivity().onBackPressed()
+        }
+
+//        private fun launchCurrentWeatherFragment() {
+//            requireActivity().supportFragmentManager
+//                .beginTransaction()
+//                .replace(R.id.fragment_container, CurrentWeatherFragment.newInstance())
+//                .addToBackStack(null)
+//                .commit()
+//        }
+
+//    private fun fieldEmpty(): Boolean {
+//        binding.apply {
+//            if (etSearch.text.isNullOrEmpty()) etSearch.error = getString(R.string.error_empty)
+//            return etSearch.text.isNullOrEmpty()
 //        }
 //    }
+    }
 
-        private fun fieldEmpty(): Boolean {
-            binding.apply {
-                if (etSearch.text.isNullOrEmpty()) etSearch.error = getString(R.string.error_empty)
-                return etSearch.text.isNullOrEmpty()
-            }
-        }
-
-        override fun onDestroyView() {
-            super.onDestroyView()
-            _binding = null //присваиваем значение null
-        }
-
-        companion object {
-            private const val EXTRA_NAME_CITY = "name"
-
-            fun newInstance(nameCity: String): Fragment {
-                return SearchFragment()
-                .apply {
-                    arguments = Bundle().apply {
-                        putString(EXTRA_NAME_CITY, nameCity)
-                    }
-                }
-            }
+    private fun closeKeyBoard() {
+        val view = requireActivity().currentFocus
+        if (view != null) {
+            val imm = requireActivity().getSystemService(INPUT_METHOD_SERVICE) as InputMethodManager
+            imm.hideSoftInputFromWindow(view.windowToken, 0)
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        _binding = null //присваиваем значение null
+    }
+
+    companion object {
+        private const val EXTRA_NAME_CITY = "name"
+
+        fun newInstance(nameCity: String): Fragment {
+            return SearchFragment()
+//                    .apply {
+//                        arguments = Bundle().apply {
+//                            putString(EXTRA_NAME_CITY, nameCity)
+//                        }
+//                    }
+        }
+
+        val COUNTRIES = arrayOf(
+            "Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra",
+            "Angola", "Anguilla", "Antarctica", "Antigua and Barbuda", "Argentina",
+            "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan",
+            "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium",
+            "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia",
+            "Bolivia Marching Powder Confederated Anarchic Socialist Communes and Rest Homes")
+    }
+}
 
 
 

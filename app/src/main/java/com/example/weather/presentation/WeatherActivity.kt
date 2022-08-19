@@ -1,6 +1,7 @@
 package com.example.weather.presentation
 
 import android.os.Bundle
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weather.R
 import com.example.weather.databinding.ActivityWeatherBinding
@@ -16,7 +17,6 @@ class WeatherActivity : AppCompatActivity() {
         setContentView(binding.root)
         launchFragment()
         }
-
 
     private fun launchFragment() {
         supportFragmentManager
