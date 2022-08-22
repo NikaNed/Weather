@@ -11,6 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weather.databinding.FragmentDayBinding
 import com.example.weather.presentation.adapters.WeatherAdapter
+import kotlinx.android.synthetic.main.fragment_current_weather.*
 import javax.inject.Inject
 
 

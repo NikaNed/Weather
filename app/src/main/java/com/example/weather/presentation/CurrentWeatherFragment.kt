@@ -2,10 +2,7 @@ package com.example.weather.presentation
 
 import android.Manifest
 import android.content.Context
-import android.content.Intent
 import android.os.Bundle
-import android.text.TextUtils
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -74,7 +71,12 @@ class CurrentWeatherFragment : Fragment() {
         toolbar.setNavigationOnClickListener {
 //            launchSearchFragment()
         }
+        toolbar.setOnClickListener {
+            binding.etSearch.text.clear()
+        }
     }
+
+
 
     private fun initObservers() {
         viewModel = ViewModelProvider(requireActivity(),
@@ -83,7 +85,8 @@ class CurrentWeatherFragment : Fragment() {
         binding.etSearch.setOnEditorActionListener { view, actionId, event ->
 
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                viewModel.getCityName((view as EditText).text.toString())
+                val resultCity = (view as EditText).text.toString()
+                viewModel.getCityName(resultCity)
             }
             false
         }
@@ -94,21 +97,12 @@ class CurrentWeatherFragment : Fragment() {
 
         viewModel.errorIncorrectCity.observe(viewLifecycleOwner) {
             binding.tvNothingFound.isVisible = it
-
-
-//            Toast.makeText(
-//                requireActivity().application,
-//                "Incorrect name of the city",
-//                Toast.LENGTH_SHORT)
-//                .show()
         }
 
         viewModel.nameCity.observe(viewLifecycleOwner) {
             val city = (binding.etSearch as TextView).text.toString()
             viewModel.getCurrentInfo(city)
         }
-
-
 
         viewModel.currentInfo.observe(viewLifecycleOwner) {
             with(binding) {
@@ -121,13 +115,13 @@ class CurrentWeatherFragment : Fragment() {
                 Picasso.get()
                     .load("http://openweathermap.org/img/wn/" + it.weather.joinToString { it.icon } + "@2x.png")
                     .into(ivWeatherIcon)
+
+                nameTest.text = it.name + " , " + it.sys.country
             }
         }
         viewModel.progressVisible.observe(viewLifecycleOwner) {
             binding.progressBar.isVisible = it
         }
-
-
     }
 
 
