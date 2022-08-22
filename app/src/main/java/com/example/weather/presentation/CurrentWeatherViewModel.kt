@@ -15,7 +15,9 @@ import com.example.weather.domain.usecase.SearchCityUseCase
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
+import retrofit2.HttpException
 import retrofit2.Response
+import java.io.IOException
 import javax.inject.Inject
 
 class CurrentWeatherViewModel @Inject constructor(
@@ -53,6 +55,10 @@ class CurrentWeatherViewModel @Inject constructor(
     val errorInputName: LiveData<Boolean>
         get() = _errorInputName
 
+    private val _errorIncorrectCity = MutableLiveData<Boolean>()
+    val errorIncorrectCity: LiveData<Boolean>
+        get() = _errorIncorrectCity
+
     fun getCurrentInfo(name: String) {
 
         val response = getCurrentWeatherUseCase.invoke(name)
@@ -63,21 +69,28 @@ class CurrentWeatherViewModel @Inject constructor(
                 call: Call<WeatherResponse>,
                 response: Response<WeatherResponse>,
             ) {
-                _currentInfo.postValue(response.body())
-                Log.d("TAG", "onResponse Weather Success $call ${response.body()}")
 
+                if (response.body() != null) {
+                    _currentInfo.postValue(response.body())
+                    _errorIncorrectCity.postValue(false)
+                    Log.d("TAG", "onResponse Weather Success $call ${response.body()}")
+                } else {
+                    _errorIncorrectCity.postValue(true)
+                }
             }
 
             override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
                 Log.d("TAG", "onResponse onFailure ${t.message}")
+//                _errorIncorrectCity.postValue(true)
+
             }
         })
     }
 
+
     fun getCityName(nameCity: String) {
         _progressVisible.value = true
 //        val name = parseName(nameCity)
-
         val fieldsVailed = validateInput(nameCity)
         if (fieldsVailed) {
             viewModelScope.launch {
@@ -87,10 +100,10 @@ class CurrentWeatherViewModel @Inject constructor(
         }
     }
 
-    private fun parseName(inputName: String?): String {
-        return inputName?.trim() ?: "" // если inputName не null, то обрезаем пробелы, если null,то
-        // возвращаем пустую строку
-    }
+//    private fun parseName(inputName: String?): String {
+//        return inputName?.trim() ?: "" // если inputName не null, то обрезаем пробелы, если null,то
+//        // возвращаем пустую строку
+//    }
 
     private fun validateInput(name: String): Boolean { // проводим валидацию
         var result = true
@@ -103,7 +116,7 @@ class CurrentWeatherViewModel @Inject constructor(
     }
 
 
-    fun getForecastInfo(name: String){
+    fun getForecastInfo(name: String) {
 
         val response = getForecastUseCase.invoke(name)
 
@@ -123,6 +136,7 @@ class CurrentWeatherViewModel @Inject constructor(
 
             override fun onFailure(call: Call<ForecastResponse>, t: Throwable) {
                 Log.d("TAG", "onResponse onFailure ${t.message}")
+
             }
         })
     }

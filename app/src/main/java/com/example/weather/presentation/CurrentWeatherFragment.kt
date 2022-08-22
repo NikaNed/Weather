@@ -88,13 +88,20 @@ class CurrentWeatherFragment : Fragment() {
             false
         }
 
-     viewModel.errorInputName.observe(viewLifecycleOwner){
-         etSearch.error = R.string.error_empty.toString()
-     }
+        viewModel.errorInputName.observe(viewLifecycleOwner) {
+            etSearch.error = "Enter name of the city"
+        }
 
-//        if(TextUtils.isEmpty(etSearch.text.toString())){
-//            binding.tvNothingFound.isVisible
-//        }
+        viewModel.errorIncorrectCity.observe(viewLifecycleOwner) {
+            binding.tvNothingFound.isVisible = it
+
+
+//            Toast.makeText(
+//                requireActivity().application,
+//                "Incorrect name of the city",
+//                Toast.LENGTH_SHORT)
+//                .show()
+        }
 
         viewModel.nameCity.observe(viewLifecycleOwner) {
             val city = (binding.etSearch as TextView).text.toString()
