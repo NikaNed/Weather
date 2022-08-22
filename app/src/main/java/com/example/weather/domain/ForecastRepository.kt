@@ -13,7 +13,7 @@ interface ForecastRepository {
 
     fun getCurrentInfoList(name: String): Call<WeatherResponse>
 
-    fun getLocationByName(inputName: String): List<Location>
+    fun getLocationByName(): Call<ForecastResponse>
 
     fun getForecastInfo(name: String): Call<ForecastResponse>
 

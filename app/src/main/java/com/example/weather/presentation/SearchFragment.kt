@@ -1,23 +1,27 @@
 package com.example.weather.presentation
 
-import android.R
 import android.content.Context
 import android.content.Context.INPUT_METHOD_SERVICE
+import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
 import android.view.inputmethod.InputMethodManager
-import android.widget.ArrayAdapter
-import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
+import android.widget.EditText
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.weather.R
 import com.example.weather.data.network.modelsForecast.City
 import com.example.weather.databinding.FragmentSearchBinding
 import com.example.weather.presentation.adapters.SearchAdapter
-import kotlinx.android.synthetic.main.fragment_search.*
+import com.google.android.libraries.places.widget.AutocompleteSupportFragment
+import com.google.android.libraries.places.widget.listener.PlaceSelectionListener
+import kotlinx.android.synthetic.main.fragment_current_weather.*
+import kotlinx.android.synthetic.main.fragment_day.*
 import javax.inject.Inject
 
 
@@ -38,7 +42,6 @@ class SearchFragment : Fragment() {
         (requireActivity().application as WeatherApp).component
     }
 
-
     override fun onAttach(context: Context) {
         component.inject(this)
         super.onAttach(context)
@@ -51,6 +54,7 @@ class SearchFragment : Fragment() {
     ): View {
         _binding = FragmentSearchBinding.inflate(inflater, container, false)
         return binding.root
+
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,62 +63,49 @@ class SearchFragment : Fragment() {
         viewModel = ViewModelProvider(this,
             viewModelFactory)[CurrentWeatherViewModel::class.java]
 
-        val cityList = ArrayList<String>()
-        cityList.add("London")
-        cityList.add("Miami")
-        cityList.add("California")
-        cityList.add("Los Angeles")
-        cityList.add("Chicago")
-        cityList.add("Houston")
-
-
-        val cityAdapter = ArrayAdapter(requireActivity().application,
-            R.layout.simple_spinner_dropdown_item,
-            cityList)
-        binding.autocomplete.setAdapter(cityAdapter)
-
-
-        binding.autocomplete.setOnItemClickListener { adapterView, view, position, l ->
-            val city = adapterView.getItemAtPosition(position).toString()
-            binding.autocomplete.setText(city)
-            closeKeyBoard()
-        }
-
-
-//            val cityAdapter = SearchAdapter(
-//                requireActivity().application,
-//                R.layout.simple_spinner_dropdown_item,
-//                cityList
-//            )
-//
-//            binding.autocomplete.setAdapter(cityAdapter)
-//            binding.autocomplete.setOnItemClickListener { _, _, position, _ ->
-//                val city = cityAdapter.getItem(position) as City?
-//                binding.autocomplete.setText(city?.name)
-//            }
-
 //        viewModel.searchCity.observe(viewLifecycleOwner) {
-//            adapter = SearchAdapter()
 //
-//            with(binding) {
-//                recycler.layoutManager = LinearLayoutManager(context)
-//                recycler.adapter = adapter
-////                adapter.submitList(it)
+//             binding.tvNothingFound.isVisible = it.isEmpty()
+//             binding.autocomplete.text = it.
 //
-////               etSearch.setOnEditorActionListener { view, actionId, event ->
-////                    if (actionId == EditorInfo.IME_ACTION_DONE) {
-////                        viewModel.getCityName((view as EditText).text.toString())
-////                    }
-////                    false
-////                }
+//         }
 //
-//                autocomplete.onItemClickListener =
-//                    AdapterView.OnItemClickListener { parent, _, position, _ ->
-//                        val place = parent.getItemAtPosition(position) as City
-//                        autocomplete.setText(place.name)
-//                    }
-//            }
-
+//             val cityList = mutableListOf(
+//                 City("London"),
+//                 City("Miami"),
+//                 City("California"),
+//                 City("Los Angeles"),
+//                 City("Chicago"),
+//                 City("Houston")
+//             )
+//        with(binding){
+//             context?.let { context ->
+//                 val cityAdapter =
+//                     SearchAdapter(context, R.layout.item_search, cityList)
+//                 autocomplete.setAdapter(cityAdapter)
+//                 autocomplete.setOnItemClickListener { _, _, position, _ ->
+//                     val city = cityAdapter.getItem(position)
+//                     autocomplete.setText(city.name)
+//                     closeKeyBoard()
+//                 }
+//             }
+//
+//             viewModel.searchCity.observe(viewLifecycleOwner) {
+//                 adapter = SearchAdapter()
+//
+//                 recycler.layoutManager = LinearLayoutManager(context)
+//                 recycler.adapter = adapter
+//                 adapter.submitList(it)
+//
+//                 etSearch.setOnEditorActionListener { view, actionId, event ->
+//                     if (actionId == EditorInfo.IME_ACTION_DONE) {
+//                         viewModel.getCityName((view as EditText).text.toString())
+//                     }
+//                     false
+//                 }
+//             }
+//         }
+//
 
         binding.toolbar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
@@ -134,6 +125,7 @@ class SearchFragment : Fragment() {
 //            return etSearch.text.isNullOrEmpty()
 //        }
 //    }
+
     }
 
     private fun closeKeyBoard() {
@@ -151,6 +143,8 @@ class SearchFragment : Fragment() {
 
     companion object {
         private const val EXTRA_NAME_CITY = "name"
+        private const val API_KEY_GOOGLE_MAP = "AIzaSyBQh0yNbuZJcJH-HugK26MNBOxudXhBVt0"
+
 
         fun newInstance(nameCity: String): Fragment {
             return SearchFragment()
@@ -160,14 +154,6 @@ class SearchFragment : Fragment() {
 //                        }
 //                    }
         }
-
-        val COUNTRIES = arrayOf(
-            "Afghanistan", "Albania", "Algeria", "American Samoa", "Andorra",
-            "Angola", "Anguilla", "Antarctica", "Antigua and Barbuda", "Argentina",
-            "Armenia", "Aruba", "Australia", "Austria", "Azerbaijan",
-            "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium",
-            "Belize", "Benin", "Bermuda", "Bhutan", "Bolivia",
-            "Bolivia Marching Powder Confederated Anarchic Socialist Communes and Rest Homes")
     }
 }
 

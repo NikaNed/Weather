@@ -45,9 +45,13 @@ class CurrentWeatherViewModel @Inject constructor(
     val progressVisible: LiveData<Boolean>
         get() = _progressVisible
 
-    private val _searchCity = MutableLiveData<City>()
-    val searchCity: LiveData<City>
+    private val _searchCity = MutableLiveData<List<City>>()
+    val searchCity: MutableLiveData<List<City>>
         get() = _searchCity
+
+    private val _errorInputName = MutableLiveData<Boolean>()
+    val errorInputName: LiveData<Boolean>
+        get() = _errorInputName
 
     fun getCurrentInfo(name: String) {
 
@@ -72,10 +76,10 @@ class CurrentWeatherViewModel @Inject constructor(
 
     fun getCityName(nameCity: String) {
         _progressVisible.value = true
-        val name = parseName(nameCity)
-        val fieldsVailed = validateInput(name)
-        if (fieldsVailed) { // если поля валидные, то добаялем новый элемент
+//        val name = parseName(nameCity)
 
+        val fieldsVailed = validateInput(nameCity)
+        if (fieldsVailed) {
             viewModelScope.launch {
                 _nameCity.value = nameCity
                 _progressVisible.value = false
@@ -83,8 +87,7 @@ class CurrentWeatherViewModel @Inject constructor(
         }
     }
 
-    private fun parseName(inputName: String?): String { //приводим строку ввода в нормальный вид
-        //принимает нулабельный тип, а возвращает ненулабельную строку
+    private fun parseName(inputName: String?): String {
         return inputName?.trim() ?: "" // если inputName не null, то обрезаем пробелы, если null,то
         // возвращаем пустую строку
     }
@@ -93,10 +96,12 @@ class CurrentWeatherViewModel @Inject constructor(
         var result = true
         if (name.isBlank()) {
             result = false
-
+            _errorInputName.value = true
+            _progressVisible.value = false
         }
         return result
     }
+
 
     fun getForecastInfo(name: String){
 
@@ -112,7 +117,6 @@ class CurrentWeatherViewModel @Inject constructor(
                     _progressVisible.value = true
                     Log.d("TAG", "onResponse Forecast Success $call ${response.body()?.list}")
                     _forecastInfo.postValue(response.body()?.list)
-                    _searchCity.postValue(response.body()?.city)
                     _progressVisible.value = false
                 }
             }

@@ -4,16 +4,7 @@
     <string name="hours">Hours</string>
     <string name="days">Days</string>
     <string name="data_template">%s/%s/%s %s : %s</string>
-    <string name="error_empty">Enter city</string>
+    <string name="error_empty">Enter name of the city</string>
+    <string name="nothing_found">Nothing found</string>
 
-    <string-array name="languages">
-        <item>Java</item>
-        <item>Kotlin</item>
-        <item>Swift</item>
-        <item>Python</item>
-        <item>Scala</item>
-        <item>Perl</item>
-        <item>Javascript</item>
-        <item>Jquery</item>
-    </string-array>
 </resources>

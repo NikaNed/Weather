@@ -2,7 +2,10 @@ package com.example.weather.presentation
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
+import android.text.TextUtils
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -78,11 +81,20 @@ class CurrentWeatherFragment : Fragment() {
             viewModelFactory)[CurrentWeatherViewModel::class.java] //инициализируем vM
 
         binding.etSearch.setOnEditorActionListener { view, actionId, event ->
+
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 viewModel.getCityName((view as EditText).text.toString())
             }
             false
         }
+
+     viewModel.errorInputName.observe(viewLifecycleOwner){
+         etSearch.error = R.string.error_empty.toString()
+     }
+
+//        if(TextUtils.isEmpty(etSearch.text.toString())){
+//            binding.tvNothingFound.isVisible
+//        }
 
         viewModel.nameCity.observe(viewLifecycleOwner) {
             val city = (binding.etSearch as TextView).text.toString()
@@ -139,7 +151,7 @@ class CurrentWeatherFragment : Fragment() {
 
     private fun setOnClickLaunchWeekFragment() {
         binding.buttonDays.setOnClickListener {
-            viewModel.getCityName(binding.etSearch.text.toString())
+//            viewModel.getCityName(binding.etSearch.text.toString())
             launchSearchFragment()
         }
     }

@@ -28,7 +28,11 @@ interface ApiService {
 
 
     @GET("forecast")
-    fun getLocationByName( @Query("q") name: String):  List<City>
+    fun getLocationByName(
+        @Query("q") name: String = "",
+        @Query("appid") appid: String = API_KEY,
+        @Query("lang") languageCode: String = "ru"
+    ): Call<ForecastResponse>
 
     companion object {
         const val API_KEY = "cf6776e097a42e7104c009431a5c9ef8"
