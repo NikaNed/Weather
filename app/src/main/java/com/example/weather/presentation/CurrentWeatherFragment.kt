@@ -115,8 +115,25 @@ class CurrentWeatherFragment : Fragment() {
                 Picasso.get()
                     .load("http://openweathermap.org/img/wn/" + it.weather.joinToString { it.icon } + "@2x.png")
                     .into(ivWeatherIcon)
-
                 nameTest.text = it.name + " , " + it.sys.country
+                tvHumidityValue.text = it.main.humidity.toString() + "%"
+                tvPressureValue.text = it.main.pressure.toString() + "hPa"
+                tvVisibilityValue.text = it.visibility.div(1000).toString() + "km"
+                tvWindValue.text = it.wind.speed.toString() + "m/s"
+                tvCloudsValue.text = it.clouds.all.toString() + "%"
+            }
+        }
+
+        viewModel.currentDetail.observe(viewLifecycleOwner){
+            with(binding){
+                llCurrentDetails1.isVisible= it
+                llCurrentDetails2.isVisible= it
+                tvCurrentDetails.isVisible= it
+                tvHumidity.isVisible=it
+                tvPressure.isVisible = it
+                tvVisibility.isVisible = it
+                tvWind.isVisible = it
+                tvClouds.isVisible = it
             }
         }
 

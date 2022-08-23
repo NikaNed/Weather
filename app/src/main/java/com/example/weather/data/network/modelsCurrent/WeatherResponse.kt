@@ -8,8 +8,8 @@ data class WeatherResponse(
     val weather: List<Weather>,
     val sys: Sys,
 //    val timezone: Int,
-//    val visibility: Int,
+    val visibility: Int,
     val id: Int, //идентификатор города
-//    val wind: Wind
-//    val clouds: Clouds,
+    val wind: Wind,
+    val clouds: Clouds,
 )
