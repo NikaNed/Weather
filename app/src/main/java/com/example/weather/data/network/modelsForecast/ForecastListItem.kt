@@ -1,9 +1,6 @@
 package com.example.weather.data.network.modelsForecast
 
 import com.example.weather.data.network.modelsCurrent.Main
-import com.google.gson.annotations.SerializedName
-import java.text.SimpleDateFormat
-import java.util.*
 
 data class ForecastListItem(
 //    @SerializedName("dt")

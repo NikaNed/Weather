@@ -22,25 +22,20 @@ class ForecastRepositoryImpl @Inject constructor(
         return apiService.getCurrentWeather(name)
     }
 
+    override fun getForecastInfo(name: String): Call<ForecastResponse> {
+        return apiService.getForecastWeather(name)
+    }
+
+    override fun getLocationByName(): Call<ForecastResponse>  {
+        return apiService.getLocationByName()
+    }
 
 
 //    override fun addCityName(forecastItem: ForecastItem) {
 //        weatherInfoDao.searchCity(mapper.mapEntityToDbModel(forecastItem))
 //    }
 
-    override fun getLocationByName(name: String): List<Location> {
-        TODO()
-
-    }
-
-
 //    override fun searchCity(forecastItem: ForecastItem) {
 //        weatherInfoDao.searchCity(mapper.mapEntityToDbModel(forecastItem))
 //    }
-
-    override fun getForecastInfo(name: String): Call<ForecastResponse> {
-        return apiService.getForecastWeather(name)
-    }
-
-
 }

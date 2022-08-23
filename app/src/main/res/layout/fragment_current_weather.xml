@@ -17,29 +17,52 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:isScrollContainer="false"
+            app:buttonGravity="center_vertical"
             app:contentInsetEnd="0dp"
             app:contentInsetStart="0dp"
-            app:contentInsetStartWithNavigation="0dp"
             app:titleMargin="0dp"
             app:titleTextColor="@color/purple_dark">
-            <!--            tools:title="Moscow"-->
+
+            <ImageView
+                android:id="@+id/close"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:padding="0dp"
+                android:paddingEnd="8dp"
+                android:src="@drawable/ic_close" />
 
             <EditText
                 android:id="@+id/etSearch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="0dp"
                 android:drawableStart="@drawable/ic_search"
                 android:drawablePadding="8dp"
                 android:hint="@string/search_hint"
                 android:importantForAutofill="no"
-                android:inputType="text"
+                android:inputType="textCapSentences|textAutoCorrect"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
+
+            <!--            <AutoCompleteTextView-->
+            <!--                android:id="@+id/autocomplete"-->
+            <!--                android:layout_width="0dp"-->
+            <!--                android:layout_height="wrap_content"-->
+            <!--                android:completionHint="Enter city"-->
+            <!--                android:completionThreshold="2"-->
+            <!--                app:layout_constraintLeft_toLeftOf="parent"-->
+            <!--                app:layout_constraintRight_toRightOf="parent"-->
+            <!--                app:layout_constraintTop_toTopOf="parent"-->
+            <!--                />-->
+
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
+
 
     <ImageView
         android:id="@+id/im_background"
@@ -49,9 +72,36 @@
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/background_current_weather" />
+
+    <TextView
+        android:id="@+id/nameTest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="32dp"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_hours"
+        tools:text="Москва, RU" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tvNothingFound"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="16dp"
+        android:text="@string/nothing_found"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_hours"
+        tools:visibility="visible" />
 
 
     <com.google.android.material.textview.MaterialTextView
@@ -59,7 +109,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="16dp"
         android:textColor="@color/white"
         android:textSize="80sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -79,27 +129,14 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_temperature"
         tools:text="Feels like 22°C" />
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/tv_max_min_temp"
-        android:layout_width="wrap_content"
-        android:layout_height="32dp"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:textColor="@color/white"
-        android:textSize="16sp"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_data_with_time"
-        tools:text="Day 22°↑ • Night 18°↓" />
-
     <ImageView
         android:id="@+id/iv_weather_icon"
         android:layout_width="128dp"
         android:layout_height="128dp"
-        android:layout_marginTop="145dp"
+        android:layout_marginTop="50dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appbar"
+        app:layout_constraintTop_toBottomOf="@+id/nameTest"
         tools:ignore="ContentDescription"
         tools:src="@drawable/ic_showers" />
 
@@ -121,13 +158,166 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="86dp"
+        android:layout_marginTop="16dp"
         android:textColor="@color/white"
-        android:textSize="24sp"
+        android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/appbar"
+        app:layout_constraintTop_toBottomOf="@+id/nameTest"
         tools:text="23 June, 23:32" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_current_details_1"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:background="@color/white_clean"
+        android:orientation="vertical"
+        android:paddingBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/guideline_vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_temp_feel">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_current_details"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/gray"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_temperature"
+            android:text="Current details" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_humidity"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/gray"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_temperature"
+            android:text="Humidity" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_pressure"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/gray"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_humidity"
+            android:text="Pressure" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_visibility"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/gray"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_pressure"
+            android:text="Visibility" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_wind"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/gray"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="Wind speed" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_clouds"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/gray"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:text="Clouds" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/ll_current_details_2"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:background="@color/white_clean"
+        android:orientation="vertical"
+        android:paddingTop="40dp"
+        android:paddingBottom="20dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/guideline_vertical"
+        app:layout_constraintTop_toBottomOf="@+id/tv_temp_feel">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_humidity_value"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/gray"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_temperature"
+            tools:text="39%" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_pressure_value"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/gray"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_humidity"
+            tools:text=" 1012 hPa" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_visibility_value"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/gray"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_pressure"
+            tools:text="14 km" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_wind_value"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/gray"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="4.12 m/s" />
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/tv_clouds_value"
+            android:layout_width="wrap_content"
+            android:layout_height="32dp"
+            android:layout_marginTop="8dp"
+            android:textColor="@color/gray"
+            android:textSize="16sp"
+            app:layout_constraintStart_toStartOf="parent"
+            tools:text="100 %" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 
     <com.google.android.material.button.MaterialButton
@@ -136,7 +326,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="51dp"
         android:backgroundTint="@color/white_clean"
-        android:text="@string/hours"
+        android:text="5 days"
         app:cornerRadius="0dp"
         app:layout_constraintEnd_toStartOf="@id/guideline_vertical"
         app:layout_constraintStart_toStartOf="parent"
@@ -161,5 +351,20 @@
         android:layout_height="wrap_content"
         android:orientation="vertical"
         app:layout_constraintGuide_percent="0.5" />
+
+    <ProgressBar
+        android:id="@+id/progressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:indeterminate="true"
+        android:indeterminateTint="#FFFFFF"
+        android:indeterminateTintMode="src_atop"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:visibility="visible" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

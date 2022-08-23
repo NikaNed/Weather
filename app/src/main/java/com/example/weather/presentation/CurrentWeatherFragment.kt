@@ -12,11 +12,11 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
 import com.example.weather.databinding.FragmentCurrentWeatherBinding
-import com.example.weather.domain.entities.Location
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_current_weather.*
 import java.sql.Timestamp
@@ -66,20 +66,37 @@ class CurrentWeatherFragment : Fragment() {
 
         setOnClickLaunchDayFragment()
 
+        setOnClickLaunchWeekFragment()
+
         toolbar.setNavigationOnClickListener {
 //            launchSearchFragment()
         }
+        toolbar.setOnClickListener {
+            binding.etSearch.text.clear()
+        }
     }
+
+
 
     private fun initObservers() {
         viewModel = ViewModelProvider(requireActivity(),
             viewModelFactory)[CurrentWeatherViewModel::class.java] //инициализируем vM
 
         binding.etSearch.setOnEditorActionListener { view, actionId, event ->
+
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                viewModel.getCityName((view as EditText).text.toString())
+                val resultCity = (view as EditText).text.toString()
+                viewModel.getCityName(resultCity)
             }
             false
+        }
+
+        viewModel.errorInputName.observe(viewLifecycleOwner) {
+            etSearch.error = "Enter name of the city"
+        }
+
+        viewModel.errorIncorrectCity.observe(viewLifecycleOwner) {
+            binding.tvNothingFound.isVisible = it
         }
 
         viewModel.nameCity.observe(viewLifecycleOwner) {
@@ -89,11 +106,8 @@ class CurrentWeatherFragment : Fragment() {
 
         viewModel.currentInfo.observe(viewLifecycleOwner) {
             with(binding) {
-                val maxMinTemp =
-                    "Day ${it.main.temp_max.roundToInt()}°↑ • Night ${it.main.temp_min.roundToInt()}°↓"
                 tvDataWithTime.text = convertTimestampToTime(it.dt)
                 tvTemperature.text = it.main.temp.roundToInt().toString() + "°С"
-                tvMaxMinTemp.text = maxMinTemp
                 tvTempFeel.text =
                     "Ощущается как " + it.main.feels_like.roundToInt().toString() + "°"
                 tvDescription.text = it.weather.joinToString { it.description }
@@ -101,7 +115,43 @@ class CurrentWeatherFragment : Fragment() {
                 Picasso.get()
                     .load("http://openweathermap.org/img/wn/" + it.weather.joinToString { it.icon } + "@2x.png")
                     .into(ivWeatherIcon)
+                nameTest.text = it.name + " , " + it.sys.country
+                tvHumidityValue.text = it.main.humidity.toString() + "%"
+                tvPressureValue.text = it.main.pressure.toString() + "hPa"
+                tvVisibilityValue.text = it.visibility.div(1000).toString() + "km"
+                tvWindValue.text = it.wind.speed.toString() + "m/s"
+                tvCloudsValue.text = it.clouds.all.toString() + "%"
             }
+        }
+
+        viewModel.currentDetail.observe(viewLifecycleOwner){
+            with(binding){
+                llCurrentDetails1.isVisible= it
+                llCurrentDetails2.isVisible= it
+                tvCurrentDetails.isVisible= it
+                tvHumidity.isVisible=it
+                tvPressure.isVisible = it
+                tvVisibility.isVisible = it
+                tvWind.isVisible = it
+                tvClouds.isVisible = it
+            }
+        }
+
+        viewModel.resetFields.observe(viewLifecycleOwner){
+            with(binding) {
+                tvDataWithTime.text = ""
+                tvTemperature.text = ""
+                tvTempFeel.text = ""
+                tvDescription.text = ""
+                nameTest.text = ""
+                Picasso.get()
+                    .load("http://openweathermap.org/img/wn/" + "")
+                    .into(ivWeatherIcon)
+            }
+        }
+
+        viewModel.progressVisible.observe(viewLifecycleOwner) {
+            binding.progressBar.isVisible = it
         }
     }
 
@@ -131,14 +181,21 @@ class CurrentWeatherFragment : Fragment() {
             .commit()
     }
 
-//    private fun launchSearchFragment() {
-//        val nameCity = requireActivity().intent.getStringExtra(EXTRA_NAME_CITY) ?: EMPTY_NAME
-//        requireActivity().supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.fragment_container, SearchFragment.newInstance(nameCity))
-//            .addToBackStack(null)
-//            .commit()
-//    }
+    private fun setOnClickLaunchWeekFragment() {
+        binding.buttonDays.setOnClickListener {
+//            viewModel.getCityName(binding.etSearch.text.toString())
+            launchSearchFragment()
+        }
+    }
+
+    private fun launchSearchFragment() {
+        val nameCity = requireActivity().intent.getStringExtra(EXTRA_NAME_CITY) ?: EMPTY_NAME
+        requireActivity().supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragment_container, SearchFragment.newInstance(nameCity))
+            .addToBackStack(null)
+            .commit()
+    }
 
     private fun permissionListener() {
         pLauncher = registerForActivityResult(
