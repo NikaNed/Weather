@@ -59,6 +59,10 @@ class CurrentWeatherViewModel @Inject constructor(
     val errorIncorrectCity: LiveData<Boolean>
         get() = _errorIncorrectCity
 
+    private val _resetFields = MutableLiveData<Boolean>()
+    val resetFields: LiveData<Boolean>
+        get() = _resetFields
+
     fun getCurrentInfo(name: String) {
 
         val response = getCurrentWeatherUseCase.invoke(name)
@@ -76,6 +80,7 @@ class CurrentWeatherViewModel @Inject constructor(
                     Log.d("TAG", "onResponse Weather Success $call ${response.body()}")
                 } else {
                     _errorIncorrectCity.postValue(true)
+                    _resetFields.value = true
                 }
             }
 
@@ -111,6 +116,7 @@ class CurrentWeatherViewModel @Inject constructor(
             result = false
             _errorInputName.value = true
             _progressVisible.value = false
+
         }
         return result
     }

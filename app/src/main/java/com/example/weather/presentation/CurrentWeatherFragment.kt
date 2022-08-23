@@ -119,6 +119,20 @@ class CurrentWeatherFragment : Fragment() {
                 nameTest.text = it.name + " , " + it.sys.country
             }
         }
+
+        viewModel.resetFields.observe(viewLifecycleOwner){
+            with(binding) {
+                tvDataWithTime.text = ""
+                tvTemperature.text = ""
+                tvTempFeel.text = ""
+                tvDescription.text = ""
+                nameTest.text = ""
+                Picasso.get()
+                    .load("http://openweathermap.org/img/wn/" + "")
+                    .into(ivWeatherIcon)
+            }
+        }
+
         viewModel.progressVisible.observe(viewLifecycleOwner) {
             binding.progressBar.isVisible = it
         }
