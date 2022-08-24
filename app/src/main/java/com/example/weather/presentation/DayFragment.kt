@@ -70,7 +70,6 @@ class DayFragment : Fragment() {
         binding.toolbar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
             viewModel.onBackPressed()
-
         }
     }
 
@@ -80,7 +79,6 @@ class DayFragment : Fragment() {
     }
 
     companion object {
-        private const val EXTRA_NAME_CITY = "name"
 
         fun newInstance(): Fragment {
             return DayFragment()

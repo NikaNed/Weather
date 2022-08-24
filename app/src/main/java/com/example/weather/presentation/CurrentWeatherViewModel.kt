@@ -37,8 +37,6 @@ class CurrentWeatherViewModel @Inject constructor(
     val state: LiveData<State>
         get() = _state*/
 
-var resultCity:String = ""
-
     private val _currentInfo = MutableLiveData<WeatherResponse>()
     val currentInfo: LiveData<WeatherResponse>
         get() = _currentInfo
@@ -75,13 +73,12 @@ var resultCity:String = ""
     val currentDetail: LiveData<Boolean>
         get() = _currentDetail
 
-    private val _checkInternet = MutableLiveData<Boolean>()
-    val checkInternet: LiveData<Boolean>
-        get() = _checkInternet
+    private val _buttonForecast = MutableLiveData<Boolean>()
+    val buttonForecast: LiveData<Boolean>
+        get() = _buttonForecast
 
     init {
         _currentDetail.value = false
-        _checkInternet.value = true
     }
 
 
@@ -98,7 +95,7 @@ var resultCity:String = ""
                 if (response.body() != null) {
                     _currentDetail.value = true
                     _currentInfo.postValue(response.body())
-                    _checkInternet.value = false
+                    _buttonForecast.value = true
                     Log.d("TAG", "onResponse Weather Success $call ${response.body()}")
                 } else {
                     _errorIncorrectCity.postValue(true)
@@ -126,7 +123,6 @@ var resultCity:String = ""
         }
     }
 
-
     private fun validateInput(name: String): Boolean {
         var result = true
         if (name.isBlank()) {
@@ -141,7 +137,6 @@ var resultCity:String = ""
         _currentDetail.value = false
 //         _errorInputName.value = false
     }
-
 
     fun getForecastInfo(name: String) {
 

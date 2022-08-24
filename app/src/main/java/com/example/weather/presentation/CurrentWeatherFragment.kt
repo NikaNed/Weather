@@ -7,13 +7,11 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
-import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
@@ -69,27 +67,27 @@ class CurrentWeatherFragment : Fragment() {
 
         initObservers()
 
-
         setOnClickLaunchDayFragment()
 
-        setOnClickLaunchWeekFragment()
+        testConnection()
 
-        toolbar.setNavigationOnClickListener {
+//        setOnClickLaunchWeekFragment()
+
+//        toolbar.setNavigationOnClickListener {
 //            launchSearchFragment()
-        }
+//        }
+
         toolbar.setOnClickListener {
             binding.etSearch.text.clear()
         }
-        testConnection()
-
     }
 
     private fun testConnection() {
         cld = InternetConnection(requireActivity().application)
         cld.observe(viewLifecycleOwner) { isConnected ->
             if (isConnected) {
-                Toast.makeText((requireActivity().application), "Connected", Toast.LENGTH_SHORT).show()
-//                binding.tvCheckInternetAvailable.visibility = View.VISIBLE
+                Toast.makeText((requireActivity().application), "Connected", Toast.LENGTH_SHORT)
+                    .show()
                 binding.tvCheckInternetUnavailable.visibility = View.GONE
             } else {
                 binding.tvCheckInternetAvailable.visibility = View.GONE
@@ -103,7 +101,7 @@ class CurrentWeatherFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity(),
             viewModelFactory)[CurrentWeatherViewModel::class.java]
 
-        binding.etSearch.setOnEditorActionListener { view, actionId, event ->
+        binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
 
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 viewModel.getCityName(binding.etSearch.text.toString())
@@ -111,9 +109,8 @@ class CurrentWeatherFragment : Fragment() {
             false
         }
 
-
         viewModel.errorInputName.observe(viewLifecycleOwner) {
-            etSearch.error = "Enter name of the city"
+            etSearch.error = getString(R.string.error_enter_name)
             binding.buttonHours.isEnabled = it != true
         }
 
@@ -134,7 +131,6 @@ class CurrentWeatherFragment : Fragment() {
 
         viewModel.nameCity.observe(viewLifecycleOwner) {
             (binding.etSearch as TextView).text = it.toString()
-//            var city = (binding.etSearch as TextView).text.toString()
             viewModel.getCurrentInfo(it.toString())
         }
 
@@ -148,9 +144,9 @@ class CurrentWeatherFragment : Fragment() {
                 tvDescription.text = it.weather.joinToString { it.description }
                     .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
                 Picasso.get()
-                    .load("http://openweathermap.org/img/wn/" + it.weather.joinToString { it.icon } + "@2x.png")
+                    .load(URL_IMAGE + it.weather.joinToString { it.icon } + "@2x.png")
                     .into(ivWeatherIcon)
-                nameTest.text = it.name + " , " + it.sys.country
+                tvNameCityTitle.text = it.name + " , " + it.sys.country
                 tvHumidityValue.text = it.main.humidity.toString() + "%"
                 tvPressureValue.text = it.main.pressure.toString() + "hPa"
                 tvVisibilityValue.text = it.visibility.div(1000).toString() + "km"
@@ -178,11 +174,11 @@ class CurrentWeatherFragment : Fragment() {
                 tvTemperature.text = ""
                 tvTempFeel.text = ""
                 tvDescription.text = ""
-                nameTest.text = ""
+                tvNameCityTitle.text = ""
                 Picasso.get()
-                    .load("http://openweathermap.org/img/wn/" + "")
+                    .load(URL_IMAGE + "")
                     .into(ivWeatherIcon)
-                nameTest.text = ""
+                tvNameCityTitle.text = ""
                 tvHumidityValue.text = ""
                 tvPressureValue.text = ""
                 tvVisibilityValue.text = ""
@@ -193,6 +189,10 @@ class CurrentWeatherFragment : Fragment() {
 
         viewModel.progressVisible.observe(viewLifecycleOwner) {
             binding.progressBar.isVisible = it
+        }
+
+        viewModel.buttonForecast.observe(viewLifecycleOwner) {
+            binding.buttonHours.isVisible = it
         }
     }
 
@@ -222,21 +222,21 @@ class CurrentWeatherFragment : Fragment() {
             .commit()
     }
 
-    private fun setOnClickLaunchWeekFragment() {
-        binding.buttonDays.setOnClickListener {
-//            viewModel.getCityName(binding.etSearch.text.toString())
-            launchSearchFragment()
-        }
-    }
+//    private fun setOnClickLaunchWeekFragment() {
+//        binding.buttonDays.setOnClickListener {
+////            viewModel.getCityName(binding.etSearch.text.toString())
+//            launchSearchFragment()
+//        }
+//    }
 
-    private fun launchSearchFragment() {
-        val nameCity = requireActivity().intent.getStringExtra(EXTRA_NAME_CITY) ?: EMPTY_NAME
-        requireActivity().supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragment_container, SearchFragment.newInstance(nameCity))
-            .addToBackStack(null)
-            .commit()
-    }
+//    private fun launchSearchFragment() {
+//        val nameCity = requireActivity().intent.getStringExtra(EXTRA_NAME_CITY) ?: EMPTY_NAME
+//        requireActivity().supportFragmentManager
+//            .beginTransaction()
+//            .replace(R.id.fragment_container, SearchFragment.newInstance(nameCity))
+//            .addToBackStack(null)
+//            .commit()
+//    }
 
     private fun permissionListener() {
         pLauncher = registerForActivityResult(
@@ -252,36 +252,13 @@ class CurrentWeatherFragment : Fragment() {
         }
     }
 
-
-//    private fun checkForInternet(context: Context): Boolean {
-//        val connectivityManager =
-//            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
-//        if (connectivityManager != null) {
-//            val capabilities =
-//                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
-//            if (capabilities != null) {
-//                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
-//                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
-//                    return true
-//                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
-//                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
-//                    return true
-//                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
-//                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
-//                    return true
-//                }
-//            }
-//        }
-//        return false
-//    }
-
     override fun onDestroyView() {
         super.onDestroyView()
-        _binding = null //присваиваем значение null
+        _binding = null
     }
 
     companion object {
-
+        const val URL_IMAGE = "http://openweathermap.org/img/wn/"
         const val EXTRA_NAME_CITY = "name"
         const val EMPTY_NAME = ""
 

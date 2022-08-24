@@ -6,5 +6,15 @@
     <string name="data_template">%s/%s/%s %s : %s</string>
     <string name="error_empty">Enter name of the city</string>
     <string name="nothing_found">Nothing found</string>
-
+    <string name="error_enter_name">Enter name of the city</string>
+    <string name="background_content_description">background</string>
+    <string name="network_currently_unavailable">Network currently unavailable</string>
+    <string name="network_available">Network available</string>
+    <string name="current_details">Current details</string>
+    <string name="humidity">Humidity</string>
+    <string name="pressure">Pressure</string>
+    <string name="visibility">Visibility</string>
+    <string name="wind_speed">Wind speed</string>
+    <string name="clouds">Clouds</string>
+    <string name="weather_forecast">Weather forecast</string>
 </resources>

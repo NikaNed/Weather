@@ -63,12 +63,11 @@
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>
 
-
     <ImageView
         android:id="@+id/im_background"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:contentDescription="background"
+        android:contentDescription="@string/background_content_description"
         android:scaleType="fitXY"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -77,8 +76,8 @@
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/background_current_weather" />
 
-    <TextView
-        android:id="@+id/nameTest"
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_name_city_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
@@ -86,21 +85,22 @@
         android:textColor="@color/white"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_hours"
-        tools:text="Москва, RU" />
+        app:layout_constraintTop_toBottomOf="@+id/appbar"
+        tools:text="Moscow, RU" />
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tvNothingFound"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="0dp"
         android:text="@string/nothing_found"
         android:textColor="@color/white"
+        android:textSize="16sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_hours"
+        app:layout_constraintTop_toBottomOf="@+id/appbar"
         tools:visibility="visible" />
 
     <com.google.android.material.textview.MaterialTextView
@@ -109,7 +109,7 @@
         android:layout_height="wrap_content"
         android:background="#D51E06"
         android:gravity="center"
-        android:text="Network currently unavailable"
+        android:text="@string/network_currently_unavailable"
         android:textColor="@color/white"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -123,7 +123,7 @@
         android:layout_height="wrap_content"
         android:background="#5CD506"
         android:gravity="center"
-        android:text="Network available"
+        android:text="@string/network_available"
         android:textColor="@color/white"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -164,7 +164,7 @@
         android:layout_marginTop="50dp"
         android:layout_marginEnd="32dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameTest"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name_city_title"
         tools:ignore="ContentDescription"
         tools:src="@drawable/ic_showers" />
 
@@ -186,26 +186,26 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
         android:textColor="@color/white"
         android:textSize="22sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameTest"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name_city_title"
         tools:text="23 June, 23:32" />
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ll_current_details_1"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         android:background="@color/white_clean"
         android:orientation="vertical"
         android:paddingBottom="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/guideline_vertical"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_temp_feel">
+        app:layout_constraintTop_toBottomOf="@+id/button_hours">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_current_details"
@@ -213,12 +213,12 @@
             android:layout_height="32dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
+            android:text="@string/current_details"
             android:textColor="@color/gray"
             android:textSize="16sp"
             android:textStyle="bold"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_temperature"
-            android:text="Current details" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_temperature" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_humidity"
@@ -226,11 +226,11 @@
             android:layout_height="32dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
+            android:text="@string/humidity"
             android:textColor="@color/gray"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_temperature"
-            android:text="Humidity" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_temperature" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_pressure"
@@ -238,11 +238,11 @@
             android:layout_height="32dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
+            android:text="@string/pressure"
             android:textColor="@color/gray"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_humidity"
-            android:text="Pressure" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_humidity" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_visibility"
@@ -250,11 +250,11 @@
             android:layout_height="32dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
+            android:text="@string/visibility"
             android:textColor="@color/gray"
             android:textSize="16sp"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/tv_pressure"
-            android:text="Visibility" />
+            app:layout_constraintTop_toBottomOf="@+id/tv_pressure" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_wind"
@@ -262,10 +262,10 @@
             android:layout_height="32dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
+            android:text="@string/wind_speed"
             android:textColor="@color/gray"
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            android:text="Wind speed" />
+            app:layout_constraintStart_toStartOf="parent" />
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_clouds"
@@ -273,17 +273,17 @@
             android:layout_height="32dp"
             android:layout_marginStart="32dp"
             android:layout_marginTop="8dp"
+            android:text="@string/clouds"
             android:textColor="@color/gray"
             android:textSize="16sp"
-            app:layout_constraintStart_toStartOf="parent"
-            android:text="Clouds" />
+            app:layout_constraintStart_toStartOf="parent" />
     </androidx.appcompat.widget.LinearLayoutCompat>
 
     <androidx.appcompat.widget.LinearLayoutCompat
         android:id="@+id/ll_current_details_2"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="100dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         android:background="@color/white_clean"
         android:orientation="vertical"
         android:paddingTop="40dp"
@@ -291,7 +291,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/guideline_vertical"
-        app:layout_constraintTop_toBottomOf="@+id/tv_temp_feel">
+        app:layout_constraintTop_toBottomOf="@+id/button_hours">
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tv_humidity_value"
@@ -352,26 +352,19 @@
         android:id="@+id/button_hours"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="51dp"
+        android:layout_marginStart="90dp"
+        android:layout_marginTop="100dp"
+        android:layout_marginEnd="90dp"
         android:backgroundTint="@color/white_clean"
-        android:text="5 days"
-        app:cornerRadius="0dp"
-        app:layout_constraintEnd_toStartOf="@id/guideline_vertical"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/button_days"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="51dp"
-        android:backgroundTint="@color/white_clean"
-        android:text="@string/days"
-        app:cornerRadius="0dp"
+        android:text="@string/weather_forecast"
+        android:textAllCaps="false"
+        android:textColor="@color/gray"
+        android:visibility="gone"
+        app:cornerRadius="20dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/guideline_vertical"
-        app:layout_constraintTop_toTopOf="parent" />
-
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_description"
+        tools:visibility="visible" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline_vertical"
@@ -393,6 +386,5 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:visibility="visible" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>
