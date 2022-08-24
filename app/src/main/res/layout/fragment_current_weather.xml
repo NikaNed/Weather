@@ -103,6 +103,34 @@
         app:layout_constraintTop_toBottomOf="@+id/button_hours"
         tools:visibility="visible" />
 
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_check_internet_unavailable"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#D51E06"
+        android:gravity="center"
+        android:text="Network currently unavailable"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
+
+    <com.google.android.material.textview.MaterialTextView
+        android:id="@+id/tv_check_internet_available"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="#5CD506"
+        android:gravity="center"
+        android:text="Network available"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:visibility="visible" />
+
 
     <com.google.android.material.textview.MaterialTextView
         android:id="@+id/tv_temperature"

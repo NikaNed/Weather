@@ -13,10 +13,12 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.view.isVisible
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
 import com.example.weather.databinding.FragmentCurrentWeatherBinding
+import com.example.weather.presentation.adapters.InternetConnection
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_current_weather.*
 import java.sql.Timestamp
@@ -44,6 +46,8 @@ class CurrentWeatherFragment : Fragment() {
         get() = _binding ?: throw RuntimeException("FragmentCurrentWeatherBinding == null")
 
 
+    private lateinit var cld: InternetConnection
+
     override fun onAttach(context: Context) {
         component.inject(this)
         super.onAttach(context)
@@ -60,9 +64,11 @@ class CurrentWeatherFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
         checkPermission()
 
         initObservers()
+
 
         setOnClickLaunchDayFragment()
 
@@ -74,38 +80,67 @@ class CurrentWeatherFragment : Fragment() {
         toolbar.setOnClickListener {
             binding.etSearch.text.clear()
         }
+        testConnection()
+
     }
 
+    private fun testConnection() {
+        cld = InternetConnection(requireActivity().application)
+        cld.observe(viewLifecycleOwner) { isConnected ->
+            if (isConnected) {
+                Toast.makeText((requireActivity().application), "Connected", Toast.LENGTH_SHORT).show()
+//                binding.tvCheckInternetAvailable.visibility = View.VISIBLE
+                binding.tvCheckInternetUnavailable.visibility = View.GONE
+            } else {
+                binding.tvCheckInternetAvailable.visibility = View.GONE
+                binding.tvCheckInternetUnavailable.visibility = View.VISIBLE
+            }
+        }
+    }
 
 
     private fun initObservers() {
         viewModel = ViewModelProvider(requireActivity(),
-            viewModelFactory)[CurrentWeatherViewModel::class.java] //инициализируем vM
+            viewModelFactory)[CurrentWeatherViewModel::class.java]
 
         binding.etSearch.setOnEditorActionListener { view, actionId, event ->
 
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                val resultCity = (view as EditText).text.toString()
-                viewModel.getCityName(resultCity)
+                viewModel.getCityName(binding.etSearch.text.toString())
             }
             false
         }
 
+
         viewModel.errorInputName.observe(viewLifecycleOwner) {
             etSearch.error = "Enter name of the city"
+            binding.buttonHours.isEnabled = it != true
         }
 
         viewModel.errorIncorrectCity.observe(viewLifecycleOwner) {
+            binding.buttonHours.isEnabled = it != true
             binding.tvNothingFound.isVisible = it
+            with(binding) {
+                llCurrentDetails1.visibility = View.GONE
+                llCurrentDetails2.visibility = View.GONE
+                tvCurrentDetails.visibility = View.GONE
+                tvHumidity.visibility = View.GONE
+                tvPressure.visibility = View.GONE
+                tvVisibility.visibility = View.GONE
+                tvWind.visibility = View.GONE
+                tvClouds.visibility = View.GONE
+            }
         }
 
         viewModel.nameCity.observe(viewLifecycleOwner) {
-            val city = (binding.etSearch as TextView).text.toString()
-            viewModel.getCurrentInfo(city)
+            (binding.etSearch as TextView).text = it.toString()
+//            var city = (binding.etSearch as TextView).text.toString()
+            viewModel.getCurrentInfo(it.toString())
         }
 
         viewModel.currentInfo.observe(viewLifecycleOwner) {
             with(binding) {
+                buttonHours.isEnabled = true
                 tvDataWithTime.text = convertTimestampToTime(it.dt)
                 tvTemperature.text = it.main.temp.roundToInt().toString() + "°С"
                 tvTempFeel.text =
@@ -124,12 +159,12 @@ class CurrentWeatherFragment : Fragment() {
             }
         }
 
-        viewModel.currentDetail.observe(viewLifecycleOwner){
-            with(binding){
-                llCurrentDetails1.isVisible= it
-                llCurrentDetails2.isVisible= it
-                tvCurrentDetails.isVisible= it
-                tvHumidity.isVisible=it
+        viewModel.currentDetail.observe(viewLifecycleOwner) {
+            with(binding) {
+                llCurrentDetails1.isVisible = it
+                llCurrentDetails2.isVisible = it
+                tvCurrentDetails.isVisible = it
+                tvHumidity.isVisible = it
                 tvPressure.isVisible = it
                 tvVisibility.isVisible = it
                 tvWind.isVisible = it
@@ -137,7 +172,7 @@ class CurrentWeatherFragment : Fragment() {
             }
         }
 
-        viewModel.resetFields.observe(viewLifecycleOwner){
+        viewModel.resetFields.observe(viewLifecycleOwner) {
             with(binding) {
                 tvDataWithTime.text = ""
                 tvTemperature.text = ""
@@ -147,6 +182,12 @@ class CurrentWeatherFragment : Fragment() {
                 Picasso.get()
                     .load("http://openweathermap.org/img/wn/" + "")
                     .into(ivWeatherIcon)
+                nameTest.text = ""
+                tvHumidityValue.text = ""
+                tvPressureValue.text = ""
+                tvVisibilityValue.text = ""
+                tvWindValue.text = ""
+                tvCloudsValue.text = ""
             }
         }
 
@@ -210,6 +251,29 @@ class CurrentWeatherFragment : Fragment() {
             pLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
         }
     }
+
+
+//    private fun checkForInternet(context: Context): Boolean {
+//        val connectivityManager =
+//            context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+//        if (connectivityManager != null) {
+//            val capabilities =
+//                connectivityManager.getNetworkCapabilities(connectivityManager.activeNetwork)
+//            if (capabilities != null) {
+//                if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_CELLULAR)) {
+//                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_CELLULAR")
+//                    return true
+//                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_WIFI)) {
+//                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_WIFI")
+//                    return true
+//                } else if (capabilities.hasTransport(NetworkCapabilities.TRANSPORT_ETHERNET)) {
+//                    Log.i("Internet", "NetworkCapabilities.TRANSPORT_ETHERNET")
+//                    return true
+//                }
+//            }
+//        }
+//        return false
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()

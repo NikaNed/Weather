@@ -143,7 +143,7 @@ class SearchFragment : Fragment() {
 
     companion object {
         private const val EXTRA_NAME_CITY = "name"
-        private const val API_KEY_GOOGLE_MAP = "AIzaSyBQh0yNbuZJcJH-HugK26MNBOxudXhBVt0"
+
 
 
         fun newInstance(nameCity: String): Fragment {

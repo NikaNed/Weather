@@ -1,10 +1,17 @@
 package com.example.weather.presentation
 
+import android.content.Context
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities
 import android.util.Log
+import android.widget.Toast
+import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.work.ListenableWorker
+import com.android.volley.NetworkError
 import com.example.weather.data.network.modelsCurrent.WeatherResponse
 import com.example.weather.data.network.modelsForecast.City
 import com.example.weather.data.network.modelsForecast.ForecastListItem
@@ -30,6 +37,7 @@ class CurrentWeatherViewModel @Inject constructor(
     val state: LiveData<State>
         get() = _state*/
 
+var resultCity:String = ""
 
     private val _currentInfo = MutableLiveData<WeatherResponse>()
     val currentInfo: LiveData<WeatherResponse>
@@ -64,12 +72,18 @@ class CurrentWeatherViewModel @Inject constructor(
         get() = _resetFields
 
     private val _currentDetail = MutableLiveData<Boolean>()
-    val  currentDetail: LiveData<Boolean>
-        get() =  _currentDetail
+    val currentDetail: LiveData<Boolean>
+        get() = _currentDetail
+
+    private val _checkInternet = MutableLiveData<Boolean>()
+    val checkInternet: LiveData<Boolean>
+        get() = _checkInternet
 
     init {
         _currentDetail.value = false
+        _checkInternet.value = true
     }
+
 
     fun getCurrentInfo(name: String) {
 
@@ -84,8 +98,7 @@ class CurrentWeatherViewModel @Inject constructor(
                 if (response.body() != null) {
                     _currentDetail.value = true
                     _currentInfo.postValue(response.body())
-                    _errorIncorrectCity.postValue(false)
-
+                    _checkInternet.value = false
                     Log.d("TAG", "onResponse Weather Success $call ${response.body()}")
                 } else {
                     _errorIncorrectCity.postValue(true)
@@ -95,7 +108,6 @@ class CurrentWeatherViewModel @Inject constructor(
 
             override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
                 Log.d("TAG", "onResponse onFailure ${t.message}")
-//                _errorIncorrectCity.postValue(true)
 
             }
         })
@@ -104,30 +116,30 @@ class CurrentWeatherViewModel @Inject constructor(
 
     fun getCityName(nameCity: String) {
         _progressVisible.value = true
-//        val name = parseName(nameCity)
         val fieldsVailed = validateInput(nameCity)
         if (fieldsVailed) {
             viewModelScope.launch {
+                _errorIncorrectCity.postValue(false)
                 _nameCity.value = nameCity
                 _progressVisible.value = false
             }
         }
     }
 
-//    private fun parseName(inputName: String?): String {
-//        return inputName?.trim() ?: "" // если inputName не null, то обрезаем пробелы, если null,то
-//        // возвращаем пустую строку
-//    }
 
-    private fun validateInput(name: String): Boolean { // проводим валидацию
+    private fun validateInput(name: String): Boolean {
         var result = true
         if (name.isBlank()) {
             result = false
             _errorInputName.value = true
             _progressVisible.value = false
-
         }
         return result
+    }
+
+     fun onBackPressed(){
+        _currentDetail.value = false
+//         _errorInputName.value = false
     }
 
 
