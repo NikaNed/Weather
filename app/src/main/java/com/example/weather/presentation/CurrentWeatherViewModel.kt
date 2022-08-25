@@ -1,10 +1,12 @@
 package com.example.weather.presentation
 
 import android.content.Context
+import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.util.Log
 import android.widget.Toast
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -53,10 +55,6 @@ class CurrentWeatherViewModel @Inject constructor(
     val progressVisible: LiveData<Boolean>
         get() = _progressVisible
 
-    private val _searchCity = MutableLiveData<List<City>>()
-    val searchCity: MutableLiveData<List<City>>
-        get() = _searchCity
-
     private val _errorInputName = MutableLiveData<Boolean>()
     val errorInputName: LiveData<Boolean>
         get() = _errorInputName
@@ -64,10 +62,6 @@ class CurrentWeatherViewModel @Inject constructor(
     private val _errorIncorrectCity = MutableLiveData<Boolean>()
     val errorIncorrectCity: LiveData<Boolean>
         get() = _errorIncorrectCity
-
-    private val _resetFields = MutableLiveData<Boolean>()
-    val resetFields: LiveData<Boolean>
-        get() = _resetFields
 
     private val _currentDetail = MutableLiveData<Boolean>()
     val currentDetail: LiveData<Boolean>
@@ -80,7 +74,6 @@ class CurrentWeatherViewModel @Inject constructor(
     init {
         _currentDetail.value = false
     }
-
 
     fun getCurrentInfo(name: String) {
 
@@ -99,7 +92,7 @@ class CurrentWeatherViewModel @Inject constructor(
                     Log.d("TAG", "onResponse Weather Success $call ${response.body()}")
                 } else {
                     _errorIncorrectCity.postValue(true)
-                    _resetFields.value = true
+                    _currentDetail.value = false
                 }
             }
 
@@ -110,13 +103,13 @@ class CurrentWeatherViewModel @Inject constructor(
         })
     }
 
-
     fun getCityName(nameCity: String) {
         _progressVisible.value = true
         val fieldsVailed = validateInput(nameCity)
         if (fieldsVailed) {
             viewModelScope.launch {
                 _errorIncorrectCity.postValue(false)
+                _currentDetail.value = false
                 _nameCity.value = nameCity
                 _progressVisible.value = false
             }
@@ -135,7 +128,7 @@ class CurrentWeatherViewModel @Inject constructor(
 
      fun onBackPressed(){
         _currentDetail.value = false
-//         _errorInputName.value = false
+         _errorInputName.value = false
     }
 
     fun getForecastInfo(name: String) {

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Погода</string>
+    <string name="search_hint">Введите город</string>
+    <string name="weather_forecast">Прогноз</string>
+    <string name="clouds">Облачность</string>
+    <string name="wind_speed">Скорость ветра</string>
+    <string name="visibility">Видимость</string>
+    <string name="pressure">Давление</string>
+    <string name="humidity">Влажность</string>
+    <string name="current_details">Детали</string>
+    <string name="network_currently_unavailable">Сеть недоступна</string>
+    <string name="network_available">Сеть доступна</string>
+    <string name="nothing_found">Ничего не найдено</string>
+    <string name="mc_metric">м/с</string>
+    <string name="error_enter_name">Введите город</string>
+    <string name="connected">Сеть доступна</string>
+    <string name="mater_metric">км</string>
+    <string name="pressure_metric"> мм рт.ст.</string>
+    <string name="feels_like">Ошущается как\u0020</string>
+</resources>

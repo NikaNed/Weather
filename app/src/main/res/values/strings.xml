@@ -1,13 +1,12 @@
 <resources>
     <string name="app_name">Weather</string>
-    <string name="search_hint">Search places</string>
-    <string name="hours">Hours</string>
-    <string name="days">Days</string>
-    <string name="data_template">%s/%s/%s %s : %s</string>
-    <string name="error_empty">Enter name of the city</string>
+    <string name="hours" translatable="false">Hours</string>
+    <string name="days" translatable="false">Days</string>
+    <string name="data_template" translatable="false">%s/%s/%s %s : %s</string>
+    <string name="error_empty" translatable="false">Enter name of the city</string>
     <string name="nothing_found">Nothing found</string>
     <string name="error_enter_name">Enter name of the city</string>
-    <string name="background_content_description">background</string>
+    <string name="background_content_description" translatable="false">background</string>
     <string name="network_currently_unavailable">Network currently unavailable</string>
     <string name="network_available">Network available</string>
     <string name="current_details">Current details</string>
@@ -17,4 +16,14 @@
     <string name="wind_speed">Wind speed</string>
     <string name="clouds">Clouds</string>
     <string name="weather_forecast">Weather forecast</string>
+    <string name="search_hint">Search places</string>
+    <string name="mc_metric">m/s</string>
+    <string name="connected">Connected</string>
+    <string name="degree_celsius_metric" translatable="false">°С</string>
+    <string name="degree_metric" translatable="false">°</string>
+    <string name="percent_metric" translatable="false">%</string>
+    <string name="pressure_metric">mmHg</string>
+    <string name="mater_metric">km</string>
+    <string name="comma" translatable="false">\u0020,</string>
+    <string name="feels_like">Feels like\u0020</string>
 </resources>

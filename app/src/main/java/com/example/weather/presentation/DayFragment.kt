@@ -8,9 +8,11 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weather.databinding.FragmentDayBinding
 import com.example.weather.presentation.adapters.WeatherAdapter
+import kotlinx.android.synthetic.main.fragment_day.*
 import javax.inject.Inject
 
 
@@ -61,6 +63,15 @@ class DayFragment : Fragment() {
             binding.recycler.layoutManager = LinearLayoutManager(context)
             binding.recycler.adapter = adapter
             adapter.submitList(it)
+
+            val layoutManager = LinearLayoutManager(requireActivity().application, LinearLayoutManager.VERTICAL, false)
+            recycler.layoutManager = layoutManager
+            recycler.addItemDecoration(
+                DividerItemDecoration(
+                    context,
+                    layoutManager.orientation
+                )
+            )
         }
 
         viewModel.progressVisible.observe(viewLifecycleOwner) {

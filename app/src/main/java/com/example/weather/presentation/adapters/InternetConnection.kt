@@ -2,6 +2,7 @@ package com.example.weather.presentation.adapters
 
 import android.app.Application
 import android.content.Context
+import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
@@ -9,6 +10,7 @@ import android.net.NetworkRequest
 import android.os.Build
 import android.util.Log
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.LiveData
 
 class InternetConnection(
@@ -16,11 +18,12 @@ class InternetConnection(
 ) : LiveData<Boolean>() {
 
     constructor(appContext: Application) : this(
-        appContext.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+        appContext.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
     )
 
-    private val networkCallback = @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+    private val networkCallback =
     object : ConnectivityManager.NetworkCallback() {
+
 
         override fun onAvailable(network: Network) {
             super.onAvailable(network)
@@ -28,7 +31,6 @@ class InternetConnection(
             postValue(true)
         }
 
-        @RequiresApi(Build.VERSION_CODES.M)
         override fun onCapabilitiesChanged(
             network: Network,
             networkCapabilities: NetworkCapabilities,
@@ -54,7 +56,6 @@ class InternetConnection(
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onActive() {
         super.onActive()
         val builder = NetworkRequest.Builder()
@@ -63,7 +64,6 @@ class InternetConnection(
             .build(), networkCallback)
     }
 
-    @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
     override fun onInactive() {
         super.onInactive()
         connectivityManager.unregisterNetworkCallback(networkCallback)

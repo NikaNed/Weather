@@ -8,8 +8,9 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/purple_light_bar"
-        android:padding="8dp">
+        android:padding="8dp"
+     android:background="#C3A5A9F1"
+      >
 
         <com.google.android.material.textview.MaterialTextView
             android:id="@+id/tvDate"

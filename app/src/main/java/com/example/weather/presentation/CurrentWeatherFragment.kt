@@ -1,7 +1,11 @@
 package com.example.weather.presentation
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
+import android.content.Context.CONNECTIVITY_SERVICE
+import android.net.ConnectivityManager
+import android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +15,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
@@ -43,9 +48,6 @@ class CurrentWeatherFragment : Fragment() {
     private val binding: FragmentCurrentWeatherBinding
         get() = _binding ?: throw RuntimeException("FragmentCurrentWeatherBinding == null")
 
-
-    private lateinit var cld: InternetConnection
-
     override fun onAttach(context: Context) {
         component.inject(this)
         super.onAttach(context)
@@ -64,39 +66,51 @@ class CurrentWeatherFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         checkPermission()
-
+//        drawLayout()
         initObservers()
-
-        setOnClickLaunchDayFragment()
-
         testConnection()
-
-//        setOnClickLaunchWeekFragment()
-
-//        toolbar.setNavigationOnClickListener {
-//            launchSearchFragment()
-//        }
+        setOnClickLaunchDayFragment()
 
         toolbar.setOnClickListener {
             binding.etSearch.text.clear()
+
         }
     }
 
     private fun testConnection() {
-        cld = InternetConnection(requireActivity().application)
-        cld.observe(viewLifecycleOwner) { isConnected ->
-            if (isConnected) {
-                Toast.makeText((requireActivity().application), "Connected", Toast.LENGTH_SHORT)
-                    .show()
-                binding.tvCheckInternetUnavailable.visibility = View.GONE
-            } else {
-                binding.tvCheckInternetAvailable.visibility = View.GONE
-                binding.tvCheckInternetUnavailable.visibility = View.VISIBLE
+        val internet = InternetConnection(requireActivity().application)
+        internet.observe(viewLifecycleOwner) { isConnected->
+            with(binding) {
+                if (isConnected) {
+//                Toast.makeText((requireActivity().application), getString(R.string.connected), Toast.LENGTH_SHORT)
+//                    .show()
+                    tvCheckInternetUnavailable.visibility = View.GONE
+                } else {
+                    tvCheckInternetAvailable.visibility = View.GONE
+                    tvCheckInternetUnavailable.visibility = View.VISIBLE
+                }
             }
         }
     }
 
+//    private fun isNetworkAvailable(): Boolean {
+//        val cm = requireActivity().application.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+//        val capabilities = cm.getNetworkCapabilities(cm.activeNetwork)
+//        return (capabilities != null && capabilities.hasCapability(NET_CAPABILITY_INTERNET))
+//
+//    }
+//
+//    private fun drawLayout() {
+//        if (isNetworkAvailable()) {
+//                binding.tvCheckInternetUnavailable.visibility = View.GONE
+//        } else {
+//            binding.tvCheckInternetAvailable.visibility = View.GONE
+//                binding.tvCheckInternetUnavailable.visibility = View.VISIBLE
+//        }
+//    }
 
+
+    @SuppressLint("SetTextI18n")
     private fun initObservers() {
         viewModel = ViewModelProvider(requireActivity(),
             viewModelFactory)[CurrentWeatherViewModel::class.java]
@@ -117,16 +131,6 @@ class CurrentWeatherFragment : Fragment() {
         viewModel.errorIncorrectCity.observe(viewLifecycleOwner) {
             binding.buttonHours.isEnabled = it != true
             binding.tvNothingFound.isVisible = it
-            with(binding) {
-                llCurrentDetails1.visibility = View.GONE
-                llCurrentDetails2.visibility = View.GONE
-                tvCurrentDetails.visibility = View.GONE
-                tvHumidity.visibility = View.GONE
-                tvPressure.visibility = View.GONE
-                tvVisibility.visibility = View.GONE
-                tvWind.visibility = View.GONE
-                tvClouds.visibility = View.GONE
-            }
         }
 
         viewModel.nameCity.observe(viewLifecycleOwner) {
@@ -138,20 +142,21 @@ class CurrentWeatherFragment : Fragment() {
             with(binding) {
                 buttonHours.isEnabled = true
                 tvDataWithTime.text = convertTimestampToTime(it.dt)
-                tvTemperature.text = it.main.temp.roundToInt().toString() + "°С"
+                tvTemperature.text = it.main.temp.roundToInt().toString() + getString(R.string.degree_celsius_metric)
                 tvTempFeel.text =
-                    "Ощущается как " + it.main.feels_like.roundToInt().toString() + "°"
+                    getString(R.string.feels_like) + it.main.feels_like.roundToInt().toString() + getString(R.string.degree_metric)
                 tvDescription.text = it.weather.joinToString { it.description }
                     .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
                 Picasso.get()
                     .load(URL_IMAGE + it.weather.joinToString { it.icon } + "@2x.png")
                     .into(ivWeatherIcon)
-                tvNameCityTitle.text = it.name + " , " + it.sys.country
-                tvHumidityValue.text = it.main.humidity.toString() + "%"
-                tvPressureValue.text = it.main.pressure.toString() + "hPa"
-                tvVisibilityValue.text = it.visibility.div(1000).toString() + "km"
-                tvWindValue.text = it.wind.speed.toString() + "m/s"
-                tvCloudsValue.text = it.clouds.all.toString() + "%"
+                tvNameCityTitle.text = it.name + getString(R.string.comma) + it.sys.country
+                tvHumidityValue.text = it.main.humidity.toString() + getString(R.string.percent_metric)
+                tvPressureValue.text =
+                    it.main.pressure.div(1.333).roundToInt().toString() + getString(R.string.pressure_metric)
+                tvVisibilityValue.text = it.visibility.div(1000).toString() + getString(R.string.mater_metric)
+                tvWindValue.text = it.wind.speed.toString() + getString(R.string.mc_metric)
+                tvCloudsValue.text = it.clouds.all.toString() + getString(R.string.percent_metric)
             }
         }
 
@@ -165,25 +170,14 @@ class CurrentWeatherFragment : Fragment() {
                 tvVisibility.isVisible = it
                 tvWind.isVisible = it
                 tvClouds.isVisible = it
-            }
-        }
-
-        viewModel.resetFields.observe(viewLifecycleOwner) {
-            with(binding) {
-                tvDataWithTime.text = ""
-                tvTemperature.text = ""
-                tvTempFeel.text = ""
-                tvDescription.text = ""
-                tvNameCityTitle.text = ""
-                Picasso.get()
-                    .load(URL_IMAGE + "")
-                    .into(ivWeatherIcon)
-                tvNameCityTitle.text = ""
-                tvHumidityValue.text = ""
-                tvPressureValue.text = ""
-                tvVisibilityValue.text = ""
-                tvWindValue.text = ""
-                tvCloudsValue.text = ""
+                buttonHours.isVisible = it
+                tvDataWithTime.isVisible = it
+                tvTemperature.isVisible = it
+                tvTempFeel.isVisible = it
+                tvDescription.isVisible = it
+                tvNameCityTitle.isVisible = it
+                Picasso.get().load(URL_IMAGE + it).into(ivWeatherIcon)
+                tvNameCityTitle.isVisible = it
             }
         }
 
@@ -196,11 +190,10 @@ class CurrentWeatherFragment : Fragment() {
         }
     }
 
-
     private fun convertTimestampToTime(dt: Int): String {
         val stamp = Timestamp(System.currentTimeMillis())
         val data = Date(stamp.time)
-        val pattern = "MMMM dd, HH:mm"
+        val pattern = "dd MMMM, HH:mm"
         val sdf = SimpleDateFormat(pattern, Locale.getDefault())
         sdf.timeZone = TimeZone.getDefault()
         return sdf.format(data)
@@ -213,7 +206,6 @@ class CurrentWeatherFragment : Fragment() {
         }
     }
 
-
     private fun launchDayFragment() {
         requireActivity().supportFragmentManager
             .beginTransaction()
@@ -221,22 +213,6 @@ class CurrentWeatherFragment : Fragment() {
             .addToBackStack(null)
             .commit()
     }
-
-//    private fun setOnClickLaunchWeekFragment() {
-//        binding.buttonDays.setOnClickListener {
-////            viewModel.getCityName(binding.etSearch.text.toString())
-//            launchSearchFragment()
-//        }
-//    }
-
-//    private fun launchSearchFragment() {
-//        val nameCity = requireActivity().intent.getStringExtra(EXTRA_NAME_CITY) ?: EMPTY_NAME
-//        requireActivity().supportFragmentManager
-//            .beginTransaction()
-//            .replace(R.id.fragment_container, SearchFragment.newInstance(nameCity))
-//            .addToBackStack(null)
-//            .commit()
-//    }
 
     private fun permissionListener() {
         pLauncher = registerForActivityResult(
@@ -259,8 +235,6 @@ class CurrentWeatherFragment : Fragment() {
 
     companion object {
         const val URL_IMAGE = "http://openweathermap.org/img/wn/"
-        const val EXTRA_NAME_CITY = "name"
-        const val EMPTY_NAME = ""
 
         fun newInstance(): Fragment {
             return CurrentWeatherFragment()
