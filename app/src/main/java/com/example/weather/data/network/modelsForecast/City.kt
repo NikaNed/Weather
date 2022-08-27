@@ -6,7 +6,7 @@ data class City(
 //    val coord: Coord,
 //    @SerializedName("country")
 //    val country: String,
-//    @SerializedName("name")
+    @SerializedName("name")
     val name: String,
 //    val population: Int,
 //    val sunrise: Int,

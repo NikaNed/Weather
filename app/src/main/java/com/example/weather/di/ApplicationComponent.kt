@@ -6,8 +6,9 @@ import dagger.BindsInstance
 import dagger.Component
 
 
-/*@ApplicationScope*/
+
 @Component(modules = [DataModule::class, ViewModelModule::class])
+@ApplicationScope
 interface ApplicationComponent  {
 
     fun inject(fragment: CurrentWeatherFragment)

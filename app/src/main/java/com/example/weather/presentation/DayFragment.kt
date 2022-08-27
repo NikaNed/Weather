@@ -12,9 +12,7 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weather.databinding.FragmentDayBinding
 import com.example.weather.presentation.adapters.WeatherAdapter
-import kotlinx.android.synthetic.main.fragment_day.*
 import javax.inject.Inject
-
 
 class DayFragment : Fragment() {
 
@@ -60,18 +58,20 @@ class DayFragment : Fragment() {
 
         viewModel.forecastInfo.observe(viewLifecycleOwner) {
             adapter = WeatherAdapter()
-            binding.recycler.layoutManager = LinearLayoutManager(context)
-            binding.recycler.adapter = adapter
-            adapter.submitList(it)
+            with(binding) {
+                recycler.layoutManager = LinearLayoutManager(context)
+                recycler.adapter = adapter
+                adapter.submitList(it)
 
-            val layoutManager = LinearLayoutManager(requireActivity().application, LinearLayoutManager.VERTICAL, false)
-            recycler.layoutManager = layoutManager
-            recycler.addItemDecoration(
-                DividerItemDecoration(
-                    context,
-                    layoutManager.orientation
+                val layoutManager = LinearLayoutManager(requireActivity().application,
+                    LinearLayoutManager.VERTICAL,
+                    false)
+                recycler.addItemDecoration(
+                    DividerItemDecoration(
+                        context,
+                        layoutManager.orientation)
                 )
-            )
+            }
         }
 
         viewModel.progressVisible.observe(viewLifecycleOwner) {
@@ -80,7 +80,6 @@ class DayFragment : Fragment() {
 
         binding.toolbar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
-            viewModel.onBackPressed()
         }
     }
 
@@ -90,7 +89,6 @@ class DayFragment : Fragment() {
     }
 
     companion object {
-
         fun newInstance(): Fragment {
             return DayFragment()
         }

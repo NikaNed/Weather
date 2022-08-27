@@ -1,21 +1,11 @@
 package com.example.weather.presentation
 
-import android.content.Context
-import android.content.Context.CONNECTIVITY_SERVICE
-import android.net.ConnectivityManager
-import android.net.NetworkCapabilities
 import android.util.Log
-import android.widget.Toast
-import androidx.core.content.ContextCompat.getSystemService
-import androidx.core.view.isVisible
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.work.ListenableWorker
-import com.android.volley.NetworkError
 import com.example.weather.data.network.modelsCurrent.WeatherResponse
-import com.example.weather.data.network.modelsForecast.City
 import com.example.weather.data.network.modelsForecast.ForecastListItem
 import com.example.weather.data.network.modelsForecast.ForecastResponse
 import com.example.weather.domain.usecase.GetCurrentWeatherUseCase
@@ -24,9 +14,7 @@ import com.example.weather.domain.usecase.SearchCityUseCase
 import kotlinx.coroutines.launch
 import retrofit2.Call
 import retrofit2.Callback
-import retrofit2.HttpException
 import retrofit2.Response
-import java.io.IOException
 import javax.inject.Inject
 
 class CurrentWeatherViewModel @Inject constructor(
@@ -35,9 +23,9 @@ class CurrentWeatherViewModel @Inject constructor(
     private val searchCityUseCase: SearchCityUseCase,
 ) : ViewModel() {
 
-/*    private val _state = MutableLiveData<State>()
-    val state: LiveData<State>
-        get() = _state*/
+//    private val _state = MutableLiveData<State>()
+//    val state: LiveData<State>
+//        get() = _state
 
     private val _currentInfo = MutableLiveData<WeatherResponse>()
     val currentInfo: LiveData<WeatherResponse>
@@ -67,13 +55,11 @@ class CurrentWeatherViewModel @Inject constructor(
     val currentDetail: LiveData<Boolean>
         get() = _currentDetail
 
-    private val _buttonForecast = MutableLiveData<Boolean>()
-    val buttonForecast: LiveData<Boolean>
-        get() = _buttonForecast
 
     init {
         _currentDetail.value = false
     }
+
 
     fun getCurrentInfo(name: String) {
 
@@ -88,10 +74,11 @@ class CurrentWeatherViewModel @Inject constructor(
                 if (response.body() != null) {
                     _currentDetail.value = true
                     _currentInfo.postValue(response.body())
-                    _buttonForecast.value = true
+                    _progressVisible.value = false
                     Log.d("TAG", "onResponse Weather Success $call ${response.body()}")
                 } else {
-                    _errorIncorrectCity.postValue(true)
+                    _errorIncorrectCity.value = true
+                    _progressVisible.value = false
                     _currentDetail.value = false
                 }
             }
@@ -104,32 +91,14 @@ class CurrentWeatherViewModel @Inject constructor(
     }
 
     fun getCityName(nameCity: String) {
-        _progressVisible.value = true
-        val fieldsVailed = validateInput(nameCity)
-        if (fieldsVailed) {
             viewModelScope.launch {
                 _errorIncorrectCity.postValue(false)
+                _errorInputName.value = true
                 _currentDetail.value = false
                 _nameCity.value = nameCity
-                _progressVisible.value = false
+                _progressVisible.value = true
             }
         }
-    }
-
-    private fun validateInput(name: String): Boolean {
-        var result = true
-        if (name.isBlank()) {
-            result = false
-            _errorInputName.value = true
-            _progressVisible.value = false
-        }
-        return result
-    }
-
-     fun onBackPressed(){
-        _currentDetail.value = false
-         _errorInputName.value = false
-    }
 
     fun getForecastInfo(name: String) {
 
@@ -142,7 +111,6 @@ class CurrentWeatherViewModel @Inject constructor(
                 response: Response<ForecastResponse>,
             ) {
                 viewModelScope.launch {
-                    _progressVisible.value = true
                     Log.d("TAG", "onResponse Forecast Success $call ${response.body()?.list}")
                     _forecastInfo.postValue(response.body()?.list)
                     _progressVisible.value = false

@@ -15,8 +15,10 @@ class WeatherActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(binding.root)
+        if (savedInstanceState == null) {
         launchFragment()
         }
+    }
 
     private fun launchFragment() {
         supportFragmentManager
