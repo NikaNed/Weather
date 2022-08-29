@@ -14,12 +14,12 @@ object ApiFactory {
     private val httpLogLevel = HttpLoggingInterceptor.Level.BODY
 
     private val okHttpClient: OkHttpClient = OkHttpClient.Builder()
-        .addInterceptor(RequestInterceptor())
+//        .addInterceptor(RequestInterceptor())
         .addInterceptor(HttpLoggingInterceptor().apply { level = httpLogLevel })
         .build()
 
     private val retrofit = Retrofit.Builder() //создаем объект retrofit
-        .baseUrl(BASE_URL) //указываем к какому базовому URL будем образаться
+        .baseUrl(BASE_URL) //указываем к какому базовому URL будем обращаться
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())

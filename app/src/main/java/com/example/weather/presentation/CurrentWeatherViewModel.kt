@@ -4,23 +4,16 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.weather.data.network.modelsCurrent.WeatherResponse
 import com.example.weather.data.network.modelsForecast.ForecastListItem
-import com.example.weather.data.network.modelsForecast.ForecastResponse
 import com.example.weather.domain.usecase.GetCurrentWeatherUseCase
 import com.example.weather.domain.usecase.GetForecastUseCase
-import com.example.weather.domain.usecase.SearchCityUseCase
-import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 class CurrentWeatherViewModel @Inject constructor(
     private val getCurrentWeatherUseCase: GetCurrentWeatherUseCase,
     private val getForecastUseCase: GetForecastUseCase,
-    private val searchCityUseCase: SearchCityUseCase,
 ) : ViewModel() {
 
 //    private val _state = MutableLiveData<State>()
@@ -55,72 +48,128 @@ class CurrentWeatherViewModel @Inject constructor(
     val currentDetail: LiveData<Boolean>
         get() = _currentDetail
 
+    var job: Job? = null
 
     init {
         _currentDetail.value = false
     }
 
+    fun getCurrentInfo(nameCity: String) {
 
-    fun getCurrentInfo(name: String) {
+        job = CoroutineScope(Dispatchers.IO).launch {
+            val response = getCurrentWeatherUseCase.invoke(nameCity)
 
-        val response = getCurrentWeatherUseCase.invoke(name)
-
-        response.enqueue(object : Callback<WeatherResponse> {
-
-            override fun onResponse(
-                call: Call<WeatherResponse>,
-                response: Response<WeatherResponse>,
-            ) {
-                if (response.body() != null) {
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful) {
                     _currentDetail.value = true
                     _currentInfo.postValue(response.body())
                     _progressVisible.value = false
-                    Log.d("TAG", "onResponse Weather Success $call ${response.body()}")
+//                        Log.d("TAG", "onResponse Weather Success $call ${response.body()}")
+//
                 } else {
                     _errorIncorrectCity.value = true
                     _progressVisible.value = false
                     _currentDetail.value = false
+                    Log.d("TAG", "onResponse onFailure ${response.message()}")
+//                    onError("Error : ${response.message()} ")
                 }
-            }
-
-            override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-                Log.d("TAG", "onResponse onFailure ${t.message}")
-
-            }
-        })
-    }
-
-    fun getCityName(nameCity: String) {
-            viewModelScope.launch {
-                _errorIncorrectCity.postValue(false)
-                _errorInputName.value = true
-                _currentDetail.value = false
-                _nameCity.value = nameCity
-                _progressVisible.value = true
             }
         }
 
+//        val response = getCurrentWeatherUseCase.invoke(name)
+
+//        response.enqueue(object : Callback<WeatherResponse> {
+//
+//            override fun onResponse(
+//                call: Call<WeatherResponse>,
+//                response: Response<WeatherResponse>,
+//            ) {
+//                viewModelScope.launch {
+//                    if (response.body() != null) {
+//                        _currentDetail.value = true
+//                        withContext(Dispatchers.IO) {
+//                            _currentInfo.postValue(response.body())
+//                        }
+//                        _progressVisible.value = false
+//                        Log.d("TAG", "onResponse Weather Success $call ${response.body()}")
+//                    } else {
+//                        _errorIncorrectCity.value = true
+//                        _progressVisible.value = false
+//                        _currentDetail.value = false
+//                    }
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
+//                Log.d("TAG", "onResponse onFailure ${t.message}")
+//            }
+//        })
+    }
+
+
+//    val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
+//        onError("Exception handled: ${throwable.localizedMessage}")
+//    }
+//
+//    private fun onError(message: String) {
+//        errorMessage.value = message
+//        loading.value = false
+//    }
+
+
+    fun getCityName(nameCity: String) {
+        _errorInputName.value = true
+        _errorIncorrectCity.value = false
+        _progressVisible.value = true
+        _currentDetail.value = false
+        _nameCity.value = nameCity
+    }
+
     fun getForecastInfo(name: String) {
 
-        val response = getForecastUseCase.invoke(name)
-
-        response.enqueue(object : Callback<ForecastResponse> {
-
-            override fun onResponse(
-                call: Call<ForecastResponse>,
-                response: Response<ForecastResponse>,
-            ) {
-                viewModelScope.launch {
-                    Log.d("TAG", "onResponse Forecast Success $call ${response.body()?.list}")
+        job = CoroutineScope(Dispatchers.IO).launch {
+            val response = getForecastUseCase.invoke(name)
+            withContext(Dispatchers.Main) {
+                _progressVisible.value = true
+                if (response.isSuccessful) {
                     _forecastInfo.postValue(response.body()?.list)
                     _progressVisible.value = false
+                } else {
+                    _errorIncorrectCity.value = true
+                    _progressVisible.value = false
+                    Log.d("TAG", "onResponse onFailure ${response.message()}")
+//                    onError("Error : ${response.message()} ")
                 }
             }
+        }
 
-            override fun onFailure(call: Call<ForecastResponse>, t: Throwable) {
-                Log.d("TAG", "onResponse onFailure ${t.message}")
+//        val response = getForecastUseCase.invoke(name)
+//
+//        response.enqueue(object : Callback<ForecastResponse> {
+//
+//            override fun onResponse(
+//                call: Call<ForecastResponse>,
+//                response: Response<ForecastResponse>,
+//            ) {
+//                viewModelScope.launch {
+//                    _progressVisible.value = true
+//                    Log.d("TAG", "onResponse Forecast Success $call ${response.body()?.list}")
+//                    withContext(Dispatchers.IO) {
+//                        _forecastInfo.postValue(response.body()?.list)
+//                    }
+//                    _progressVisible.value = false
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<ForecastResponse>, t: Throwable) {
+//                Log.d("TAG", "onResponse onFailure ${t.message}")
+//
+//            }
+//        })
+    }
 
-            }
-        })
+    override fun onCleared() {
+        super.onCleared()
+        job?.cancel()
     }
 }

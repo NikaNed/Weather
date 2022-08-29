@@ -7,6 +7,6 @@ class GetCurrentWeatherUseCase @Inject constructor (
     private val repository: ForecastRepository
 ) {
 
-    operator fun invoke(name: String) = repository.getCurrentInfoList(name)
+    suspend operator fun invoke(nameCity: String) = repository.getCurrentInfoList(nameCity)
 
 }

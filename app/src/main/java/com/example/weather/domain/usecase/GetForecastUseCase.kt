@@ -6,6 +6,6 @@ import javax.inject.Inject
 class GetForecastUseCase  @Inject constructor (
     private val repository: ForecastRepository
 ) {
-        operator fun invoke(name: String) = repository.getForecastInfo(name)
+        suspend operator fun invoke(name: String) = repository.getForecastInfo(name)
 
     }

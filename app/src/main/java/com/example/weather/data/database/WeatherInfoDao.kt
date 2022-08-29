@@ -22,12 +22,9 @@ interface WeatherInfoDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertWeatherList(weatherList: List<WeatherInfoDbModel>)
 
+//    @Query("SELECT * FROM city_items")
+//    fun getCityName(): LiveData<CityNameDbModel>
+//
 //    @Insert(onConflict = OnConflictStrategy.REPLACE)
-//    fun searchCity(weatherInfoDbModel: WeatherInfoDbModel)
-
-    @Query("SELECT * FROM city_items")
-    fun getCityName(): LiveData<CityNameDbModel>
-
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun searchCityName(cityNameDbModel: CityNameDbModel)
+//    fun searchCityName(cityNameDbModel: CityNameDbModel)
 }

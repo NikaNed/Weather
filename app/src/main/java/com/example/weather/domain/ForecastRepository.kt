@@ -3,14 +3,15 @@ package com.example.weather.domain
 import com.example.weather.data.network.modelsCurrent.WeatherResponse
 import com.example.weather.data.network.modelsForecast.ForecastResponse
 import retrofit2.Call
+import retrofit2.Response
 
 interface ForecastRepository {
 
-    fun getCurrentInfoList(name: String): Call<WeatherResponse>
+    suspend fun getCurrentInfoList(name: String): Response<WeatherResponse>
 
-    fun getLocationByName(): Call<ForecastResponse>
+    suspend fun getForecastInfo(name: String): Response<ForecastResponse>
 
-    fun getForecastInfo(name: String): Call<ForecastResponse>
+//    suspend fun getLocationByName(): Call<ForecastResponse>
 
 //    fun addCityName(forecastItem: ForecastItem)
 }

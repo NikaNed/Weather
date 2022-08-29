@@ -19,11 +19,13 @@ import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import com.example.weather.R
 import com.example.weather.databinding.FragmentCurrentWeatherBinding
 import com.example.weather.presentation.adapters.InternetConnection
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_current_weather.*
+import kotlinx.coroutines.launch
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -80,8 +82,6 @@ class CurrentWeatherFragment : Fragment() {
         internet.observe(viewLifecycleOwner) { isConnected ->
             with(binding) {
                 if (isConnected) {
-//                Toast.makeText((requireActivity().application), getString(R.string.connected), Toast.LENGTH_SHORT)
-//                    .show()
                     tvCheckInternetUnavailable.visibility = View.GONE
                 } else {
                     tvCheckInternetAvailable.visibility = View.GONE
@@ -92,18 +92,18 @@ class CurrentWeatherFragment : Fragment() {
     }
 
     private fun isNetworkAvailable(): Boolean {
-        val cm = requireActivity().application.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
+        val cm =
+            requireActivity().application.getSystemService(CONNECTIVITY_SERVICE) as ConnectivityManager
         val capabilities = cm.getNetworkCapabilities(cm.activeNetwork)
         return (capabilities != null && capabilities.hasCapability(NET_CAPABILITY_INTERNET))
-
     }
 
     private fun drawLayout() {
         if (isNetworkAvailable()) {
-                binding.tvCheckInternetUnavailable.visibility = View.GONE
+            binding.tvCheckInternetUnavailable.visibility = View.GONE
         } else {
             binding.tvCheckInternetAvailable.visibility = View.GONE
-                binding.tvCheckInternetUnavailable.visibility = View.VISIBLE
+            binding.tvCheckInternetUnavailable.visibility = View.VISIBLE
         }
     }
 
@@ -112,12 +112,12 @@ class CurrentWeatherFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity(),
             viewModelFactory)[CurrentWeatherViewModel::class.java]
 
+
         viewModel.errorInputName.observe(viewLifecycleOwner) {
-            if(etSearch.text.isEmpty()){
-                etSearch.error= getString(R.string.error_enter_name)
+            if (etSearch.text.isEmpty()) {
+                etSearch.error = getString(R.string.error_enter_name)
             }
         }
-
         binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val resultCity = binding.etSearch.text.toString()
@@ -126,11 +126,6 @@ class CurrentWeatherFragment : Fragment() {
             }
             false
         }
-
-//        viewModel.nameCity.observe(viewLifecycleOwner) {
-//            val resultCity = binding.etSearch.text.toString()
-////            viewModel.getCurrentInfo(resultCity)
-//        }
 
         viewModel.errorIncorrectCity.observe(viewLifecycleOwner) {
             binding.tvNothingFound.isVisible = it
@@ -146,7 +141,10 @@ class CurrentWeatherFragment : Fragment() {
                     getString(R.string.feels_like) + it.main.feels_like.roundToInt()
                         .toString() + getString(R.string.degree_metric)
                 tvDescription.text = it.weather.joinToString { it.description }
-                    .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+                    .replaceFirstChar {
+                        if (it.isLowerCase()) it.titlecase(Locale.getDefault())
+                        else it.toString()
+                    }
                 Picasso.get()
                     .load(URL_IMAGE + it.weather.joinToString { it.icon } + "@2x.png")
                     .into(ivWeatherIcon)
@@ -206,10 +204,10 @@ class CurrentWeatherFragment : Fragment() {
 
     private fun launchDayFragment() {
         requireActivity().supportFragmentManager
-                .beginTransaction()
-                .replace(R.id.fragment_container, DayFragment.newInstance())
-                .addToBackStack(null)
-                .commit()
+            .beginTransaction()
+            .replace(R.id.fragment_container, DayFragment.newInstance())
+            .addToBackStack(null)
+            .commit()
     }
 
     private fun permissionListener() {

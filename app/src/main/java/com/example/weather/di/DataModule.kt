@@ -34,6 +34,12 @@ interface DataModule {
         fun provideApiService(): ApiService {
             return ApiFactory.apiService
         }
+
+//        @Provides
+//        @ApplicationScope
+//        fun provideRequestInterceptor(): RequestInterceptor {
+//            return RequestInterceptor().intercept()
+//        }
     }
 
 }

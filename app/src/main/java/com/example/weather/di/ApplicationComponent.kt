@@ -13,7 +13,6 @@ interface ApplicationComponent  {
 
     fun inject(fragment: CurrentWeatherFragment)
     fun inject(fragment: DayFragment)
-    fun inject(fragment: SearchFragment)
 
     fun inject(activity: WeatherActivity)
 

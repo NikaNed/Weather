@@ -29,6 +29,7 @@ class InternetConnection(
             super.onAvailable(network)
             Log.d("TAG", "onAvailable: Network ${network} is Available")
             postValue(true)
+
         }
 
         override fun onCapabilitiesChanged(
