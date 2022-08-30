@@ -1,5 +1,6 @@
 package com.example.weather.presentation.adapters
 
+import android.annotation.SuppressLint
 import android.os.Build
 import android.view.View
 import androidx.recyclerview.widget.RecyclerView
@@ -15,14 +16,17 @@ class WeatherViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
     private val binding = ItemForecastDayBinding.bind(view)
 
+    @SuppressLint("SetTextI18n")
     fun bind(item: ForecastListItem) = with(binding) {
 
         tvDate.text = convertPattern(item.dt_txt).toString()
         tvDescription.text = item.weather.joinToString { it.description }
-            .replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() }
+            .replaceFirstChar {
+                if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString()
+            }
         tvTemperature.text = item.main.temp.roundToInt().toString() + "°"
         Picasso.get()
-            .load("http://openweathermap.org/img/wn/" + item.weather.joinToString { it.icon } + "@2x.png")
+            .load(URL_IMAGE + item.weather.joinToString { it.icon } + "@2x.png")
             .into(ivWeatherIcon)
 
     }
@@ -35,5 +39,8 @@ class WeatherViewHolder(view: View) : RecyclerView.ViewHolder(view) {
         }
         val date = LocalDateTime.parse(dt, firstApiFormat)
         return date.format(DateTimeFormatter.ofPattern("d.MM HH:mm"))
+    }
+    companion object {
+        const val URL_IMAGE = "http://openweathermap.org/img/wn/"
     }
 }

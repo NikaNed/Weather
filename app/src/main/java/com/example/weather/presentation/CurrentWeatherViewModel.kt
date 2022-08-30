@@ -8,12 +8,14 @@ import com.example.weather.data.network.modelsCurrent.WeatherResponse
 import com.example.weather.data.network.modelsForecast.ForecastListItem
 import com.example.weather.domain.usecase.GetCurrentWeatherUseCase
 import com.example.weather.domain.usecase.GetForecastUseCase
+import com.example.weather.domain.usecase.SearchCityUseCase
 import kotlinx.coroutines.*
 import javax.inject.Inject
 
 class CurrentWeatherViewModel @Inject constructor(
     private val getCurrentWeatherUseCase: GetCurrentWeatherUseCase,
     private val getForecastUseCase: GetForecastUseCase,
+    private val searchCityUseCase: SearchCityUseCase
 ) : ViewModel() {
 
 //    private val _state = MutableLiveData<State>()
@@ -65,7 +67,6 @@ class CurrentWeatherViewModel @Inject constructor(
                     _currentInfo.postValue(response.body())
                     _progressVisible.value = false
 //                        Log.d("TAG", "onResponse Weather Success $call ${response.body()}")
-//
                 } else {
                     _errorIncorrectCity.value = true
                     _progressVisible.value = false
@@ -75,35 +76,6 @@ class CurrentWeatherViewModel @Inject constructor(
                 }
             }
         }
-
-//        val response = getCurrentWeatherUseCase.invoke(name)
-
-//        response.enqueue(object : Callback<WeatherResponse> {
-//
-//            override fun onResponse(
-//                call: Call<WeatherResponse>,
-//                response: Response<WeatherResponse>,
-//            ) {
-//                viewModelScope.launch {
-//                    if (response.body() != null) {
-//                        _currentDetail.value = true
-//                        withContext(Dispatchers.IO) {
-//                            _currentInfo.postValue(response.body())
-//                        }
-//                        _progressVisible.value = false
-//                        Log.d("TAG", "onResponse Weather Success $call ${response.body()}")
-//                    } else {
-//                        _errorIncorrectCity.value = true
-//                        _progressVisible.value = false
-//                        _currentDetail.value = false
-//                    }
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-//                Log.d("TAG", "onResponse onFailure ${t.message}")
-//            }
-//        })
     }
 
 
@@ -142,30 +114,29 @@ class CurrentWeatherViewModel @Inject constructor(
                 }
             }
         }
+    }
 
-//        val response = getForecastUseCase.invoke(name)
-//
-//        response.enqueue(object : Callback<ForecastResponse> {
-//
-//            override fun onResponse(
-//                call: Call<ForecastResponse>,
-//                response: Response<ForecastResponse>,
-//            ) {
-//                viewModelScope.launch {
-//                    _progressVisible.value = true
-//                    Log.d("TAG", "onResponse Forecast Success $call ${response.body()?.list}")
-//                    withContext(Dispatchers.IO) {
-//                        _forecastInfo.postValue(response.body()?.list)
-//                    }
-//                    _progressVisible.value = false
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<ForecastResponse>, t: Throwable) {
-//                Log.d("TAG", "onResponse onFailure ${t.message}")
-//
-//            }
-//        })
+    fun getLocationByCoord(lat:Double, lon:Double) {
+
+        job = CoroutineScope(Dispatchers.IO).launch {
+            val response = searchCityUseCase.invoke(lat, lon)
+            withContext(Dispatchers.Main) {
+                _progressVisible.value = true
+                if (response.isSuccessful) {
+                    _currentDetail.value = true
+                    _currentInfo.postValue(response.body())
+                    _progressVisible.value = false
+                    _errorIncorrectCity.value = false
+//                        Log.d("TAG", "onResponse Weather Success $call ${response.body()}")
+                } else {
+                    _errorIncorrectCity.value = true
+                    _progressVisible.value = false
+                    _currentDetail.value = false
+                    Log.d("TAG", "onResponse onFailure ${response.message()}")
+//                    onError("Error : ${response.message()} ")
+                }
+            }
+        }
     }
 
     override fun onCleared() {

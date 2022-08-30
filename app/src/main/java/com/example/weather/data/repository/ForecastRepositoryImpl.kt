@@ -12,8 +12,6 @@ class ForecastRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
 ) : ForecastRepository {
 
-
-
     override suspend fun getCurrentInfoList(nameCity: String): Response<WeatherResponse> {
         return apiService.getCurrentWeather(nameCity)
     }
@@ -22,7 +20,8 @@ class ForecastRepositoryImpl @Inject constructor(
         return apiService.getForecastWeather(name)
     }
 
-//    override fun getLocationByName(): Call<ForecastResponse>  {
-//        return apiService.getLocationByName()
-//    }
+    override suspend fun getLocation(lat: Double, lon: Double): Response<WeatherResponse> {
+        return apiService.getLocationByCoord(lat, lon)
+    }
+
 }

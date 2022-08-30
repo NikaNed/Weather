@@ -6,7 +6,6 @@ import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
-//аналог singelton
 object ApiFactory {
 
     private const val BASE_URL = "http://api.openweathermap.org/data/2.5/"
@@ -14,7 +13,7 @@ object ApiFactory {
     private val httpLogLevel = HttpLoggingInterceptor.Level.BODY
 
     private val okHttpClient: OkHttpClient = OkHttpClient.Builder()
-//        .addInterceptor(RequestInterceptor())
+        .addInterceptor(RequestInterceptor())
         .addInterceptor(HttpLoggingInterceptor().apply { level = httpLogLevel })
         .build()
 

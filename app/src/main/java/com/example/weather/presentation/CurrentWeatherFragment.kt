@@ -4,9 +4,12 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Context.CONNECTIVITY_SERVICE
+import android.content.pm.PackageManager
+import android.location.Location
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities.NET_CAPABILITY_INTERNET
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,6 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
@@ -23,6 +27,8 @@ import androidx.lifecycle.lifecycleScope
 import com.example.weather.R
 import com.example.weather.databinding.FragmentCurrentWeatherBinding
 import com.example.weather.presentation.adapters.InternetConnection
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_current_weather.*
 import kotlinx.coroutines.launch
@@ -49,6 +55,8 @@ class CurrentWeatherFragment : Fragment() {
     private val binding: FragmentCurrentWeatherBinding
         get() = _binding ?: throw RuntimeException("FragmentCurrentWeatherBinding == null")
 
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     override fun onAttach(context: Context) {
         component.inject(this)
         super.onAttach(context)
@@ -67,14 +75,46 @@ class CurrentWeatherFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         checkPermission()
-        drawLayout()
         initObservers()
+        startConnection()
         testConnection()
+        getLocation()
         setOnClickLaunchDayFragment()
 
         toolbar.setOnClickListener {
             binding.etSearch.text.clear()
         }
+    }
+
+    private fun getLocation() {
+        binding.icLocationToolbar?.setOnClickListener {
+            fusedLocationClient =
+                LocationServices.getFusedLocationProviderClient(requireActivity().application)
+            getLastLocation()
+        }
+    }
+
+    private fun getLastLocation() {
+        if (ActivityCompat.checkSelfPermission(requireActivity().application,
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                requireActivity().application,
+                Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
+        ) {
+            return
+        }
+        fusedLocationClient.lastLocation
+            .addOnSuccessListener { location: Location? ->
+                if (location == null)
+                    Toast.makeText(requireActivity().application,
+                        "Cannot get location.",
+                        Toast.LENGTH_SHORT).show()
+                else {
+                    val lat = location.latitude
+                    val lon = location.longitude
+                    viewModel.getLocationByCoord(lat, lon)
+                    Log.d("lat", "$lat,$lon")
+                }
+            }
     }
 
     private fun testConnection() {
@@ -83,9 +123,12 @@ class CurrentWeatherFragment : Fragment() {
             with(binding) {
                 if (isConnected) {
                     tvCheckInternetUnavailable.visibility = View.GONE
+                    icLocationToolbar.visibility = View.VISIBLE
                 } else {
-                    tvCheckInternetAvailable.visibility = View.GONE
                     tvCheckInternetUnavailable.visibility = View.VISIBLE
+                    icLocationToolbar.visibility = View.GONE
+                    binding.etSearch.isEnabled = false
+                    buttonHours.isEnabled = false
                 }
             }
         }
@@ -98,12 +141,17 @@ class CurrentWeatherFragment : Fragment() {
         return (capabilities != null && capabilities.hasCapability(NET_CAPABILITY_INTERNET))
     }
 
-    private fun drawLayout() {
-        if (isNetworkAvailable()) {
-            binding.tvCheckInternetUnavailable.visibility = View.GONE
-        } else {
-            binding.tvCheckInternetAvailable.visibility = View.GONE
-            binding.tvCheckInternetUnavailable.visibility = View.VISIBLE
+    private fun startConnection() {
+        with(binding) {
+            if (isNetworkAvailable()) {
+                tvCheckInternetUnavailable.visibility = View.GONE
+                icLocationToolbar.visibility = View.VISIBLE
+            } else {
+                icLocationToolbar.visibility = View.GONE
+                tvCheckInternetUnavailable.visibility = View.VISIBLE
+                etSearch.isEnabled = false
+                buttonHours.isEnabled = false
+            }
         }
     }
 
@@ -111,7 +159,6 @@ class CurrentWeatherFragment : Fragment() {
     private fun initObservers() {
         viewModel = ViewModelProvider(requireActivity(),
             viewModelFactory)[CurrentWeatherViewModel::class.java]
-
 
         viewModel.errorInputName.observe(viewLifecycleOwner) {
             if (etSearch.text.isEmpty()) {
@@ -126,6 +173,7 @@ class CurrentWeatherFragment : Fragment() {
             }
             false
         }
+
 
         viewModel.errorIncorrectCity.observe(viewLifecycleOwner) {
             binding.tvNothingFound.isVisible = it

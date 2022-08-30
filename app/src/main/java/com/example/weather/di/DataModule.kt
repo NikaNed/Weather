@@ -37,7 +37,7 @@ interface DataModule {
 
 //        @Provides
 //        @ApplicationScope
-//        fun provideRequestInterceptor(): RequestInterceptor {
+//        fun provideRequestInterceptor(): Response {
 //            return RequestInterceptor().intercept()
 //        }
     }

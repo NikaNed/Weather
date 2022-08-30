@@ -14,7 +14,6 @@ interface ApiService {
     @GET("weather")
     suspend fun getCurrentWeather(
         @Query("q") name: String,
-        @Query("appid") appid: String = API_KEY,
         @Query("lang") languageCode: String = "ru",
         @Query("units") units: String = "metric",
     ): Response<WeatherResponse>
@@ -22,21 +21,16 @@ interface ApiService {
     @GET("forecast")
     suspend fun getForecastWeather(
         @Query("q") name: String,
-        @Query("appid") appid: String = API_KEY,
         @Query("lang") languageCode: String = "ru",
         @Query("units") units: String = "metric",
     ): Response<ForecastResponse>
 
 
-//    @GET("forecast")
-//    fun getLocationByName(
-//        @Query("q") name: String = "",
-//        @Query("appid") appid: String = API_KEY,
-//        @Query("lang") languageCode: String = "ru"
-//    ): Call<ForecastResponse>
-
-    companion object {
-        const val API_KEY = "cf6776e097a42e7104c009431a5c9ef8"
-
-    }
+    @GET("weather")
+    suspend fun getLocationByCoord(
+        @Query("lat") lat: Double,
+        @Query("lon") lon: Double,
+        @Query("lang") languageCode: String = "ru",
+        @Query("units") units: String = "metric",
+    ): Response<WeatherResponse>
 }

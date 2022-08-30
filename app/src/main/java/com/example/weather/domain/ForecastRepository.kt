@@ -11,7 +11,6 @@ interface ForecastRepository {
 
     suspend fun getForecastInfo(name: String): Response<ForecastResponse>
 
-//    suspend fun getLocationByName(): Call<ForecastResponse>
+    suspend fun getLocation(lat: Double, lon: Double): Response<WeatherResponse>
 
-//    fun addCityName(forecastItem: ForecastItem)
 }
