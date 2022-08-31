@@ -119,7 +119,7 @@
                 android:id="@+id/tv_check_internet_unavailable"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:background="#D51E06"
+                android:background="@color/orange"
                 android:gravity="center"
                 android:layout_marginTop="55dp"
                 android:text="@string/network_currently_unavailable"

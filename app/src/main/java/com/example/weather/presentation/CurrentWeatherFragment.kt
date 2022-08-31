@@ -91,6 +91,7 @@ class CurrentWeatherFragment : Fragment() {
             fusedLocationClient =
                 LocationServices.getFusedLocationProviderClient(requireActivity().application)
             getLastLocation()
+            binding.etSearch.text.clear()
         }
     }
 
@@ -124,6 +125,7 @@ class CurrentWeatherFragment : Fragment() {
                 if (isConnected) {
                     tvCheckInternetUnavailable.visibility = View.GONE
                     icLocationToolbar.visibility = View.VISIBLE
+                    buttonHours.isEnabled = true
                 } else {
                     tvCheckInternetUnavailable.visibility = View.VISIBLE
                     icLocationToolbar.visibility = View.GONE
@@ -167,7 +169,7 @@ class CurrentWeatherFragment : Fragment() {
         }
         binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
-                val resultCity = binding.etSearch.text.toString()
+                val resultCity = binding.etSearch.text.trim().toString()
                 viewModel.getCityName(resultCity)
                 viewModel.getCurrentInfo(resultCity)
             }
@@ -225,7 +227,7 @@ class CurrentWeatherFragment : Fragment() {
                 tvTempFeel.isVisible = it
                 tvDescription.isVisible = it
                 tvNameCityTitle.isVisible = it
-                Picasso.get().load(URL_IMAGE + it).into(ivWeatherIcon)
+                ivWeatherIcon.isVisible = it
                 tvNameCityTitle.isVisible = it
             }
         }
