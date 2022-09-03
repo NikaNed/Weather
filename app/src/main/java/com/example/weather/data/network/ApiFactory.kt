@@ -17,18 +17,15 @@ object ApiFactory {
         .addInterceptor(HttpLoggingInterceptor().apply { level = httpLogLevel })
         .build()
 
-    private val retrofit = Retrofit.Builder() //создаем объект retrofit
-        .baseUrl(BASE_URL) //указываем к какому базовому URL будем обращаться
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(BASE_URL)
         .client(okHttpClient)
         .addConverterFactory(GsonConverterFactory.create())
         .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
         .build()
 
     val apiService: ApiService =
-        retrofit.create(ApiService::class.java) //для генирации кода описанного api
-// предоставляем класс интерфейса
-
-
+        retrofit.create(ApiService::class.java)
 }
 
 

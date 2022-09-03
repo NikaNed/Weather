@@ -12,7 +12,8 @@ data class ForecastListItem(
     val main: Main,
     @SerializedName("weather")
     val weather: List<Weather>,
-//    val wind: Wind,
-//    val visibility: Int,
-//    val pop: Int,
+    @SerializedName("wind")
+    val wind: Wind,
+    @SerializedName("visibility")
+    val visibility: Int,
 )

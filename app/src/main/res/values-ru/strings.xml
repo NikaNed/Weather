@@ -18,4 +18,5 @@
     <string name="mater_metric">км</string>
     <string name="pressure_metric"> мм рт.ст.</string>
     <string name="feels_like">Ошущается как\u0020</string>
+    <string name="cannot_get_location">Невозможно определить местоположение</string>
 </resources>

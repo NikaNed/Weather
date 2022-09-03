@@ -51,11 +51,6 @@ class DayFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity(),
             viewModelFactory)[CurrentWeatherViewModel::class.java]
 
-//        viewModel.nameCity.observe(viewLifecycleOwner) {
-//            binding.toolbar.title = it
-//            viewModel.getForecastInfo(it)
-//        }
-
         viewModel.currentInfo.observe(viewLifecycleOwner){
             binding.toolbar.title = it.name
             viewModel.getForecastInfo(it.name)

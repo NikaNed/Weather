@@ -4,7 +4,6 @@ import com.example.weather.data.network.ApiService
 import com.example.weather.data.network.modelsCurrent.WeatherResponse
 import com.example.weather.data.network.modelsForecast.ForecastResponse
 import com.example.weather.domain.ForecastRepository
-import retrofit2.Call
 import retrofit2.Response
 import javax.inject.Inject
 
@@ -23,5 +22,4 @@ class ForecastRepositoryImpl @Inject constructor(
     override suspend fun getLocation(lat: Double, lon: Double): Response<WeatherResponse> {
         return apiService.getLocationByCoord(lat, lon)
     }
-
 }

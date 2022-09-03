@@ -15,11 +15,12 @@ data class WeatherResponse(
     val weather: List<Weather>,
     @SerializedName("sys")
     val sys: Sys,
-//    val timezone: Int,
+    @SerializedName("timezone")
+    val timezone: Int,
     @SerializedName("visibility")
     val visibility: Int,
     @SerializedName("id")
-    val id: Int, //идентификатор города
+    val id: Int,
     @SerializedName("wind")
     val wind: Wind,
     @SerializedName("clouds")

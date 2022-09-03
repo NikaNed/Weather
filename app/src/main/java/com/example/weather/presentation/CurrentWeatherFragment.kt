@@ -14,16 +14,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
-import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.app.ActivityCompat
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.lifecycleScope
 import com.example.weather.R
 import com.example.weather.databinding.FragmentCurrentWeatherBinding
 import com.example.weather.presentation.adapters.InternetConnection
@@ -31,7 +28,6 @@ import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.squareup.picasso.Picasso
 import kotlinx.android.synthetic.main.fragment_current_weather.*
-import kotlinx.coroutines.launch
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 import java.util.*
@@ -47,6 +43,8 @@ class CurrentWeatherFragment : Fragment() {
 
     private lateinit var pLauncher: ActivityResultLauncher<String>
 
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     private val component by lazy {
         (requireActivity().application as WeatherApp).component
     }
@@ -54,8 +52,6 @@ class CurrentWeatherFragment : Fragment() {
     private var _binding: FragmentCurrentWeatherBinding? = null
     private val binding: FragmentCurrentWeatherBinding
         get() = _binding ?: throw RuntimeException("FragmentCurrentWeatherBinding == null")
-
-    private lateinit var fusedLocationClient: FusedLocationProviderClient
 
     override fun onAttach(context: Context) {
         component.inject(this)
@@ -76,6 +72,7 @@ class CurrentWeatherFragment : Fragment() {
 
         checkPermission()
         initObservers()
+        checkPermission()
         startConnection()
         testConnection()
         getLocation()
@@ -87,7 +84,7 @@ class CurrentWeatherFragment : Fragment() {
     }
 
     private fun getLocation() {
-        binding.icLocationToolbar?.setOnClickListener {
+        binding.icLocationToolbar.setOnClickListener {
             fusedLocationClient =
                 LocationServices.getFusedLocationProviderClient(requireActivity().application)
             getLastLocation()
@@ -97,7 +94,8 @@ class CurrentWeatherFragment : Fragment() {
 
     private fun getLastLocation() {
         if (ActivityCompat.checkSelfPermission(requireActivity().application,
-                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
+                Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
                 requireActivity().application,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED
         ) {
@@ -107,13 +105,12 @@ class CurrentWeatherFragment : Fragment() {
             .addOnSuccessListener { location: Location? ->
                 if (location == null)
                     Toast.makeText(requireActivity().application,
-                        "Cannot get location.",
+                        getString(R.string.cannot_get_location),
                         Toast.LENGTH_SHORT).show()
                 else {
                     val lat = location.latitude
                     val lon = location.longitude
                     viewModel.getLocationByCoord(lat, lon)
-                    Log.d("lat", "$lat,$lon")
                 }
             }
     }
@@ -162,11 +159,6 @@ class CurrentWeatherFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity(),
             viewModelFactory)[CurrentWeatherViewModel::class.java]
 
-        viewModel.errorInputName.observe(viewLifecycleOwner) {
-            if (etSearch.text.isEmpty()) {
-                etSearch.error = getString(R.string.error_enter_name)
-            }
-        }
         binding.etSearch.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_DONE) {
                 val resultCity = binding.etSearch.text.trim().toString()
@@ -175,7 +167,6 @@ class CurrentWeatherFragment : Fragment() {
             }
             false
         }
-
 
         viewModel.errorIncorrectCity.observe(viewLifecycleOwner) {
             binding.tvNothingFound.isVisible = it
@@ -263,14 +254,14 @@ class CurrentWeatherFragment : Fragment() {
     private fun permissionListener() {
         pLauncher = registerForActivityResult(
             ActivityResultContracts.RequestPermission()) {
-            Toast.makeText(activity, "Permission is $it", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireActivity().application, "Permission is $it", Toast.LENGTH_LONG).show()
         }
     }
 
     private fun checkPermission() {
-        if (!isPermissionGranted(Manifest.permission.ACCESS_FINE_LOCATION)) {
+        if (!isPermissionGranted(Manifest.permission.ACCESS_COARSE_LOCATION)) {
             permissionListener()
-            pLauncher.launch(Manifest.permission.ACCESS_FINE_LOCATION)
+            pLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION)
         }
     }
 

@@ -8,5 +8,4 @@ class GetCurrentWeatherUseCase @Inject constructor (
 ) {
 
     suspend operator fun invoke(nameCity: String) = repository.getCurrentInfoList(nameCity)
-
 }

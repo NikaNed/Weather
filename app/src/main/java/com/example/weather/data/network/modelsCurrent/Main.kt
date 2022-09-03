@@ -15,6 +15,8 @@ data class Main(
     val humidity: Int,
     @SerializedName("pressure")
     val pressure: Int,
-//    val grnd_level: Int,
-//    val sea_level: Int,
+    @SerializedName("grnd_level")
+    val grnd_level: Int,
+    @SerializedName("sea_level")
+    val sea_level: Int,
 )

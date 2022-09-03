@@ -18,10 +18,6 @@ class CurrentWeatherViewModel @Inject constructor(
     private val searchCityUseCase: SearchCityUseCase
 ) : ViewModel() {
 
-//    private val _state = MutableLiveData<State>()
-//    val state: LiveData<State>
-//        get() = _state
-
     private val _currentInfo = MutableLiveData<WeatherResponse>()
     val currentInfo: LiveData<WeatherResponse>
         get() = _currentInfo
@@ -30,17 +26,9 @@ class CurrentWeatherViewModel @Inject constructor(
     val forecastInfo: LiveData<List<ForecastListItem>>
         get() = _forecastInfo
 
-    private val _nameCity = MutableLiveData<String>()
-    val nameCity: LiveData<String>
-        get() = _nameCity
-
     private val _progressVisible = MutableLiveData<Boolean>()
     val progressVisible: LiveData<Boolean>
         get() = _progressVisible
-
-    private val _errorInputName = MutableLiveData<Boolean>()
-    val errorInputName: LiveData<Boolean>
-        get() = _errorInputName
 
     private val _errorIncorrectCity = MutableLiveData<Boolean>()
     val errorIncorrectCity: LiveData<Boolean>
@@ -66,35 +54,20 @@ class CurrentWeatherViewModel @Inject constructor(
                     _currentDetail.value = true
                     _currentInfo.postValue(response.body())
                     _progressVisible.value = false
-//                        Log.d("TAG", "onResponse Weather Success $call ${response.body()}")
                 } else {
                     _errorIncorrectCity.value = true
                     _progressVisible.value = false
                     _currentDetail.value = false
                     Log.d("TAG", "onResponse onFailure ${response.message()}")
-//                    onError("Error : ${response.message()} ")
                 }
             }
         }
     }
 
-
-//    val exceptionHandler = CoroutineExceptionHandler { _, throwable ->
-//        onError("Exception handled: ${throwable.localizedMessage}")
-//    }
-//
-//    private fun onError(message: String) {
-//        errorMessage.value = message
-//        loading.value = false
-//    }
-
-
     fun getCityName(nameCity: String) {
-        _errorInputName.value = true
         _errorIncorrectCity.value = false
         _progressVisible.value = true
         _currentDetail.value = false
-        _nameCity.value = nameCity
     }
 
     fun getForecastInfo(name: String) {
@@ -110,7 +83,6 @@ class CurrentWeatherViewModel @Inject constructor(
                     _errorIncorrectCity.value = true
                     _progressVisible.value = false
                     Log.d("TAG", "onResponse onFailure ${response.message()}")
-//                    onError("Error : ${response.message()} ")
                 }
             }
         }
@@ -127,13 +99,11 @@ class CurrentWeatherViewModel @Inject constructor(
                     _currentInfo.postValue(response.body())
                     _progressVisible.value = false
                     _errorIncorrectCity.value = false
-//                        Log.d("TAG", "onResponse Weather Success $call ${response.body()}")
                 } else {
                     _errorIncorrectCity.value = true
                     _progressVisible.value = false
                     _currentDetail.value = false
                     Log.d("TAG", "onResponse onFailure ${response.message()}")
-//                    onError("Error : ${response.message()} ")
                 }
             }
         }

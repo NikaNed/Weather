@@ -2,7 +2,6 @@ package com.example.weather.domain
 
 import com.example.weather.data.network.modelsCurrent.WeatherResponse
 import com.example.weather.data.network.modelsForecast.ForecastResponse
-import retrofit2.Call
 import retrofit2.Response
 
 interface ForecastRepository {

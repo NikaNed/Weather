@@ -9,5 +9,4 @@ class SearchCityUseCase @Inject constructor (
 ) {
 
     suspend operator fun invoke(lat: Double, lon: Double) = repository.getLocation(lat,lon)
-
 }

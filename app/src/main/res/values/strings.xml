@@ -26,4 +26,5 @@
     <string name="mater_metric">km</string>
     <string name="comma" translatable="false">\u0020,</string>
     <string name="feels_like">Feels like\u0020</string>
+    <string name="cannot_get_location">Cannot get location</string>
 </resources>

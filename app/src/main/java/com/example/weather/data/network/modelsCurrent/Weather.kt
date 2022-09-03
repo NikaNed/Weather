@@ -6,7 +6,9 @@ data class Weather(
     @SerializedName("description")
     val description: String,
     @SerializedName("icon")
-    val icon: String
-//    val main: String
-    //    val id: Int
+    val icon: String,
+    @SerializedName("main")
+    val main: String,
+    @SerializedName("id")
+    val id: Int,
 )

@@ -1,16 +1,12 @@
 package com.example.weather.presentation.adapters
 
 import android.app.Application
-import android.content.Context
 import android.content.Context.CONNECTIVITY_SERVICE
 import android.net.ConnectivityManager
 import android.net.Network
 import android.net.NetworkCapabilities
 import android.net.NetworkRequest
-import android.os.Build
 import android.util.Log
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat.getSystemService
 import androidx.lifecycle.LiveData
 
 class InternetConnection(
@@ -24,12 +20,10 @@ class InternetConnection(
     private val networkCallback =
     object : ConnectivityManager.NetworkCallback() {
 
-
         override fun onAvailable(network: Network) {
             super.onAvailable(network)
             Log.d("TAG", "onAvailable: Network ${network} is Available")
             postValue(true)
-
         }
 
         override fun onCapabilitiesChanged(
