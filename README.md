@@ -7,9 +7,8 @@ data from the [OpenWeatherMap](https://openweathermap.org/forecast5) and to get 
 Use Kotlin as language
 
 ## Screenshots
-<div style="width:60px ; height:60px">
-![Screenshot_current_weather](https://user-images.githubusercontent.com/96004385/188332339-efd1332f-7258-4c61-a75b-a01dc069d6e6.png)
-<div>
+
+![Screenshot_current_weather](https://user-images.githubusercontent.com/96004385/188333130-3ba886ac-27de-4d5a-a105-098f3e8a399f.png)
 ![Screenshot_forecast](https://user-images.githubusercontent.com/96004385/188332347-bb63dedb-cdc3-446f-b24e-024686af268e.png)
 ![Screenshot_search](https://user-images.githubusercontent.com/96004385/188332355-690fb6b9-8245-44cd-b9ce-0db5e41a95e9.png)
 
