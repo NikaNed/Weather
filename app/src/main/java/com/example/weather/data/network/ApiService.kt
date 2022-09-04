@@ -1,41 +1,32 @@
 package com.example.weather.data.network
 
 import com.example.weather.data.network.modelsCurrent.WeatherResponse
-import com.example.weather.data.network.modelsForecast.City
 import com.example.weather.data.network.modelsForecast.ForecastResponse
-import io.reactivex.Single
-import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 
 interface ApiService {
 
     @GET("weather")
-    fun getCurrentWeather(
+    suspend fun getCurrentWeather(
         @Query("q") name: String,
-        @Query("appid") appid: String = API_KEY,
         @Query("lang") languageCode: String = "ru",
         @Query("units") units: String = "metric",
-    ): Call<WeatherResponse>
+    ): Response<WeatherResponse>
 
     @GET("forecast")
-    fun getForecastWeather(
-        @Query("q") name: String = "",
-        @Query("appid") appid: String = API_KEY,
+    suspend fun getForecastWeather(
+        @Query("q") name: String,
         @Query("lang") languageCode: String = "ru",
         @Query("units") units: String = "metric",
-    ): Call<ForecastResponse>
+    ): Response<ForecastResponse>
 
-
-    @GET("forecast")
-    fun getLocationByName(
-        @Query("q") name: String = "",
-        @Query("appid") appid: String = API_KEY,
-        @Query("lang") languageCode: String = "ru"
-    ): Call<ForecastResponse>
-
-    companion object {
-        const val API_KEY = "cf6776e097a42e7104c009431a5c9ef8"
-
-    }
+    @GET("weather")
+    suspend fun getLocationByCoord(
+        @Query("lat") lat: Double,
+        @Query("lon") lon: Double,
+        @Query("lang") languageCode: String = "ru",
+        @Query("units") units: String = "metric",
+    ): Response<WeatherResponse>
 }

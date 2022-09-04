@@ -1,8 +1,14 @@
 package com.example.weather.data.network.modelsCurrent
 
+import com.google.gson.annotations.SerializedName
+
 data class Weather(
+    @SerializedName("description")
     val description: String,
-    val icon: String
-//    val main: String
-    //    val id: Int
+    @SerializedName("icon")
+    val icon: String,
+    @SerializedName("main")
+    val main: String,
+    @SerializedName("id")
+    val id: Int,
 )

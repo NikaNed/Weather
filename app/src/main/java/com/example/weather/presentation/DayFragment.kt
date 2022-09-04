@@ -8,12 +8,11 @@ import android.view.ViewGroup
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weather.databinding.FragmentDayBinding
 import com.example.weather.presentation.adapters.WeatherAdapter
-import kotlinx.android.synthetic.main.fragment_current_weather.*
 import javax.inject.Inject
-
 
 class DayFragment : Fragment() {
 
@@ -52,16 +51,27 @@ class DayFragment : Fragment() {
         viewModel = ViewModelProvider(requireActivity(),
             viewModelFactory)[CurrentWeatherViewModel::class.java]
 
-        viewModel.nameCity.observe(viewLifecycleOwner) {
-            binding.toolbar.title = it
-            viewModel.getForecastInfo(it)
+        viewModel.currentInfo.observe(viewLifecycleOwner){
+            binding.toolbar.title = it.name
+            viewModel.getForecastInfo(it.name)
         }
 
         viewModel.forecastInfo.observe(viewLifecycleOwner) {
             adapter = WeatherAdapter()
-            binding.recycler.layoutManager = LinearLayoutManager(context)
-            binding.recycler.adapter = adapter
-            adapter.submitList(it)
+            with(binding) {
+                recycler.layoutManager = LinearLayoutManager(context)
+                recycler.adapter = adapter
+                adapter.submitList(it)
+
+                val layoutManager = LinearLayoutManager(requireActivity().application,
+                    LinearLayoutManager.VERTICAL,
+                    false)
+                recycler.addItemDecoration(
+                    DividerItemDecoration(
+                        context,
+                        layoutManager.orientation)
+                )
+            }
         }
 
         viewModel.progressVisible.observe(viewLifecycleOwner) {
@@ -79,8 +89,6 @@ class DayFragment : Fragment() {
     }
 
     companion object {
-        private const val EXTRA_NAME_CITY = "name"
-
         fun newInstance(): Fragment {
             return DayFragment()
         }

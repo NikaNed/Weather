@@ -4,32 +4,19 @@ import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.viewModelScope
 import com.example.weather.data.network.modelsCurrent.WeatherResponse
-import com.example.weather.data.network.modelsForecast.City
 import com.example.weather.data.network.modelsForecast.ForecastListItem
-import com.example.weather.data.network.modelsForecast.ForecastResponse
 import com.example.weather.domain.usecase.GetCurrentWeatherUseCase
 import com.example.weather.domain.usecase.GetForecastUseCase
 import com.example.weather.domain.usecase.SearchCityUseCase
-import kotlinx.coroutines.launch
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.HttpException
-import retrofit2.Response
-import java.io.IOException
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 class CurrentWeatherViewModel @Inject constructor(
     private val getCurrentWeatherUseCase: GetCurrentWeatherUseCase,
     private val getForecastUseCase: GetForecastUseCase,
-    private val searchCityUseCase: SearchCityUseCase,
+    private val searchCityUseCase: SearchCityUseCase
 ) : ViewModel() {
-
-/*    private val _state = MutableLiveData<State>()
-    val state: LiveData<State>
-        get() = _state*/
-
 
     private val _currentInfo = MutableLiveData<WeatherResponse>()
     val currentInfo: LiveData<WeatherResponse>
@@ -39,120 +26,91 @@ class CurrentWeatherViewModel @Inject constructor(
     val forecastInfo: LiveData<List<ForecastListItem>>
         get() = _forecastInfo
 
-    private val _nameCity = MutableLiveData<String>()
-    val nameCity: LiveData<String>
-        get() = _nameCity
-
     private val _progressVisible = MutableLiveData<Boolean>()
     val progressVisible: LiveData<Boolean>
         get() = _progressVisible
-
-    private val _searchCity = MutableLiveData<List<City>>()
-    val searchCity: MutableLiveData<List<City>>
-        get() = _searchCity
-
-    private val _errorInputName = MutableLiveData<Boolean>()
-    val errorInputName: LiveData<Boolean>
-        get() = _errorInputName
 
     private val _errorIncorrectCity = MutableLiveData<Boolean>()
     val errorIncorrectCity: LiveData<Boolean>
         get() = _errorIncorrectCity
 
-    private val _resetFields = MutableLiveData<Boolean>()
-    val resetFields: LiveData<Boolean>
-        get() = _resetFields
-
     private val _currentDetail = MutableLiveData<Boolean>()
-    val  currentDetail: LiveData<Boolean>
-        get() =  _currentDetail
+    val currentDetail: LiveData<Boolean>
+        get() = _currentDetail
+
+    var job: Job? = null
 
     init {
         _currentDetail.value = false
     }
 
-    fun getCurrentInfo(name: String) {
+    fun getCurrentInfo(nameCity: String) {
 
-        val response = getCurrentWeatherUseCase.invoke(name)
+        job = CoroutineScope(Dispatchers.IO).launch {
+            val response = getCurrentWeatherUseCase.invoke(nameCity)
 
-        response.enqueue(object : Callback<WeatherResponse> {
-
-            override fun onResponse(
-                call: Call<WeatherResponse>,
-                response: Response<WeatherResponse>,
-            ) {
-                if (response.body() != null) {
+            withContext(Dispatchers.Main) {
+                if (response.isSuccessful) {
                     _currentDetail.value = true
                     _currentInfo.postValue(response.body())
-                    _errorIncorrectCity.postValue(false)
-
-                    Log.d("TAG", "onResponse Weather Success $call ${response.body()}")
+                    _progressVisible.value = false
                 } else {
-                    _errorIncorrectCity.postValue(true)
-                    _resetFields.value = true
+                    _errorIncorrectCity.value = true
+                    _progressVisible.value = false
+                    _currentDetail.value = false
+                    Log.d("TAG", "onResponse onFailure ${response.message()}")
                 }
             }
-
-            override fun onFailure(call: Call<WeatherResponse>, t: Throwable) {
-                Log.d("TAG", "onResponse onFailure ${t.message}")
-//                _errorIncorrectCity.postValue(true)
-
-            }
-        })
+        }
     }
-
 
     fun getCityName(nameCity: String) {
+        _errorIncorrectCity.value = false
         _progressVisible.value = true
-//        val name = parseName(nameCity)
-        val fieldsVailed = validateInput(nameCity)
-        if (fieldsVailed) {
-            viewModelScope.launch {
-                _nameCity.value = nameCity
-                _progressVisible.value = false
-            }
-        }
+        _currentDetail.value = false
     }
-
-//    private fun parseName(inputName: String?): String {
-//        return inputName?.trim() ?: "" // если inputName не null, то обрезаем пробелы, если null,то
-//        // возвращаем пустую строку
-//    }
-
-    private fun validateInput(name: String): Boolean { // проводим валидацию
-        var result = true
-        if (name.isBlank()) {
-            result = false
-            _errorInputName.value = true
-            _progressVisible.value = false
-
-        }
-        return result
-    }
-
 
     fun getForecastInfo(name: String) {
 
-        val response = getForecastUseCase.invoke(name)
-
-        response.enqueue(object : Callback<ForecastResponse> {
-
-            override fun onResponse(
-                call: Call<ForecastResponse>,
-                response: Response<ForecastResponse>,
-            ) {
-                viewModelScope.launch {
-                    _progressVisible.value = true
-                    Log.d("TAG", "onResponse Forecast Success $call ${response.body()?.list}")
+        job = CoroutineScope(Dispatchers.IO).launch {
+            val response = getForecastUseCase.invoke(name)
+            withContext(Dispatchers.Main) {
+                _progressVisible.value = true
+                if (response.isSuccessful) {
                     _forecastInfo.postValue(response.body()?.list)
                     _progressVisible.value = false
+                } else {
+                    _errorIncorrectCity.value = true
+                    _progressVisible.value = false
+                    Log.d("TAG", "onResponse onFailure ${response.message()}")
                 }
             }
+        }
+    }
 
-            override fun onFailure(call: Call<ForecastResponse>, t: Throwable) {
-                Log.d("TAG", "onResponse onFailure ${t.message}")
+    fun getLocationByCoord(lat:Double, lon:Double) {
 
+        job = CoroutineScope(Dispatchers.IO).launch {
+            val response = searchCityUseCase.invoke(lat, lon)
+            withContext(Dispatchers.Main) {
+                _progressVisible.value = true
+                if (response.isSuccessful) {
+                    _currentDetail.value = true
+                    _currentInfo.postValue(response.body())
+                    _progressVisible.value = false
+                    _errorIncorrectCity.value = false
+                } else {
+                    _errorIncorrectCity.value = true
+                    _progressVisible.value = false
+                    _currentDetail.value = false
+                    Log.d("TAG", "onResponse onFailure ${response.message()}")
+                }
             }
-        })
+        }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        job?.cancel()
     }
 }

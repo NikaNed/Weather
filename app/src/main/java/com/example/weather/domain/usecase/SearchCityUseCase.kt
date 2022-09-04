@@ -8,6 +8,5 @@ class SearchCityUseCase @Inject constructor (
     private val repository: ForecastRepository
 ) {
 
-    operator fun invoke() = repository.getLocationByName()
-
+    suspend operator fun invoke(lat: Double, lon: Double) = repository.getLocation(lat,lon)
 }
