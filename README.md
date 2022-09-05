@@ -8,7 +8,7 @@ Use Kotlin as language
 
 ## Screenshots
 
-<img src="https://user-images.githubusercontent.com/96004385/188511461-2cf16724-576a-4804-9ff3-ce7e99e05c93.png" height="500" width="250" hspace="40"><img src="https://user-images.githubusercontent.com/96004385/188332347-bb63dedb-cdc3-446f-b24e-024686af268e.png" height="600" width="300" hspace="40">
+<img src="https://user-images.githubusercontent.com/96004385/188511461-2cf16724-576a-4804-9ff3-ce7e99e05c93.png" height="500" hspace="40"><img src="https://user-images.githubusercontent.com/96004385/188332347-bb63dedb-cdc3-446f-b24e-024686af268e.png" height="600" width="300" hspace="40">
 
 <img src="https://user-images.githubusercontent.com/96004385/188332355-690fb6b9-8245-44cd-b9ce-0db5e41a95e9.png" height="600" width="300" hspace="40">
 
