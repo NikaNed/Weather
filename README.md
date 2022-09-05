@@ -8,11 +8,13 @@ Use Kotlin as language
 
 ## Screenshots
 
-<img src="Screenshot_current_weather/https://user-images.githubusercontent.com/96004385/188333130-3ba886ac-27de-4d5a-a105-098f3e8a399f.png" width="50">
+<img src="https://user-images.githubusercontent.com/96004385/188332347-bb63dedb-cdc3-446f-b24e-024686af268e.png" height="600" width="300" hspace="40"><img src="https://user-images.githubusercontent.com/96004385/188332347-bb63dedb-cdc3-446f-b24e-024686af268e.png" height="600" width="300" hspace="40">
+
+<img src="https://user-images.githubusercontent.com/96004385/188332355-690fb6b9-8245-44cd-b9ce-0db5e41a95e9.png" height="600" width="300"
 
 [comment]: <> (![Screenshot_current_weather]&#40;https://user-images.githubusercontent.com/96004385/188333130-3ba886ac-27de-4d5a-a105-098f3e8a399f.png&#41;)
-![Screenshot_forecast](https://user-images.githubusercontent.com/96004385/188332347-bb63dedb-cdc3-446f-b24e-024686af268e.png)
-![Screenshot_search](https://user-images.githubusercontent.com/96004385/188332355-690fb6b9-8245-44cd-b9ce-0db5e41a95e9.png)
+[comment]: <> (![Screenshot_forecast]&#40;https://user-images.githubusercontent.com/96004385/188332347-bb63dedb-cdc3-446f-b24e-024686af268e.png&#41;)
+[comment]: <> (![Screenshot_search]&#40;https://user-images.githubusercontent.com/96004385/188332355-690fb6b9-8245-44cd-b9ce-0db5e41a95e9.png&#41;)
 
 ## Libraries/Language/Tools 🛠
 
