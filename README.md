@@ -1,6 +1,6 @@
 # Weather
 
-![appicon](https://user-images.githubusercontent.com/96004385/194842853-3bf1bce9-14fc-4df6-b586-e09fff3ad7d0.png)
+![appicon](https://user-images.githubusercontent.com/96004385/188332008-1741cb5a-f9ec-4150-9274-ab5b84a6ae90.png)
 
 Weather is a weather forecast app, which uses APIs to get current weather data from the [OpenWeatherMap](https://openweathermap.org/current) 
 and to get 5 day / 3 hour forecast data from the [OpenWeatherMap](https://openweathermap.org/forecast5).
