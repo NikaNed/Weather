@@ -1,15 +1,15 @@
 # Weather
 
-![appicon](https://user-images.githubusercontent.com/96004385/188332008-1741cb5a-f9ec-4150-9274-ab5b84a6ae90.png)
+![appicon](https://user-images.githubusercontent.com/96004385/194842853-3bf1bce9-14fc-4df6-b586-e09fff3ad7d0.png)
 
 Weather is a weather forecast app, which uses APIs to get current weather data from the [OpenWeatherMap](https://openweathermap.org/current) 
 and to get 5 day / 3 hour forecast data from the [OpenWeatherMap](https://openweathermap.org/forecast5).
 
 ## Screenshots
 
-<img src="https://user-images.githubusercontent.com/96004385/188511461-2cf16724-576a-4804-9ff3-ce7e99e05c93.png" height="600" width="300" hspace="40"><img src="https://user-images.githubusercontent.com/96004385/188332347-bb63dedb-cdc3-446f-b24e-024686af268e.png" height="600" width="300" hspace="40">
+<img src="https://user-images.githubusercontent.com/96004385/194928281-79443d18-cf65-493a-aaf7-817ae06cacd1.png" height="600" width="300" hspace="40"><img src="https://user-images.githubusercontent.com/96004385/194928502-1ba5ae20-6404-412b-a6b1-651405eeada7.png" height="600" width="300" hspace="40">
 
-<img src="https://user-images.githubusercontent.com/96004385/188332355-690fb6b9-8245-44cd-b9ce-0db5e41a95e9.png" height="600" width="300" hspace="40">
+<img src="https://user-images.githubusercontent.com/96004385/194928535-5b8ad401-8c93-4c02-943e-9da8575cf681.png" height="600" width="300" hspace="40">
 
 ## Libraries/Language/Tools 🛠
 

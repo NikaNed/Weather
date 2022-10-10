@@ -8,21 +8,21 @@
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/teal_200</item>
         <item name="colorSecondaryVariant">@color/teal_700</item>
-        <item name="colorOnSecondary">@color/blue_2</item>
-<!--        <item name="windowActionBar">false</item>-->
-<!--        <item name="windowNoTitle">true</item>-->
+        <item name="colorOnSecondary">@color/violet</item>
+
         <!-- Status bar color. -->
-        <item name="android:statusBarColor">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor">@color/violet</item>
+        <item name="android:navigationBarColor">@color/violet_dark</item>
         <!-- Customize your theme here. -->
     </style>
 
     <style name="ToolbarStyle" parent="Widget.MaterialComponents.Toolbar">
         <item name="titleTextAppearance">@style/ToolbarTitleTextAppearance</item>
-
     </style>
 
     <style name="ToolbarStyle.Navigation">
         <item name="navigationIcon">@drawable/ic_arrow_back</item>
+        <item name="android:color">@color/white</item>
         <item name="contentInsetEnd">0dp</item>
         <item name="contentInsetStart">0dp</item>
         <item name="contentInsetStartWithNavigation">0dp</item>
@@ -31,7 +31,5 @@
 
     <style name="ToolbarTitleTextAppearance">
         <item name="android:textSize">20sp</item>
-        <item name="android:color">@color/white</item>
-
     </style>
 </resources>
