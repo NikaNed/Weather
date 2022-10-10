@@ -11,14 +11,14 @@ interface ApiService {
     @GET("weather")
     suspend fun getCurrentWeather(
         @Query("q") name: String,
-        @Query("lang") languageCode: String = "ru",
+//        @Query("lang") languageCode: String = "ru",
         @Query("units") units: String = "metric",
     ): Response<WeatherResponse>
 
     @GET("forecast")
     suspend fun getForecastWeather(
         @Query("q") name: String,
-        @Query("lang") languageCode: String = "ru",
+//        @Query("lang") languageCode: String = "ru",
         @Query("units") units: String = "metric",
     ): Response<ForecastResponse>
 
@@ -26,7 +26,7 @@ interface ApiService {
     suspend fun getLocationByCoord(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
-        @Query("lang") languageCode: String = "ru",
+//        @Query("lang") languageCode: String = "ru",
         @Query("units") units: String = "metric",
     ): Response<WeatherResponse>
 }

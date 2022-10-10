@@ -15,8 +15,12 @@
     <color name="purple_light_bar">#8F69226E</color>
     <color name="purple_dark">#8A341450</color>
     <color name="blue_1">#F03561EA</color>
-    <color name="blue_2">#F0A4A1F4</color>
-    <color name="orange">#CDEA5D11</color>
+    <color name="violet">#a5a9f1</color>
+    <color name="violet_light">#D5B8BBFC</color>
+    <color name="violet_dark">#747abe</color>
+    <color name="red">#b02b00</color>
+    <color name="orange_light">#ff8e44</color>
+    <color name="orange">#ea5d11</color>
 
 
 
