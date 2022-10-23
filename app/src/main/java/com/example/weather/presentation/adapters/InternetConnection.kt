@@ -22,7 +22,7 @@ class InternetConnection(
 
         override fun onAvailable(network: Network) {
             super.onAvailable(network)
-            Log.d("TAG", "onAvailable: Network ${network} is Available")
+            Log.d("TAG", "onAvailable: Network $network is Available")
             postValue(true)
         }
 
@@ -32,21 +32,20 @@ class InternetConnection(
         ) {
             val isInternet =
                 networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET)
-            Log.d("TAG", "networkCapabilities: ${network} $networkCapabilities")
+            Log.d("TAG", "networkCapabilities: $network $networkCapabilities")
             val isValidated =
                 networkCapabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
             if (isValidated) {
-                Log.d("TAG", "hasCapability: ${network} $networkCapabilities")
+                Log.d("TAG", "hasCapability: $network $networkCapabilities")
             } else {
                 Log.d("TAG",
-                    "Network has No Connection Capability: ${network} $networkCapabilities")
+                    "Network has No Connection Capability: $network $networkCapabilities")
             }
             postValue(isInternet && isValidated)
         }
 
         override fun onLost(network: Network) {
             super.onLost(network)
-            Log.d("TAG", "onLost: ${network} Network Lost")
             postValue(false)
         }
     }

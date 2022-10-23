@@ -38,7 +38,7 @@ class CurrentWeatherViewModel @Inject constructor(
     val currentDetail: LiveData<Boolean>
         get() = _currentDetail
 
-    var job: Job? = null
+    private var job: Job? = null
 
     init {
         _currentDetail.value = false

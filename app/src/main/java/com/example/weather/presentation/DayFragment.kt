@@ -79,7 +79,7 @@ class DayFragment : Fragment() {
         }
 
         binding.toolbar.setNavigationOnClickListener {
-            requireActivity().onBackPressed()
+          requireActivity().onBackPressedDispatcher.onBackPressed()
         }
     }
 

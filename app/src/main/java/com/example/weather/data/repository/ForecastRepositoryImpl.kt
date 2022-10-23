@@ -11,8 +11,8 @@ class ForecastRepositoryImpl @Inject constructor(
     private val apiService: ApiService,
 ) : ForecastRepository {
 
-    override suspend fun getCurrentInfoList(nameCity: String): Response<WeatherResponse> {
-        return apiService.getCurrentWeather(nameCity)
+    override suspend fun getCurrentInfoList(name: String): Response<WeatherResponse> {
+        return apiService.getCurrentWeather(name)
     }
 
     override suspend fun getForecastInfo(name: String): Response<ForecastResponse> {
