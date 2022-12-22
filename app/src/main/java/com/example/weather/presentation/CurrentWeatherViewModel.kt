@@ -24,7 +24,8 @@ class CurrentWeatherViewModel @Inject constructor(
     val currentInfo: LiveData<WeatherEntity>
         get() = _currentInfo
 
-    private val _forecastInfo = MutableLiveData<List<ForecastListItem>>()
+    private val _forecastInfo =
+        MutableLiveData<List<ForecastListItem>>()
     val forecastInfo: LiveData<List<ForecastListItem>>
         get() = _forecastInfo
 
@@ -68,7 +69,6 @@ class CurrentWeatherViewModel @Inject constructor(
         }
     }
 
-
     fun getCityName(nameCity: String) {
         _errorIncorrectCity.value = false
         _progressVisible.value = true
@@ -78,7 +78,7 @@ class CurrentWeatherViewModel @Inject constructor(
     fun getForecastInfo(name: String) {
 
         viewModelScope.launch {
-                _progressVisible.value = true
+            _progressVisible.value = true
 
             withContext(Dispatchers.IO) {
                 val response = getForecastUseCase.invoke(name)

@@ -4,12 +4,9 @@ import android.util.Log
 import com.example.weather.data.mapper.ForecastMapper
 import com.example.weather.data.mapper.WeatherMapper
 import com.example.weather.data.network.ApiService
-import com.example.weather.data.network.modelsCurrent.WeatherResponse
-import com.example.weather.data.network.modelsForecast.ForecastResponse
 import com.example.weather.domain.ForecastRepository
 import com.example.weather.domain.entities.ForecastEntity
 import com.example.weather.domain.entities.WeatherEntity
-import retrofit2.Response
 import javax.inject.Inject
 
 class ForecastRepositoryImpl @Inject constructor(

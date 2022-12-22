@@ -17,7 +17,7 @@ class WeatherViewHolder(view: View) : RecyclerView.ViewHolder(view) {
     private val binding = ItemForecastDayBinding.bind(view)
 
     @SuppressLint("SetTextI18n")
-    fun bind(item: ForecastListItem) = with(binding) {
+    fun bind(item: com.example.weather.domain.entities.ForecastListItem) = with(binding) {
 
         tvDate.text = convertPattern(item.dt_txt).toString()
         tvDescription.text = item.weather.joinToString { it.description }

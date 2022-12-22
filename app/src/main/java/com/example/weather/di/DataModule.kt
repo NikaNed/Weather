@@ -13,7 +13,7 @@ interface DataModule {
 
     @Binds
     @ApplicationScope
-    fun bindForecastRepository(impl: ForecastRepositoryImpl): ForecastRepository
+    fun bindForecastRepository(impl: ForecastRepositoryImpl): com.example.weather.domain.ForecastRepository
 
     companion object {
 
