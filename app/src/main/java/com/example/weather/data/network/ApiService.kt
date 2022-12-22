@@ -12,18 +12,18 @@ interface ApiService {
     suspend fun getCurrentWeather(
         @Query("q") name: String,
         @Query("units") units: String = "metric",
-    ): Response<WeatherResponse>
+    ): WeatherResponse
 
     @GET("forecast")
     suspend fun getForecastWeather(
         @Query("q") name: String,
         @Query("units") units: String = "metric",
-    ): Response<ForecastResponse>
+    ): ForecastResponse
 
     @GET("weather")
     suspend fun getLocationByCoord(
         @Query("lat") lat: Double,
         @Query("lon") lon: Double,
         @Query("units") units: String = "metric",
-    ): Response<WeatherResponse>
+    ): WeatherResponse
 }

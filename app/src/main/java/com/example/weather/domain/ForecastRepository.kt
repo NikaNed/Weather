@@ -1,15 +1,14 @@
 package com.example.weather.domain
 
-import com.example.weather.data.network.modelsCurrent.WeatherResponse
-import com.example.weather.data.network.modelsForecast.ForecastResponse
-import retrofit2.Response
+import com.example.weather.domain.entities.ForecastEntity
+import com.example.weather.domain.entities.WeatherEntity
 
 interface ForecastRepository {
 
-    suspend fun getCurrentInfoList(name: String): Response<WeatherResponse>
+    suspend fun getCurrentInfoList(name: String): WeatherEntity?
 
-    suspend fun getForecastInfo(name: String): Response<ForecastResponse>
+    suspend fun getForecastInfo(name: String): ForecastEntity?
 
-    suspend fun getLocation(lat: Double, lon: Double): Response<WeatherResponse>
+    suspend fun getLocation(lat: Double, lon: Double): WeatherEntity?
 
 }

@@ -1,8 +1,8 @@
-package com.example.weather.data.network.modelsForecast
+package com.example.weather.data.network.modelsCurrent
 
 import com.google.gson.annotations.SerializedName
 
-data class Wind(
+data class WindCurrentDto(
     @SerializedName("deg")
     val deg: Int,
     @SerializedName("gust")

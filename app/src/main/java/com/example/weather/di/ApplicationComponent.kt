@@ -11,7 +11,7 @@ interface ApplicationComponent  {
 
     fun inject(fragment: CurrentWeatherFragment)
     fun inject(fragment: DayFragment)
-    fun inject(activity: WeatherActivity)
+//    fun inject(activity: WeatherActivity)
     fun inject(application: WeatherApp)
 
     @Component.Factory

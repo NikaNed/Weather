@@ -2,7 +2,7 @@ package com.example.weather.data.network.modelsCurrent
 
 import com.google.gson.annotations.SerializedName
 
-data class Weather(
+data class WeatherCurrentDto(
     @SerializedName("description")
     val description: String,
     @SerializedName("icon")

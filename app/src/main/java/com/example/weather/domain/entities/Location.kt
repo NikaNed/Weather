@@ -1,9 +1,5 @@
 package com.example.weather.domain.entities
 
-import android.os.Parcelable
-import kotlinx.android.parcel.Parcelize
-
-@Parcelize
 data class Location(
     val lat: Double,
     val lon: Double,
@@ -11,4 +7,4 @@ data class Location(
     val id: Int,
     val name: String,
     val timezone: Int
-): Parcelable
+)

@@ -1,8 +1,8 @@
-package com.example.weather.data.network.modelsForecast
+package com.example.weather.data.network.modelsCurrent
 
 import com.google.gson.annotations.SerializedName
 
-data class Coord(
+data class CoordCurrentDto(
     @SerializedName("lat")
     val lat: Double,
     @SerializedName("lon")

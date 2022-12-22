@@ -1,19 +1,19 @@
 package com.example.weather.data.network.modelsForecast
 
-import com.example.weather.data.network.modelsCurrent.Main
 import com.google.gson.annotations.SerializedName
 
-data class ForecastListItem(
+data class
+ForecastListItemDto(
     @SerializedName("dt")
     val dt: Int,
     @SerializedName("dt_txt")
-    var dt_txt: String,
+    val dt_txt: String,
     @SerializedName("main")
-    val main: Main,
+    val main: MainForecastDto,
     @SerializedName("weather")
-    val weather: List<Weather>,
+    val weather: List<WeatherForecastDto>,
     @SerializedName("wind")
-    val wind: Wind,
+    val wind: WindForecastDto,
     @SerializedName("visibility")
     val visibility: Int,
 )

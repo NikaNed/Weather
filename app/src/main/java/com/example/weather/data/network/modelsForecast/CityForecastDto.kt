@@ -2,9 +2,9 @@ package com.example.weather.data.network.modelsForecast
 
 import com.google.gson.annotations.SerializedName
 
-data class City(
+data class CityForecastDto(
     @SerializedName("coord")
-    val coord: Coord,
+    val coord: CoordForecastDto,
     @SerializedName("country")
     val country: String,
     @SerializedName("name")
