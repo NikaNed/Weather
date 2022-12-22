@@ -22,7 +22,7 @@
         tools:targetApi="33">
 
         <activity
-            android:name=".presentation.WeatherActivity"
+            android:name=".presentation.activity.WeatherActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

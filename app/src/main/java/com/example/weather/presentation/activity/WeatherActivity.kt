@@ -1,9 +1,10 @@
-package com.example.weather.presentation
+package com.example.weather.presentation.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.example.weather.R
 import com.example.weather.databinding.ActivityWeatherBinding
+import com.example.weather.presentation.fragments.currentWeather.CurrentWeatherFragment
 
 class WeatherActivity : AppCompatActivity() {
 

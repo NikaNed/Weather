@@ -1,4 +1,4 @@
-package com.example.weather.presentation.adapters
+package com.example.weather.presentation
 
 import android.app.Application
 import android.content.Context.CONNECTIVITY_SERVICE

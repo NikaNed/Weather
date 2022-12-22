@@ -1,8 +1,7 @@
-package com.example.weather.data.network
+package com.example.weather.data.network.api
 
 import com.example.weather.data.network.modelsCurrent.WeatherResponse
 import com.example.weather.data.network.modelsForecast.ForecastResponse
-import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Query
 

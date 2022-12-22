@@ -1,4 +1,4 @@
-package com.example.weather.presentation
+package com.example.weather.presentation.fragments.currentWeather
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

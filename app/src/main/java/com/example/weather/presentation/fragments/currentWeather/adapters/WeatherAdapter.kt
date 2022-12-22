@@ -1,12 +1,12 @@
-package com.example.weather.presentation.adapters
+package com.example.weather.presentation.fragments.currentWeather.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.ListAdapter
 import com.example.weather.R
-import com.example.weather.domain.entities.ForecastListItem
 
-class WeatherAdapter: ListAdapter<com.example.weather.domain.entities.ForecastListItem, WeatherViewHolder>(WeatherInfoDiffCallback) {
+class WeatherAdapter: ListAdapter<com.example.weather.domain.entities.ForecastListItem, WeatherViewHolder>(
+    WeatherInfoDiffCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WeatherViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(

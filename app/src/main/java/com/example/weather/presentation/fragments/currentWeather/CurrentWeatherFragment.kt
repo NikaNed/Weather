@@ -1,4 +1,4 @@
-package com.example.weather.presentation
+package com.example.weather.presentation.fragments.currentWeather
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -22,7 +22,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.weather.R
 import com.example.weather.databinding.FragmentCurrentWeatherBinding
-import com.example.weather.presentation.adapters.InternetConnection
+import com.example.weather.presentation.ViewModelFactory
+import com.example.weather.presentation.WeatherApp
+import com.example.weather.presentation.InternetConnection
+import com.example.weather.presentation.fragments.forecast.ForecastFragment
+import com.example.weather.presentation.isPermissionGranted
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import com.squareup.picasso.Picasso
@@ -245,7 +249,7 @@ class CurrentWeatherFragment : Fragment() {
     private fun launchDayFragment() {
         requireActivity().supportFragmentManager
             .beginTransaction()
-            .replace(R.id.fragment_container, DayFragment.newInstance())
+            .replace(R.id.fragment_container, ForecastFragment.newInstance())
             .addToBackStack(null)
             .commit()
     }

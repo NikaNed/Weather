@@ -1,4 +1,4 @@
-package com.example.weather.domain
+package com.example.weather.domain.repository
 
 import com.example.weather.domain.entities.ForecastEntity
 import com.example.weather.domain.entities.WeatherEntity

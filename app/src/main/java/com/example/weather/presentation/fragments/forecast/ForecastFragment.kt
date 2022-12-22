@@ -1,4 +1,4 @@
-package com.example.weather.presentation
+package com.example.weather.presentation.fragments.forecast
 
 import android.content.Context
 import android.os.Bundle
@@ -11,10 +11,13 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weather.databinding.FragmentDayBinding
-import com.example.weather.presentation.adapters.WeatherAdapter
+import com.example.weather.presentation.ViewModelFactory
+import com.example.weather.presentation.WeatherApp
+import com.example.weather.presentation.fragments.currentWeather.adapters.WeatherAdapter
+import com.example.weather.presentation.fragments.currentWeather.CurrentWeatherViewModel
 import javax.inject.Inject
 
-class DayFragment : Fragment() {
+class ForecastFragment : Fragment() {
 
     private var _binding: FragmentDayBinding? = null
     private val binding: FragmentDayBinding
@@ -90,7 +93,7 @@ class DayFragment : Fragment() {
 
     companion object {
         fun newInstance(): Fragment {
-            return DayFragment()
+            return ForecastFragment()
         }
     }
 }

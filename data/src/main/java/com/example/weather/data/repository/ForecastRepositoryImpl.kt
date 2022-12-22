@@ -3,8 +3,8 @@ package com.example.weather.data.repository
 import android.util.Log
 import com.example.weather.data.mapper.ForecastMapper
 import com.example.weather.data.mapper.WeatherMapper
-import com.example.weather.data.network.ApiService
-import com.example.weather.domain.ForecastRepository
+import com.example.weather.data.network.api.ApiService
+import com.example.weather.domain.repository.ForecastRepository
 import com.example.weather.domain.entities.ForecastEntity
 import com.example.weather.domain.entities.WeatherEntity
 import javax.inject.Inject

@@ -1,7 +1,6 @@
-package com.example.weather.presentation.adapters
+package com.example.weather.presentation.fragments.currentWeather.adapters
 
 import androidx.recyclerview.widget.DiffUtil
-import com.example.weather.domain.entities.ForecastListItem
 
 object WeatherInfoDiffCallback: DiffUtil.ItemCallback<com.example.weather.domain.entities.ForecastListItem>() {
 
