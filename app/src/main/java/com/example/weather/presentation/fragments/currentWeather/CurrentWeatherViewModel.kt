@@ -49,23 +49,16 @@ class CurrentWeatherViewModel @Inject constructor(
 
         viewModelScope.launch {
             _progressVisible.value = true
-
-            withContext(Dispatchers.IO) {
                 val response = getCurrentWeatherUseCase.invoke(nameCity)
                 if (response == null) {
-                    withContext(Dispatchers.Main) {
                         _errorIncorrectCity.value = true
                         _progressVisible.value = false
                         _currentDetail.value = false
-                    }
                 } else {
-                    withContext(Dispatchers.Main) {
                         _currentDetail.value = true
-                        _currentInfo.postValue(response)
+                        _currentInfo.value = response
                         _progressVisible.value = false
-                    }
                 }
-            }
         }
     }
 
@@ -79,20 +72,17 @@ class CurrentWeatherViewModel @Inject constructor(
 
         viewModelScope.launch {
             _progressVisible.value = true
-
-            withContext(Dispatchers.IO) {
                 val response = getForecastUseCase.invoke(name)
                 if (response == null) {
-                    withContext(Dispatchers.Main) {
                         _progressVisible.value = false
-                    }
+
                 } else {
-                    withContext(Dispatchers.Main) {
-                        _forecastInfo.postValue(response.list)
+
+                        _forecastInfo.value = response.list
                         _progressVisible.value = false
-                    }
+
                 }
-            }
+
         }
     }
 
@@ -100,23 +90,18 @@ class CurrentWeatherViewModel @Inject constructor(
 
         viewModelScope.launch {
             _progressVisible.value = true
-            withContext(Dispatchers.IO) {
                 val response = searchCityUseCase.invoke(lat, lon)
                 if (response == null) {
-                    withContext(Dispatchers.Main) {
                         _errorIncorrectCity.value = true
                         _progressVisible.value = false
                         _currentDetail.value = false
-                    }
                 } else {
-                    withContext(Dispatchers.Main) {
-                        _currentInfo.postValue(response)
+                        _currentInfo.value = response
                         _currentDetail.value = true
                         _progressVisible.value = false
                         _errorIncorrectCity.value = false
-                    }
                 }
-            }
+
         }
     }
 }
