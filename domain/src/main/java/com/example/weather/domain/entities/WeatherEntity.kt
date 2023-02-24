@@ -4,7 +4,7 @@ package com.example.weather.domain.entities
 data class WeatherEntity(
     val coord: Coord,
     val name: String,
-    val dt: Int,
+    val dt: String,
     val main: Main,
     val weather: List<WeatherCurrent>,
     val sys: Sys,
@@ -47,8 +47,6 @@ data class WeatherEntity(
     )
 
     data class Wind(
-//        val deg: Int,
-//        val gust: Double,
         val speed: Double,
     )
 

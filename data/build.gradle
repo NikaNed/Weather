@@ -36,6 +36,7 @@ dependencies {
     implementation project(path: ':domain')
 
     implementation 'com.google.dagger:dagger:2.44.2'
+    implementation 'androidx.annotation:annotation:1.5.0'
     kapt 'com.google.dagger:dagger-compiler:2.44.2'
 
     implementation 'com.squareup.retrofit2:retrofit:2.9.0'
