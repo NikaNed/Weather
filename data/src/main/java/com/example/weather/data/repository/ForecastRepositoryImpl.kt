@@ -21,7 +21,7 @@ class ForecastRepositoryImpl @Inject constructor(
             val responseCurrent = apiService.getCurrentWeather(name)
             mapperWeather.mapDtoToEntityWeather(responseCurrent)
         } catch (e: Exception) {
-            Log.d("TAG", e.message!!)
+            Log.d("TAG", e.message.toString())
             null
         }
     }
@@ -31,7 +31,7 @@ class ForecastRepositoryImpl @Inject constructor(
             val responseForecast = apiService.getForecastWeather(name)
             mapperForecast.mapDtoToEntityForecastResponse(responseForecast)
         } catch (e: Exception) {
-            Log.d("TAG", e.message!!)
+            Log.d("TAG", e.message.toString())
             null
         }
     }
@@ -41,7 +41,7 @@ class ForecastRepositoryImpl @Inject constructor(
             val responseLocation = apiService.getLocationByCoord(lat, lon)
             mapperWeather.mapDtoToEntityWeather(responseLocation)
         } catch (e: Exception) {
-            Log.d("TAG", e.message!!)
+            Log.d("TAG", e.message.toString())
             null
         }
     }

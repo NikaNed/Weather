@@ -5,16 +5,15 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.weather.databinding.FragmentDayBinding
+import com.example.weather.domain.entities.state.State
 import com.example.weather.presentation.ViewModelFactory
 import com.example.weather.presentation.WeatherApp
-import com.example.weather.presentation.fragments.currentWeather.adapters.WeatherAdapter
 import com.example.weather.presentation.fragments.currentWeather.CurrentWeatherViewModel
+import com.example.weather.presentation.fragments.currentWeather.adapters.WeatherAdapter
 import javax.inject.Inject
 
 class ForecastFragment : Fragment() {
@@ -51,38 +50,45 @@ class ForecastFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(requireActivity(),
-            viewModelFactory)[CurrentWeatherViewModel::class.java]
-
-        viewModel.currentInfo.observe(viewLifecycleOwner){
-            binding.toolbar.title = it.name
-            viewModel.getForecastInfo(it.name)
-        }
-
-        viewModel.forecastInfo.observe(viewLifecycleOwner) {
-            adapter = WeatherAdapter()
-            with(binding) {
-                recycler.layoutManager = LinearLayoutManager(context)
-                recycler.adapter = adapter
-                adapter.submitList(it)
-
-                val layoutManager = LinearLayoutManager(requireActivity().application,
-                    LinearLayoutManager.VERTICAL,
-                    false)
-                recycler.addItemDecoration(
-                    DividerItemDecoration(
-                        context,
-                        layoutManager.orientation)
-                )
-            }
-        }
-
-        viewModel.progressVisible.observe(viewLifecycleOwner) {
-            binding.progressBar.isVisible = it
-        }
+        viewModel = ViewModelProvider(
+            requireActivity(),
+            viewModelFactory
+        )[CurrentWeatherViewModel::class.java]
 
         binding.toolbar.setNavigationOnClickListener {
-          requireActivity().onBackPressedDispatcher.onBackPressed()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+
+        viewModel.cityName.observe(viewLifecycleOwner) {
+            binding.toolbar.title = it
+            viewModel.getForecastInfo(it)
+        }
+
+        viewModel.state.observe(viewLifecycleOwner) {
+            binding.progressBar.visibility = View.GONE
+
+            when (it) {
+
+                is State.Progress -> {
+                    binding.progressBar.visibility = View.VISIBLE
+                }
+                is State.LoadForecastWeather -> {
+
+                    adapter = WeatherAdapter()
+                    with(binding) {
+                        recycler.layoutManager = LinearLayoutManager(context)
+                        recycler.adapter = adapter
+                        adapter.submitList(it.forecastInfo)
+
+                        LinearLayoutManager(
+                            requireActivity().application,
+                            LinearLayoutManager.VERTICAL,
+                            false
+                        )
+                    }
+                }
+                else -> {}
+            }
         }
     }
 
